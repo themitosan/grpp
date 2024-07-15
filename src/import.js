@@ -103,7 +103,7 @@ function startCheck(){
     gitClone.on('exit', function(code){
 
         // Output exit code, cut final line break from git output and log it's data
-        console.info(`INFO - Git clone command closed with code ${code}.`);
+        console.info(`INFO - Git closed with code ${code}.`);
         msgData = msgData.slice(0, msgData.length - 1);
 
         // Process error list
