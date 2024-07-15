@@ -24,29 +24,6 @@ var cSettings = {
 // Current repo name
 const repoName = getRepoName(process.argv[2]);
 
-// Git clone error database
-const errorDatabase = {
-
-    // Repo takedown
-    dmcaTakedown: {
-        message: 'This repo is unavailable due to DMCA takedown.',
-        str: ['remote: Repository unavailable due to DMCA takedown.']
-    },
-
-    // Auth failed
-    authFailed: {
-        message: 'Unable to get repo data due failed authentication.',
-        str: [`fatal: Authentication failed for '${process.argv[2]}'`]
-    },
-
-    // Repo already exists
-    repoExists: {
-        message: 'This repo already exists on current database!',
-        str: [`fatal: destination path 'git/${repoName}' already exists and is not an empty directory.`]
-    }
-
-};
-
 /*
     Functions
 */
@@ -78,8 +55,31 @@ function startCheck(){
         module_fs.writeFileSync('settings.json', JSON.stringify(cSettings), 'utf-8');
 
     } else {
-        cSettings = JSON.parse(module_fs.readFileSync('settings.json', 'utf-8'));
+        cSettings = structuredClone(JSON.parse(module_fs.readFileSync('settings.json', 'utf-8')));
     }
+
+    // Git clone error database
+    const errorDatabase = {
+
+        // Repo takedown
+        dmcaTakedown: {
+            message: 'This repo is unavailable due to DMCA takedown.',
+            str: ['remote: Repository unavailable due to DMCA takedown.']
+        },
+
+        // Auth failed
+        authFailed: {
+            message: 'Unable to get repo data due failed authentication.',
+            str: [`fatal: Authentication failed for '${process.argv[2]}'`]
+        },
+
+        // Repo already exists
+        repoExists: {
+            message: 'This repo already exists on current database!',
+            str: [`fatal: destination path '${cSettings.clonePath}/${repoName}' already exists and is not an empty directory.`]
+        }
+
+    };
 
     // Spawn git clone command
     console.info(`INFO - Importing \x1b[33m${repoName}\x1b[0m - Please wait...`);
@@ -88,12 +88,15 @@ function startCheck(){
     // Capture git data
     gitClone.stderr.on('data', function(data){
         msgData = `${msgData}${data}\n`;
+        console.info(data.toString());
     });
     gitClone.stdout.on('data', function(data){
         msgData = `${msgData}${data}\n`;
+        console.info(data.toString());
     });
     gitClone.stdin.on('data', function(data){
         msgData = `${msgData}${data}\n`;
+        console.info(data.toString());
     });
 
     // Take action after process closing
@@ -125,7 +128,7 @@ function startCheck(){
             errorList.forEach(function(cError){
                 errStr = `${errStr}${errorDatabase[cError].message}\n`;
             });
-            console.error(`\x1b[31mERROR - Unable to clone ${repoName}!\n\x1b[0mReason: ${errStr.slice(0, errStr.length - 1)}\n\nGit output:\n${msgData}`);
+            console.error(`\x1b[31mERROR - Unable to clone ${repoName}!\n\x1b[0mReason: ${errStr.slice(0, errStr.length - 1)}`);
 
         }
 
