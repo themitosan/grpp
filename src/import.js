@@ -7,11 +7,19 @@
     Import node modules
 */
 
-const module_child_process = require('child_process');
+const
+    module_fs = require('fs'),
+    module_child_process = require('child_process');
 
 /*
     Variables
 */
+
+// Settings
+var cSettings = {
+    clonePath: "repos",
+    ignoreList: []
+};
 
 // Current repo name
 const repoName = getRepoName(process.argv[2]);
@@ -62,9 +70,20 @@ function startCheck(){
     var msgData = '',
         errorList = [];
 
+    // Check if settings file exists
+    if (module_fs.existsSync('settings.json') !== !0){
+
+        // Log settings not found and create a new file
+        console.info(`INFO - Settings file was not found!\nCreating a new file on ${process.cwd()}`);
+        module_fs.writeFileSync('settings.json', JSON.stringify(cSettings), 'utf-8');
+
+    } else {
+        cSettings = JSON.parse(module_fs.readFileSync('settings.json', 'utf-8'));
+    }
+
     // Spawn git clone command
     console.info(`INFO - Importing \x1b[33m${repoName}\x1b[0m - Please wait...`);
-    const gitClone = module_child_process.spawn('git', ['clone', '--progress', '--bare', '--mirror', process.argv[2], `git/${repoName}`]);
+    const gitClone = module_child_process.spawn('git', ['clone', '--progress', '--bare', '--mirror', process.argv[2], `repos/${repoName}`]);
 
     // Capture git data
     gitClone.stderr.on('data', function(data){

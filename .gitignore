@@ -1,2 +1,11 @@
+#
+#   Git Repo Preservation Project (GRPP)
+#   .gitignore
+#
+
+# Project folders
 non-git-projects/
 repos/
+
+# Settings
+settings.json
