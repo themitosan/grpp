@@ -120,13 +120,13 @@ function startCheck(){
             
             // Log process
             console.info('INFO - No errors were detected during clone process!');
-            console.info('INFO - Now... Let\'s make it a safe directory!');
+            console.info('INFO - Now... Let\'s make it a safe directory.');
 
             // Mark current repo as a safe dir
             const makeTrust = module_child_process.spawn('git', ['config', '--global', '--add', 'safe.directory', `${process.cwd()}/${cSettings.clonePath}/${repoName}`]);
             makeTrust.on('exit', function(data){
                 console.info(`INFO - Set ${repoName} dir as a safe dir closed with code ${data}!`);
-                console.info('=== Process complete! ===');
+                console.info('\n=== Process complete! ===\n');
             });
 
         } else {
@@ -136,7 +136,7 @@ function startCheck(){
             errorList.forEach(function(cError){
                 errStr = `${errStr}${errorDatabase[cError].message}\n`;
             });
-            console.error(`\x1b[31mERROR - Unable to clone ${repoName}!\n\x1b[0mReason: ${errStr.slice(0, errStr.length - 1)}`);
+            console.error(`\x1b[31mERROR - Unable to clone ${repoName}!\n\x1b[0mReason: ${errStr.slice(0, errStr.length - 1)}\n`);
 
         }
 
