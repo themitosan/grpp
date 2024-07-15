@@ -83,7 +83,7 @@ function startCheck(){
 
     // Spawn git clone command
     console.info(`INFO - Importing \x1b[33m${repoName}\x1b[0m - Please wait...`);
-    const gitClone = module_child_process.spawn('git', ['clone', '--progress', '--bare', '--mirror', process.argv[2], `repos/${repoName}`]);
+    const gitClone = module_child_process.spawn('git', ['clone', '--progress', '--bare', '--mirror', process.argv[2], `${cSettings.clonePath}/${repoName}`]);
 
     // Capture git data
     gitClone.stderr.on('data', function(data){
