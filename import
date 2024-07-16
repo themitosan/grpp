@@ -7,21 +7,13 @@
 # Display main message
 clear
 echo 
-echo -e "==="
-echo -e "=== Git Repo Preservation Project (GRPP)"
-echo -e "=== Created by Juliana (@themitosan)"
-echo -e "==="
-echo
-echo -e "     ################################################################"
-echo -e "    ##\033[1;30m                                                              \033[0m##"
-echo -e "    ##\033[1;30m   \033[0m########################################################\033[1;30m   \033[0m##"
-echo -e "    ##\033[1;30m  \033[0m##                                                      ##\033[1;30m  \033[0m##"
-echo -e "    ##\033[1;30m  \033[0m##           \"A classic quote from an old one:          ##\033[1;30m  \033[0m##"
-echo -e "    ##\033[1;30m  \033[0m##                  Quem guarda, \033[1;32mt\033[1;33me\033[1;34mm\033[0m!\"                  ##\033[1;30m  \033[0m##"
-echo -e "    ##\033[1;30m  \033[0m##                                                      ##\033[1;30m  \033[0m##"
-echo -e "    ##\033[1;30m   \033[0m########################################################\033[1;30m   \033[0m##"
-echo -e "    ##\033[1;30m                                                              \033[0m##"
-echo -e "     ################################################################"
+echo -e "============================================"
+echo -e "=== Git Repo Preservation Project (GRPP) ==="
+echo -e "===   Created by Juliana (@themitosan)   ==="
+echo -e "============================================"
+echo -e "===   A classic quote from an old one:   ==="
+echo -e "===         \"Quem guarda, \033[1;32mt\033[1;33me\033[1;34mm\033[0m!\"          ==="
+echo -e "============================================"
 echo 
 
 # Start process
