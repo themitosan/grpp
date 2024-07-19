@@ -1,0 +1,16 @@
+#
+#   Git Repo Preservation Project (GRPP)
+#   Created by Juliana (@themitosan)
+#   logo.sh
+#
+
+clear
+echo 
+echo -e "   ============================================"
+echo -e "   === Git Repo Preservation Project (GRPP) ==="
+echo -e "   ===   Created by Juliana (@themitosan)   ==="
+echo -e "   ============================================"
+echo -e "   ===   A classic quote from an old one:   ==="
+echo -e "   ===         \"Quem guarda, \033[1;32mt\033[1;33me\033[1;34mm\033[0m!\"          ==="
+echo -e "   ============================================"
+echo 

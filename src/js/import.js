@@ -16,10 +16,7 @@ const
 */
 
 // Settings
-var cSettings = {
-    clonePath: "repos",
-    ignoreList: []
-};
+var cSettings = structuredClone(JSON.parse(module_fs.readFileSync('src/json/settings_template.json', 'utf-8')));
 
 // Current repo name
 const repoName = getRepoName(process.argv[2]);

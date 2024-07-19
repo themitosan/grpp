@@ -1,0 +1,24 @@
+#
+#   Git Repo Preservation Project (GRPP)
+#   Created by Juliana (@themitosan)
+#   init.sh
+#
+
+# Make logo executable and display it
+chmod +x src/shell/logo
+./src/shell/logo
+
+# Make scripts executable
+echo -e "Making scripts as executable"
+chmod +x import
+chmod +x update
+chmod +x src/shell/process_update
+
+# Execute node init script
+node src/js/init.js
+
+# End process
+echo 
+echo -e "=== Process Complete ==="
+read -p "Press [ENTER] to exit"
+clear
