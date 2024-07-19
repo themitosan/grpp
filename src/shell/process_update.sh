@@ -28,7 +28,7 @@ do
 	# git reset --hard $(git rev-parse --abbrev-ref --symbolic-full-name @{u})
 
 	# Log current dir and check if the same exists
-	echo -e "=== [$i of $max_repos] - Updating \033[1;33m$entry\033[0m"
+	echo -e "=== [$i of $max_repos] Updating \033[1;33m$entry\033[0m"
 	if [ -d $entry ]; then
 
 		# Move to current repo and mark as a safe directory

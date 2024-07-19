@@ -12,7 +12,7 @@ chmod +x src/shell/logo
 echo -e "Making scripts as executable"
 chmod +x import
 chmod +x update
-chmod +x src/shell/process_update
+chmod +x src/shell/process_update.sh
 
 # Execute node init script
 node src/js/init.js

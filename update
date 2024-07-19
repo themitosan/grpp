@@ -5,4 +5,4 @@
 #
 
 # Get main repo path and start update process
-./src/shell/process_update "$(node src/js/getMainRepo.js)"
+./src/shell/process_update.sh "$(node src/js/getMainRepo.js)"
