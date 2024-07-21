@@ -11,11 +11,10 @@ sucess=0
 git_entries=`ls $1`
 max_repos=`ls $1 | wc -l`
 
-# Display main message
-./src/shell/logo
+# Display info before process
 echo -e "\033[0m==="
 echo -e "\033[0m=== Starting update process (\033[1;32m$max_repos repos listed\033[0m)"
-echo -e "\033[0m=== Clone path: $1"
+echo -e "\033[0m=== Clone path: \033[1;33m$1"
 echo -e "\033[0m==="
 echo 
 
@@ -28,7 +27,7 @@ do
 	# git reset --hard $(git rev-parse --abbrev-ref --symbolic-full-name @{u})
 
 	# Log current dir and check if the same exists
-	echo -e "=== [$i of $max_repos] Updating \033[1;33m$entry\033[0m"
+	echo -e "=== Updating \033[1;33m$entry\033[0m [$i of $max_repos]"
 	if [ -d $entry ]; then
 
 		# Move to current repo and mark as a safe directory

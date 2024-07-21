@@ -4,5 +4,6 @@
 #   process_update.sh
 #
 
-# Get main repo path and start update process
+# Display logo, get main repo path and start update process
+./src/shell/logo
 ./src/shell/process_update.sh "$(node src/js/getMainRepo.js)"

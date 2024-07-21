@@ -128,7 +128,7 @@ function startCheck(){
                 // Mark current repo as a safe dir
                 const makeTrust = module_child_process.spawn('git', ['config', '--global', '--add', 'safe.directory', `${process.cwd()}/${cSettings.clonePath}/${repoName}`]);
                 makeTrust.on('exit', function(data){
-                    console.info(`INFO - Set ${repoName} dir as a safe dir closed with code ${data}!`);
+                    console.info(`INFO - Set \x1b[33m${repoName}\x1b[0m dir as a safe dir closed with code ${data}!`);
                     console.info('\n=== Process complete! ===\n');
                 });
 
