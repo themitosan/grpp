@@ -16,10 +16,16 @@ const
 */
 
 // Settings
-var cSettings = structuredClone(JSON.parse(module_fs.readFileSync('src/json/settings_template.json', 'utf-8')));
+var cSettings = structuredClone(JSON.parse(module_fs.readFileSync('src/json/settings_template.json', 'utf-8'))),
+    repoList = [];
 
-// Current repo name
-const repoName = getRepoName(process.argv[2]);
+const
+
+    // Current repo name
+    repoName = getRepoName(process.argv[2]),
+    
+    // String separator
+    separator = '=================================================';
 
 /*
     Functions
@@ -128,8 +134,11 @@ function startCheck(){
                 // Mark current repo as a safe dir
                 const makeTrust = module_child_process.spawn('git', ['config', '--global', '--add', 'safe.directory', `${process.cwd()}/${cSettings.clonePath}/${repoName}`]);
                 makeTrust.on('exit', function(data){
-                    console.info(`INFO - Set \x1b[33m${repoName}\x1b[0m dir as a safe dir closed with code ${data}!`);
-                    console.info('\n=== Process complete! ===\n');
+
+                    // Read clone path to get total items preserved and log info!
+                    repoList = module_fs.readdirSync(cSettings.clonePath);
+                    console.info(`INFO - Set \x1b[33m${repoName}\x1b[0m dir as a safe dir closed with code ${data}!\n\n==============[ Process complete! ]==============\n  ┌ Repo name: \x1b[33m${repoName}\x1b[0m\n  └ Total repos preserved: \x1b[33m${repoList.length}\x1b[0m\n${separator}\n`);
+
                 });
 
             } else {

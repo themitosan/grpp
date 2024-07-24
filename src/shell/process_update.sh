@@ -8,8 +8,8 @@
 i=1
 error=0
 sucess=0
-git_entries=`ls $1`
-max_repos=`ls $1 | wc -l`
+git_entries=`ls "$1"`
+max_repos=`ls "$1" | wc -l`
 
 # Display info before process
 echo -e "\033[0m==="
@@ -19,7 +19,7 @@ echo -e "\033[0m==="
 echo 
 
 # Move to git clone folder and start main process
-cd $1
+cd "$1"
 for entry in $git_entries
 do
 
