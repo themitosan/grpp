@@ -1,6 +1,6 @@
 # Git Repo Preservation Project (GRPP)
 
-Created by [Juliana](https://github.com/themitosan) <sup>*(aka. themitosan)*</sup>, this is a simple project created using shell / node scripts that helps preserving git repos.
+Created by [JulianaHeartz](https://mastodon.social/@julianaheartz) <sup>*(aka. themitosan)*</sup>, this is a simple project created using shell / node scripts that helps preserving git repos.
 
 ## Requirements
 
