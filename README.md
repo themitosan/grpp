@@ -14,6 +14,8 @@ Created by [JulianaHeartz](https://mastodon.social/@julianaheartz) <sup>*(aka. t
 chmod +x init && ./init
 ```
 
+## How to use
+
 - To import a git repo, run the following command:
 
 ```
