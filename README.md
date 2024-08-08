@@ -1,4 +1,7 @@
-# Git Repo Preservation Project (GRPP)
+<h1>
+    <img src="src/logo.png" alt="logo">
+    <br>Git Repo Preservation Project (GRPP)
+</h1>
 
 Created by [JulianaHeartz](https://mastodon.social/@julianaheartz) <sup>*(aka. themitosan)*</sup>, this is a simple project created using shell / node scripts that helps preserving git repos.
 
