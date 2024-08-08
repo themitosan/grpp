@@ -1,5 +1,5 @@
-<h1>
-    <img src="src/logo.png" alt="logo">
+<h1 align="center">
+    <img src="src/GRPP.png" alt="logo" width="150">
     <br>Git Repo Preservation Project (GRPP)
 </h1>
 
