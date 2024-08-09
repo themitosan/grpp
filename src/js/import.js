@@ -83,6 +83,12 @@ function startCheck(){
         repoExists: {
             message: 'This repo already exists on current database!',
             str: [`fatal: destination path '${cSettings.clonePath}/${repoName}' already exists and is not an empty directory.`]
+        },
+
+        // Unable to acess repo
+        unableAccess: {
+            message: `Unable to access ${process.argv[2]}. Make sure that you have internet and server is available.`,
+            str: ['fatal: unable to access ', ': Failed to connect to ', 'after ', 'ms: Could not connect to server']
         }
 
     };
