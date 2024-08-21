@@ -16,7 +16,6 @@ chmod +x init && ./init
 ```
 
 ## How to use
-
 - To import a git repo, run the following command:
 
 ```
@@ -27,6 +26,12 @@ chmod +x init && ./init
 
 ```
 ./update
+```
+
+## How to update grpp itself
+- Run the following command:
+```
+chmod +x grpp_update && ./grpp_update
 ```
 
 ## External tools used on this project
