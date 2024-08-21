@@ -5,14 +5,19 @@
 #
 
 # Make logo executable and display it
-chmod +x src/shell/logo
-./src/shell/logo
+chmod +x src/shell/logo.sh
+./src/shell/logo.sh
 
 # Make scripts executable
-echo -e "Making scripts as executable"
+echo 
+echo -e "=== Making scripts as executable"
+for entry in `ls src/shell`
+do
+    chmod +x "src/shell/$entry"
+done
 chmod +x import
 chmod +x update
-chmod +x src/shell/process_update.sh
+chmod +x grpp_update
 
 # Execute node init script
 node src/js/init.js
