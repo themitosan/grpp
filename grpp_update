@@ -6,7 +6,6 @@
 
 # Display logo and log start update process
 ./src/shell/logo.sh
-echo 
 echo -e "==="
 echo -e "=== Starting grpp update process"
 echo -e "==="
