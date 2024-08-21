@@ -15,6 +15,7 @@ git reset --hard
 git fetch
 git pull
 
+echo 
 echo -e "=== Making all shell scripts executable"
 for entry in `ls src/shell`
 do
@@ -26,6 +27,7 @@ chmod +x update
 chmod +x grpp_update
 
 # Log process complete
+echo 
 echo -e "=== Process Complete! ==="
 echo -e "Press \033[1;32m[ENTER]\033[0m to exit"
 read -p ""
