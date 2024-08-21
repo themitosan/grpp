@@ -7,7 +7,9 @@
 # Display logo and log start update process
 ./src/shell/logo.sh
 echo 
-echo -e "=== Starting grpp update process ==="
+echo -e "==="
+echo -e "=== Starting grpp update process"
+echo -e "==="
 echo 
 
 echo -e "=== Reset grpp dir and fetch latest updates"
