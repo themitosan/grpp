@@ -23,6 +23,7 @@ done
 chmod +x init
 chmod +x import
 chmod +x update
+chmod +x grpp_update
 
 # Log process complete
 echo -e "=== Process Complete! ==="
