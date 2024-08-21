@@ -20,5 +20,6 @@ node src/js/init.js
 # End process
 echo 
 echo -e "=== Process Complete ==="
-read -p "Press [ENTER] to exit"
+echo -e "Press \033[1;32m[ENTER]\033[0m to exit"
+read -p ""
 clear

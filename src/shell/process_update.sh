@@ -11,6 +11,9 @@ sucess=0
 git_entries=`ls "$1"`
 max_repos=`ls "$1" | wc -l`
 
+# Create lock file
+echo "### GRPP LOCK FILE ###" > grpp_lock
+
 # Display info before process
 echo -e "\033[0m==="
 echo -e "\033[0m=== Starting update process (\033[1;32m$max_repos repos listed\033[0m)"
@@ -22,9 +25,6 @@ echo
 cd "$1"
 for entry in $git_entries
 do
-
-	# Reset files
-	# git reset --hard $(git rev-parse --abbrev-ref --symbolic-full-name @{u})
 
 	# Log current dir and check if the same exists
 	echo -e "=== Updating \033[1;33m$entry\033[0m [$i of $max_repos]"
@@ -39,6 +39,7 @@ do
 		git config remote.origin.mirror true
 		git fetch --all
 
+		# Return to main repo dir and bump success counter
 		cd ..
 		sucess=$(( sucess + 1 ))
 
@@ -56,7 +57,13 @@ do
 done
 cd ..
 
+# Check if lock file exists. If so, remove it
+if [ -f grpp_lock ]; then
+	rm grpp_lock
+fi
+
 # Output final message
 echo -e "=== INFO - Process was completed successfully processing \033[1;32m$sucess repos\033[0m with \033[1;31m$error errors\033[0m. ==="
-read -p "Press [ENTER] to exit"
+echo -e "Press \033[1;32m[ENTER]\033[0m to exit"
+read -p ""
 clear

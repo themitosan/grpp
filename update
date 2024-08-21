@@ -1,9 +1,19 @@
 #
 #   Git Repo Preservation Project (GRPP)
 #   Created by Juliana (@themitosan)
-#   process_update.sh
+#   update.sh
 #
 
 # Display logo, get main repo path and start update process
 ./src/shell/logo
-./src/shell/process_update.sh "$(node src/js/getMainRepo.js)"
+
+# Check if lock file exists. If so, update can't run
+if [ ! -e grpp_lock ]; then
+    ./src/shell/process_update.sh "$(node src/js/getMainRepo.js)"
+else
+    echo ""
+    echo -e "WARN - Unable to start update process because lock file exists"
+    echo -e "Press \033[1;32m[ENTER]\033[0m to exit"
+    read -p ""
+    clear
+fi

@@ -9,3 +9,6 @@ repos/
 
 # Settings
 settings.json
+
+# Lock file
+grpp_lock

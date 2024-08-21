@@ -28,3 +28,7 @@ chmod +x init && ./init
 ```
 ./update
 ```
+
+## External tools used on this project
+- Photopea: https://www.photopea.com
+- Vscodium: https://vscodium.com
