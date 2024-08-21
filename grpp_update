@@ -26,6 +26,7 @@ chmod +x init
 chmod +x import
 chmod +x update
 chmod +x grpp_update
+echo -e "Done!"
 
 # Log process complete
 echo 
