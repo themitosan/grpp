@@ -1,5 +1,6 @@
 #
 #   Git Repo Preservation Project (GRPP)
+#   Created by Juliana (@themitosan)
 #   .gitignore
 #
 
@@ -12,6 +13,3 @@ settings.json
 
 # Lock file
 grpp_lock
-
-# Misc.
-*.psd

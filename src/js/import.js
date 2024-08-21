@@ -16,7 +16,7 @@ const
 */
 
 // Settings
-var cSettings = structuredClone(JSON.parse(module_fs.readFileSync('src/json/settings_template.json', 'utf-8'))),
+var cSettings = structuredClone(JSON.parse(module_fs.readFileSync('settings.json', 'utf-8'))),
     repoList = [];
 
 const
@@ -52,17 +52,6 @@ function startCheck(){
     // Declare vars
     var msgData = '',
         errorList = [];
-
-    // Check if settings file exists
-    if (module_fs.existsSync('settings.json') !== !0){
-
-        // Log settings not found and create a new file
-        console.info(`INFO - Settings file was not found!\nCreating a new file on ${process.cwd()}`);
-        module_fs.writeFileSync('settings.json', JSON.stringify(cSettings), 'utf-8');
-
-    } else {
-        cSettings = structuredClone(JSON.parse(module_fs.readFileSync('settings.json', 'utf-8')));
-    }
 
     // Git clone error database
     const errorDatabase = {

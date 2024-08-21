@@ -1,14 +1,12 @@
 #
 #   Git Repo Preservation Project (GRPP)
 #   Created by Juliana (@themitosan)
-#   import.sh
+#   update.sh
 #
 
-# Display main message and start import script
+# Display logo and run update process
 ./src/shell/logo.sh
-node src/js/import.js $1
-
-# End process
+node src/js/update.js
+echo ""
 echo -e "Press \033[1;32m[ENTER]\033[0m to exit"
 read -p ""
-clear

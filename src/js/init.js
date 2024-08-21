@@ -14,7 +14,10 @@ const module_fs = require('fs');
 */
 
 // Settings
-var cSettings = structuredClone(JSON.parse(module_fs.readFileSync('src/json/settings_template.json', 'utf-8')));
+var cSettings = structuredClone({
+    "clonePath": "repos",
+    "ignoreList": []
+});
 
 /*
     Functions
