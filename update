@@ -5,7 +5,7 @@
 #
 
 # Display logo, get main repo path and start update process
-./src/shell/logo
+./src/shell/logo.sh
 
 # Check if lock file exists. If so, update can't run
 if [ ! -e grpp_lock ]; then
