@@ -13,7 +13,7 @@ echo
 
 echo -e "=== Reset grpp dir and fetch latest updates"
 git reset --hard
-git fetch
+git fetch --all
 git pull
 
 echo 

@@ -18,7 +18,7 @@ const
 
 // Lock exec
 var lockExec = !1,
-    execLogData;
+    spawnCommandLog = '';
 
 const
     
@@ -66,21 +66,26 @@ function spawnCommand(cmd, args){
     // Check if exec command is active
     if (lockExec === !1){
 
-        var strData = '';
+        lockExec = !0;
+        spawnCommandLog = '';
         const spawnProcess = module_child_process.spawn(cmd, args);
 
         spawnProcess.stderr.on('data', function(data){
-            strData = `${strData}\n${data.toString()}`;
+            spawnCommandLog = `${spawnCommandLog}\n${data.toString()}`;
         });
         spawnProcess.stdin.on('data', function(data){
-            strData = `${strData}\n${data.toString()}`;
+            spawnCommandLog = `${spawnCommandLog}\n${data.toString()}`;
         });
         spawnProcess.stdout.on('data', function(data){
-            strData = `${strData}\n${data.toString()}`;
+            spawnCommandLog = `${spawnCommandLog}\n${data.toString()}`;
+        });
+        spawnProcess.stdio.on('data', function(data){
+            spawnCommandLog = `${spawnCommandLog}\n${data.toString()}`;
         });
 
         spawnProcess.on('exit', function(data){
-            strData = `${strData}\nProcess closed with exit code ${data}`;
+            spawnCommandLog = `${spawnCommandLog}\nProcess closed with exit code ${data}`;
+            lockExec = !1;
         });
 
     }
@@ -165,13 +170,15 @@ function startProcess(){
         Clone path: ${grppSettings.clonePath}\n
         Repos to be updated: ${updateList.length} (${module_fs.readdirSync(grppSettings.clonePath).length} in total, ${grppSettings.ignoreList.length} to be skipped)\n`);
 
-    const updateRepo = function(repoName){
-        // WIP
-    }
-
     /*
         Finish process
     */
+
+    const createInterval = setInterval(function(){
+
+        var i = 0;
+
+    }, 200);
 
     // Return chdir and remove lock file
     process.chdir(rootPath);

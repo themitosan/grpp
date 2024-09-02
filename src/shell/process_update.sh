@@ -8,11 +8,12 @@
 i=1
 error=0
 sucess=0
+skipRepos=$2
 git_entries=`ls "$1"`
 max_repos=`ls "$1" | wc -l`
 
 # Create lock file
-echo "### GRPP LOCK FILE ###" > grpp_lock
+echo "### GRPP LOCK FILE ###" > lock_grpp
 
 # Display info before process
 echo -e "\033[0m==="
@@ -58,12 +59,9 @@ done
 cd ..
 
 # Check if lock file exists. If so, remove it
-if [ -f grpp_lock ]; then
-	rm grpp_lock
+if [ -f lock_grpp ]; then
+	rm lock_grpp
 fi
 
 # Output final message
 echo -e "=== INFO - Process was completed successfully processing \033[1;32m$sucess repos\033[0m with \033[1;31m$error errors\033[0m. ==="
-echo -e "Press \033[1;32m[ENTER]\033[0m to exit"
-read -p ""
-clear
