@@ -15,6 +15,8 @@ In order to initialize, you must set init as an executable and them, run it. It 
 chmod +x init && ./init
 ```
 
+> INFO: If you are running this project on windows, there is no need to set `init` as an executable! Just run `./init` and it will work just fine!
+
 ## How to use
 - To import a git repo, run the following command:
 
