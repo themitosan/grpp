@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="src/GRPP.png" alt="logo" width="150">
+    <img src="src/GRPP.png" alt="grpp_logo" width="150">
     <br>Git Repo Preservation Project (GRPP)
 </h1>
 
@@ -15,7 +15,7 @@ In order to initialize, you must set init as an executable and them, run it. It 
 chmod +x init && ./init
 ```
 
-> INFO: If you are running this project on windows under [MinGW](https://www.mingw-w64.org/), there is no need to set `init` as an executable! Just run `./init` and it will work just fine!
+> INFO: If you are running this project on windows under [MinGW](https://www.mingw-w64.org), there is no need to set `init` as an executable! Just run `./init` and it will work just fine!
 
 ## How to use
 - To import a git repo, run the following command:
@@ -38,4 +38,4 @@ chmod +x grpp_update && ./grpp_update
 
 ## External tools used on this project
 - Photopea: https://www.photopea.com
-- Vscodium: https://vscodium.com
+- VSCodium: https://vscodium.com
