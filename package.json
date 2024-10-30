@@ -1,0 +1,27 @@
+{
+	"name": "grpp",
+	"version": "1.0.0",
+	"main": "App/grpp.js",
+	"author": "JulianaHeartz",
+	"license": "GPL-2.0-only",
+	"homepage": "https://themitosan.github.io",
+	"description": "This is a simple project written in TS / Shell that aims to preserve git repos.",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "webpack --config ./compiler/dev-webpack.config.js",
+		"buildWebpack": "webpack --config ./compiler/build-webpack.config.js"
+	},
+	"devDependencies": {
+		"@types/node": "^22.8.4",
+		"ts-loader": "^9.5.1",
+		"webpack": "^5.95.0",
+		"webpack-cli": "^5.1.4"
+	},
+	"bugs": {
+		"url": "http://192.168.15.200:3000/juliana/grpp/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "http://192.168.15.200:3000/juliana/grpp.git"
+	}
+}

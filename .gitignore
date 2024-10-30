@@ -1,15 +1,13 @@
 #
 #   Git Repo Preservation Project (GRPP)
-#   Created by Juliana (@themitosan)
+#   Created by Juliana (@julianaheartz.bsky.social)
 #   .gitignore
 #
 
 # Project folders
-non-git-projects/
-repos/
+App/
+Build/
+node_modules/
 
-# Settings
-settings.json
-
-# Lock file
-lock_grpp
+# General files
+grpp_settings.json
