@@ -9,7 +9,7 @@
     Import TS modules
 */
 
-import { grpp_displayMainLogo } from './main';
+import { grpp_displayMainLogo, grppSettings } from './main';
 
 /*
     Require node modules
@@ -80,7 +80,7 @@ function promptGiteaUrl(userName:string){
     // Create vars and prompt base url
     var urlBase:string = '';
     const nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
-    nodeReadLine.question('\nPlease, insert base domain where gitea server is hosted (Example: 192.168.15.200:3000)\nYour answer: ', function(giteaUrl){
+    nodeReadLine.question('\nPlease, insert base domain where gitea server is hosted (Example: \"192.168.15.200:3000\")\nYour answer: ', function(giteaUrl){
 
         // Set url, start user fetch and close readline
         urlBase = `http://${giteaUrl}/api/v1/users/${userName}/repos?per_page=100&page=`;
@@ -100,7 +100,7 @@ function startUserFetch(urlBase:string){
     // Declare vars
     var currentPage = 1,
         repoChunk:any[] = [];
-    
+
     /*
         Declare functions
     */
@@ -108,25 +108,46 @@ function startUserFetch(urlBase:string){
     // Process fetch result
     const processFetchRes = function(fetchResult:any){
 
-        // Check if have results. If so, push to repo chunk
-        if (fetchResult.length !== 0){
-            fetchResult.forEach(function(cRepo:any){
-                repoChunk.push(cRepo);
-            });
+        // Create error string and check if there is repos available
+        var errorList:string[] = [];
+        if (fetchResult.length === 0 && repoChunk.length === 0){
+            errorList.push('No repos available for this user.');
         }
 
-        if (fetchResult.length === 0 && repoChunk.length !== 0){
-            processRepoChunk(repoChunk);
-        } else {
-            currentPage++;
-            fetchData();
+        // Check if had 404 error
+        if (fetchResult['status'] !== void 0 && fetchResult['status'].toString() === "404"){
+            errorList.push(fetchResult.status);
+        }
+
+        // Check if can continue
+        if (errorList.length === 0){
+
+            // Check if have results. If so, push to repo chunk
+            if (fetchResult.length !== 0){
+                fetchResult.forEach(function(cRepo:any){
+                    repoChunk.push(cRepo);
+                });
+            }
+
+            // Check if needs to continue fetch process
+            if (fetchResult.length === 0 && repoChunk.length !== 0 || currentPage > (grppSettings.maxPages - 1)){
+                processRepoChunk(repoChunk);
+            } else {
+                currentPage++;
+                fetchData();
+            }
+
         }
 
     };
 
-    // Fetch data
+    // Fetch data from remote
     const fetchData = function(){
-        fetch(`${urlBase}${currentPage}`).then(function(fetchRes){
+
+        // Create fetch url, log and fetch data
+        const fetchUrl = `${urlBase}${currentPage}`;
+        console.info(`INFO - Fetching url: ${fetchUrl}`);
+        fetch(fetchUrl).then(function(fetchRes){
 
             // If fetch result is ok, process output. If not, get error data and display it
             if (fetchRes.ok === !0){
@@ -142,6 +163,7 @@ function startUserFetch(urlBase:string){
     };
 
     // Start process
+    console.info(`INFO - Starting fetch process...`);
     fetchData();
 
 }

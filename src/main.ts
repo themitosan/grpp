@@ -6,14 +6,15 @@
 */
 
 /*
-    Import TS module
+    Import TS modules
 */
 
 import { grpp_initPath } from "./init";
+import { preventMinMax } from "./utils";
 import { grpp_startUpdate } from "./update";
 import { grpp_startImport } from "./import";
 import { grpp_getUserRepos } from "./getUserRepos";
-import { grppSettingsFile, grppSettingsFile_Defaults } from "./database";
+import { grpp_flagList, grppSettingsFile, grppSettingsFile_Defaults } from "./database";
 
 /*
     Variables
@@ -29,16 +30,28 @@ export const
 */
 
 /**
-    * Display main logo 
+    * Display main logo
 */
 export function grpp_displayMainLogo(){
     console.info("\n   <=============================================================>");
-    console.info("   <==          Git Repo Preservation Project (GRPP)           ==>");
-    console.info("   <==     Created by Juliana (@julianaheartz.bsky.social)     ==>");
+    console.info("   <=|          Git Repo Preservation Project (GRPP)           |=>");
+    console.info("   <=|     Created by Juliana (@julianaheartz.bsky.social)     |=>");
     console.info("   <=============================================================>");
-    console.info("   <==             A classic quote from an old one:            ==>");
-    console.info("   <==                   \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"                   ==>");
+    console.info("   <=|             A classic quote from an old one:            |=>");
+    console.info("   <=|                   \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"                   |=>");
     console.info("   <=============================================================>\n");
+}
+
+/**
+    * Display help menu
+*/
+function grpp_displayHelp(){
+    console.info("   <=============================================================>");
+    console.info('   <=|       Here is a list of all available functions:        |=>');
+    console.info("   <=============================================================>\n");
+    Object.keys(grpp_flagList).forEach(function(currentFlag:any){
+        console.info(`   ${currentFlag} - ${grpp_flagList[currentFlag]}`);
+    });
 }
 
 /**
@@ -46,9 +59,14 @@ export function grpp_displayMainLogo(){
 */
 function startApp(){
 
-    // Clear console and display main logo
+    // Clear console, display main logo and check if needs to display help string
     console.clear();
     grpp_displayMainLogo();
+    if (process.argv.indexOf('--help') === -1){
+        console.info("   <=============================================================>");
+        console.info('   <=|           Use \"--help\" in order to know more.           |=>');
+        console.info("   <=============================================================>\n");
+    }
 
     // Process main app run flags
     for (var i = 0; i < process.argv.length; i++){
@@ -59,16 +77,24 @@ function startApp(){
         */
 
         // Set max runners
-        if (currentFlag.indexOf('--runners=') !== -1){
-            grppSettings.runners = Number(currentFlag.replace('--runners=', ''));
-            if (grppSettings.runners < 1){
-                grppSettings.runners = 1;
-            }
+        if (currentFlag.indexOf('--setMaxRunners=') !== -1){
+            grppSettings.runners = preventMinMax(Number(currentFlag.replace('--setMaxRunners=', '')), 0, 1000);
+        }
+
+        // Set max fetch pages
+        if (currentFlag.indexOf('--setMaxFetchPages=') !== -1){
+            grppSettings.maxPages = preventMinMax(Number(currentFlag.replace('--setMaxFetchPages=', '')), 0, 1000);
         }
 
         /*
             Functions
         */
+
+        // Display help menu
+        if (currentFlag.indexOf('--help') !== -1){
+            grpp_displayHelp();
+            break;
+        }
 
         // Check if is init
         if (currentFlag.indexOf('--init=') !== -1){
@@ -94,7 +120,7 @@ function startApp(){
 
         // Import repo from list
         if (currentFlag.indexOf('--importList=') !== -1){
-
+            // WIP
         }
 
         // Start GRPP update process
@@ -108,7 +134,7 @@ function startApp(){
     // If no args were provided
     if (process.argv.length < 3){
         console.info("   <=============================================================>");
-        console.info("     ...Since no args were provided, We wish you a great day! <3");
+        console.info("   | ...Since no args were provided, We wish you a great day! <3 |");
         console.info("   <=============================================================>\n");
     }
 
