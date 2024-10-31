@@ -6,14 +6,25 @@
 */
 
 /*
+    Import TS modules
+*/
+
+import { grpp_loadSettings } from './main';
+
+/*
     Functions
 */
 
 /**
-    * Start GRPP update process 
+    * Start GRPP update process
 */
 export function grpp_startUpdate(){
-    // WIP
+
+    // Load settings before moving on
+    grpp_loadSettings(function(){
+        // WIP
+    });
+
 }
 
 // Export module

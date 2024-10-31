@@ -49,7 +49,8 @@ export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repo
 export const grpp_flagList:any = {
     '--help': `Display this menu.`,
     '--startUpdate': `Start GRPP update process.`,
-    '--setMaxRunners=[NUMBER]': `Set how many update instances will be running on GRPP update process. (Default: ${grppSettingsFile_Defaults.runCounter})`,
+    '--setPath=': `[PATH] Set current working directory.`,
+    '--setMaxRunners=[NUMBER]': `Set how many instances will be running on GRPP processes. (Default: ${grppSettingsFile_Defaults.runCounter})`,
     '--setMaxFetchPages=[NUMBER]': `Set maximum of pages GRPP will fetch from remote on get user repos process. (Default: ${grppSettingsFile_Defaults.maxPages})`,
     '--init=[PATH]': ` Set a location where GRPP will initialize and backup your repos. You can also just use \"--init\" to initialize where you currently are!`,
     '--getUserRepos=[USERNAME]': `Set a username to GRPP seek all repos available.`,

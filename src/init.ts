@@ -25,7 +25,7 @@ import * as module_fs from 'fs';
     * Initiaite GRPP path
     * @param path [string] path to be initialized 
 */
-export function grpp_initPath(path:string = process.cwd()){
+export async function grpp_initPath(path:string = process.cwd()){
 
     // Check if settings file exists
     console.info(`INFO - Creating settings file at \"${path}\"`);

@@ -17,10 +17,16 @@ import { grpp_getUserRepos } from "./getUserRepos";
 import { grpp_flagList, grppSettingsFile, grppSettingsFile_Defaults } from "./database";
 
 /*
+    Require node modules
+*/
+
+import * as module_fs from 'fs';
+
+/*
     Variables
 */
 
-export const
+export var
 
     // App settings
     grppSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
@@ -55,9 +61,35 @@ function grpp_displayHelp(){
 }
 
 /**
+    * Load settings
+    * @param postAction function to be executed ONLY after loading settings 
+*/
+export async function grpp_loadSettings(postAction:Function){
+
+    // Create settings file path and check if it exists
+    const filePath = `${process.cwd()}/grpp_settings.json`;
+    if (module_fs.existsSync(filePath) === !0){
+
+        // Try loading settings
+        try {
+            grppSettings = JSON.parse(module_fs.readFileSync(filePath, 'utf-8'));
+            postAction();
+        } catch (err) {
+            throw err;
+        }
+
+    } else {
+        console.warn(`WARN - Unable to load settings because this location isn\'t initialized! GRPP will initialize this folder before moving on...`);
+        grpp_initPath()
+        .then(function(){ postAction(); });
+    }
+
+}
+
+/**
     * Start main app
 */
-function startApp(){
+async function startApp(){
 
     // Clear console, display main logo and check if needs to display help string
     console.clear();
@@ -84,6 +116,11 @@ function startApp(){
         // Set max fetch pages
         if (currentFlag.indexOf('--setMaxFetchPages=') !== -1){
             grppSettings.maxPages = preventMinMax(Number(currentFlag.replace('--setMaxFetchPages=', '')), 0, 1000);
+        }
+
+        // Set working path
+        if (currentFlag.indexOf('--setPath=') !== -1){
+            process.chdir(`\"${currentFlag.replace('--setPath=', '')}\"`);
         }
 
         /*
