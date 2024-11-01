@@ -11,7 +11,7 @@
 
 import { grpp_initPath } from "./init";
 import { grpp_startUpdate } from "./update";
-import { grpp_startImport } from "./import";
+import { grpp_importBatch, grpp_startImport } from "./import";
 import { grpp_getUserRepos } from "./getUserRepos";
 import { grppRepoEntry, grppSettingsFile, grppSettingsFile_Defaults } from "./database";
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_printStatus, preventMinMax } from "./utils";
@@ -21,7 +21,6 @@ import { grpp_displayHelp, grpp_displayMainLogo, grpp_printStatus, preventMinMax
 */
 
 import * as module_fs from 'fs';
-import * as module_readLine from 'node:readline';
 
 /*
     Variables
@@ -193,7 +192,7 @@ async function startApp(){
 
         // Import repo from list
         if (currentFlag.indexOf('--importList=') !== -1){
-            // WIP
+            grpp_importBatch(module_fs.readFileSync(currentFlag.replace('--importList=', ''), 'utf-8'));
         }
 
         // Start GRPP update process

@@ -11,7 +11,7 @@
 
 import { grppRepoEntry } from './database';
 import { grpp_importRepoDatabase } from './main';
-import { checkConnection, convertArrayToString, execReasonListCheck, runExternalCommand } from './utils';
+import { convertArrayToString, execReasonListCheck, grpp_displayMainLogo, runExternalCommand } from './utils';
 
 /*
     Require node modules
@@ -29,8 +29,7 @@ import * as module_fs from 'fs';
 */
 export async function grpp_startImport(cloneURL:string){
 
-    // Check if we have some internet
-    await checkConnection().then(function(){
+    return new Promise<void>(function(resolve){
 
         // Create vars before checking if can continue
         var reasonList:string[] = [];
@@ -45,6 +44,11 @@ export async function grpp_startImport(cloneURL:string){
         // Check if repo already exists
         if (module_fs.existsSync(`${repoPath}/HEAD`) === !0){
             reasonList.push('This repo already exists on filesystem!');
+        }
+
+        // Check if no url was provided
+        if (cloneURL.length === 0){
+            reasonList.push('You must provide a git url to import!')
         }
 
         // Check if can continue
@@ -68,7 +72,7 @@ export async function grpp_startImport(cloneURL:string){
                 `${process.cwd()}/${urlData[2]}`,
                 `${process.cwd()}/${urlData[2]}/${repoOwner}`
             ].forEach(function(cEntry){
-
+            
                 // Check if folder exists. If not, create it
                 if (module_fs.existsSync(cEntry) === !1){
                     module_fs.mkdirSync(cEntry);
@@ -81,6 +85,7 @@ export async function grpp_startImport(cloneURL:string){
                 console.info(`INFO - Pushing repo ${repoName} [${cloneURL}] to GRPP database...`);
                 grpp_importRepoDatabase(newRepoEntry);
                 console.info('\nINFO - Process complete!\n');
+                resolve();
             };
         
             // Set git to fetch all refs
@@ -99,11 +104,28 @@ export async function grpp_startImport(cloneURL:string){
             console.info('INFO - Starting clone process...');
             runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, `${process.cwd()}/${urlData[2]}/${repoOwner}`, getAllRefs);
         
-        });
+        }, resolve);
 
-    }).catch(function(err){
-        throw `ERROR - Unable to start clone process because GRPP failed to connect to internet!\nDetails: ${err}\n`;
     });
+
+}
+
+/**
+    * Import all repos from a list
+    * @param urlList [string] string with urls to be imported
+*/
+export async function grpp_importBatch(urlList:string){
+
+    // Create url array and start processing it
+    const urlArray = urlList.split('\n');
+    for (const url of urlArray){
+        if (url.length > 0){
+            console.clear();
+            grpp_displayMainLogo();
+            console.info(`INFO - [${(urlArray.indexOf(url) + 1)} of ${urlArray.length}] Processing URL: ${url}`);
+            await grpp_startImport(url);
+        }
+    }
 
 }
 

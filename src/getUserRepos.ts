@@ -10,6 +10,7 @@
 */
 
 import { grppSettings } from './main';
+import { grpp_importBatch } from './import';
 import { checkConnection, convertArrayToString, execReasonListCheck, grpp_displayMainLogo } from './utils';
 
 /*
@@ -186,14 +187,14 @@ function startUserFetch(urlBase:string){
 
 /**
     * Process final fetch result
-    * @param repoChunk [object] repo list 
+    * @param resultArray [object] repo list 
 */
-function processRepoChunk(repoChunk:any[]){
+function processRepoChunk(resultArray:any[]){
 
     // Declare vars, process repo list and trim last bit
     var repoList:string = '';
     const nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
-    repoChunk.forEach(function(cRepo){
+    resultArray.forEach(function(cRepo){
         repoList = `${repoList}${cRepo.clone_url}\n`;
     });
     repoList = repoList.slice(0, (repoList.length - 1));
@@ -201,15 +202,15 @@ function processRepoChunk(repoChunk:any[]){
     // Clear window and display info
     console.clear();
     grpp_displayMainLogo();
-    nodeReadLine.question(`INFO - GRPP managed to find ${repoChunk.length} repos. Here is the full list:\n\n${repoList}\n\nHere is what you can do:\n\n   1) Import all repos\n   2) Save repo list on a file to import later\n\nYour choice: `, function(userAction){
+    nodeReadLine.question(`INFO - GRPP managed to find ${resultArray.length} repos. Here is the full list:\n\n${repoList}\n\nHere is what you can do:\n\n   1) Import all repos\n   2) Save repo list on a file to import later\n\nYour choice: `, function(userAction){
 
-        // Switch user action
+        // Close nodeReadLine and switch user action
         nodeReadLine.close();
         switch (userAction){
 
             // Import all files
             case '1':
-                // WIP
+                grpp_importBatch(repoList);
                 break;
 
             // Save file to import later
@@ -222,7 +223,7 @@ function processRepoChunk(repoChunk:any[]){
 
             // Default
             default:
-                // WIP
+                grpp_importBatch(repoList);
                 break;
 
         }

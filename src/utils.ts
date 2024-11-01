@@ -30,9 +30,9 @@ import * as module_childProcess from 'child_process';
 */
 export function grpp_printStatus(){
     console.info(`==> GRPP Status:\n    Current path: ${process.cwd()}\n`);
-    console.info(`   ┌ Total times GRPP Update run: ${grppSettings.runCounter}`);
+    console.info(`   ┌ Total times GRPP Update executed: ${grppSettings.runCounter}`);
     console.info(`   ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]`);
-    console.info(`   ├ Last GRPP Update run: ${grppSettings.lastRun}`);
+    console.info(`   ├ Last time GRPP Update was executed: ${grppSettings.lastRun}`);
     console.info(`   └ Total repos preserved: ${grppSettings.repoEntries.length}\n`);
 }
 
@@ -100,13 +100,14 @@ export function convertArrayToString(str:string[], rep:string = '\n'):string {
 	* @param warnMsg Base warn message informing that was unable to proceed
 	* @param action function to be executed if reasonList is empty
 */
-export function execReasonListCheck(reasonList:string[], warnMsg:string, action:Function) {
+export function execReasonListCheck(reasonList:string[], warnMsg:string, action:Function, onError:Function = function(){return;}) {
 
 	// Check if can execute action
 	if (reasonList.length === 0){
 		action();
 	} else {
         console.error(warnMsg);
+        onError();
 	}
 
 }
@@ -140,6 +141,14 @@ export function runExternalCommand(cmd:string, chdir:string = process.cwd(), pos
     const
         originalCwd = structuredClone(process.cwd()),
         execCmd = module_childProcess.exec(cmd);
+
+    // Print data
+    execCmd.stderr?.on('data', function(data){
+        console.info(data);
+    });
+    execCmd.stdout?.on('data', function(data){
+        console.info(data);
+    });
 
     // Execute actions after closing process
     execCmd.on('exit', function(){
