@@ -13,14 +13,15 @@ import { grpp_initPath } from "./init";
 import { grpp_startUpdate } from "./update";
 import { grpp_startImport } from "./import";
 import { grpp_getUserRepos } from "./getUserRepos";
-import { grpp_displayHelp, grpp_displayMainLogo, preventMinMax } from "./utils";
 import { grppRepoEntry, grppSettingsFile, grppSettingsFile_Defaults } from "./database";
+import { grpp_displayHelp, grpp_displayMainLogo, grpp_printStatus, preventMinMax } from "./utils";
 
 /*
     Require node modules
 */
 
 import * as module_fs from 'fs';
+import * as module_readLine from 'node:readline';
 
 /*
     Variables
@@ -41,21 +42,51 @@ export var
 */
 export async function grpp_loadSettings(){
 
-    // Create settings file path and check if it exists
-    const filePath = `${process.cwd()}/grpp_settings.json`;
-    if (module_fs.existsSync(filePath) === !0){
+    return new Promise<void>(function(resolve, reject){
 
-        // Try loading settings
-        try {
-            grppSettings = JSON.parse(module_fs.readFileSync(filePath, 'utf-8'));
-        } catch (err) {
-            throw err;
+        // Create vars
+        const
+            filePath = `${process.cwd()}/grpp_settings.json`,
+            nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
+
+        // Check if settings file exists
+        if (module_fs.existsSync(filePath) === !0){
+        
+            // Try loading settings
+            try {
+                grppSettings = JSON.parse(module_fs.readFileSync(filePath, 'utf-8'));
+                resolve();
+            } catch (err) {
+                throw err;
+            }
+        
+        } else {
+
+            // Ask user if wants to initialize current dir
+            nodeReadLine.question(`WARN - Unable to load settings because this location isn\'t initialized!\nPath: ${process.cwd()}\n\nDo you want to initialize this location? [Y/n] `, function(usrAnswer){
+                nodeReadLine.close();
+                switch (usrAnswer.toLowerCase()){
+                
+                    // Init
+                    case 'y':
+                        grpp_initPath();
+                        resolve();
+                        break;
+                
+                    case 'n':
+                        reject();
+                        break;
+                
+                    default:
+                        reject();
+                        break;
+                
+                }
+            });
+        
         }
 
-    } else {
-        console.warn(`WARN - Unable to load settings because this location isn\'t initialized! GRPP will initialize this folder before moving on...`);
-        grpp_initPath();
-    }
+    });
 
 }
 
@@ -78,7 +109,11 @@ export async function grpp_saveSettings(){
     * @param postAction [Function] function to be executed after initialization
 */
 async function grpp_init(postAction:Function){
-    grpp_loadSettings().then(function(){ postAction(); });
+    grpp_loadSettings().then(function(){
+        postAction();
+    }).catch(function(){
+        console.info('INFO - User canceled action.\n');
+    });
 }
 
 /**
@@ -121,9 +156,22 @@ async function startApp(){
             grppSettings.maxPages = preventMinMax(Number(currentFlag.replace('--setMaxFetchPages=', '')), 0, 1000);
         }
 
-        // Set working path
-        if (currentFlag.indexOf('--setPath=') !== -1){
-            process.chdir(currentFlag.replace('--setPath=', ''));
+        // Set GRPP path
+        if (currentFlag.indexOf('--path=') !== -1){
+
+            try {
+
+                // Set new path var and check if it exists. If not, try creating it
+                const newPath = currentFlag.replace('--path=', '');
+                if (module_fs.existsSync(newPath) === !1){
+                    module_fs.mkdirSync(newPath);
+                }
+                process.chdir(newPath);
+
+            } catch (err) {
+                throw `ERROR - Unable to set GRPP Path!\nDetails: ${err}\n`;
+            }
+
         }
 
         // Set web test url
@@ -145,7 +193,13 @@ async function startApp(){
             break;
         }
 
-        // Check if is init
+        // Print current stats
+        if (currentFlag.indexOf('--status') !== -1){
+            execFn = grpp_printStatus;
+            break;
+        }
+
+        // Initialize folder / path
         if (currentFlag.indexOf('--init=') !== -1){
             grpp_initPath(currentFlag.replace('--init=', ''));
             break;

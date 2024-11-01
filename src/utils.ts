@@ -26,6 +26,17 @@ import * as module_childProcess from 'child_process';
 */
 
 /**
+    * Print GRPP status
+*/
+export function grpp_printStatus(){
+    console.info(`==> GRPP Status:\n    Current path: ${process.cwd()}\n`);
+    console.info(`   ┌ Total times GRPP Update run: ${grppSettings.runCounter}`);
+    console.info(`   ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]`);
+    console.info(`   ├ Last GRPP Update run: ${grppSettings.lastRun}`);
+    console.info(`   └ Total repos preserved: ${grppSettings.repoEntries.length}\n`);
+}
+
+/**
     * Display main logo
 */
 export function grpp_displayMainLogo(){
@@ -136,6 +147,18 @@ export function runExternalCommand(cmd:string, chdir:string = process.cwd(), pos
         postAction();
     });
 
+}
+
+/**
+	* Convert ms to HH:MM:SS format
+	* Original code: https://stackoverflow.com/questions/6312993/javascript-seconds-to-time-string-with-format-hhmmss
+	* @param ms [number] ms to be converted
+	* @returns string on HH:MM:SS format 
+*/
+export function converMsToHHMMSS(ms:number):string {
+	const nDate = new Date(0);
+	nDate.setSeconds(ms / 1000);
+	return nDate.toISOString().substring(11, 19);
 }
 
 // Export module
