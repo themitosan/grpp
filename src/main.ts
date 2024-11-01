@@ -42,51 +42,21 @@ export var
 */
 export async function grpp_loadSettings(){
 
-    return new Promise<void>(function(resolve, reject){
+    // Create settings file path and check if it exists
+    const filePath = `${process.cwd()}/grpp_settings.json`;
+    if (module_fs.existsSync(filePath) === !0){
 
-        // Create vars
-        const
-            filePath = `${process.cwd()}/grpp_settings.json`,
-            nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
-
-        // Check if settings file exists
-        if (module_fs.existsSync(filePath) === !0){
-        
-            // Try loading settings
-            try {
-                grppSettings = JSON.parse(module_fs.readFileSync(filePath, 'utf-8'));
-                resolve();
-            } catch (err) {
-                throw err;
-            }
-        
-        } else {
-
-            // Ask user if wants to initialize current dir
-            nodeReadLine.question(`WARN - Unable to load settings because this location isn\'t initialized!\nPath: ${process.cwd()}\n\nDo you want to initialize this location? [Y/n] `, function(usrAnswer){
-                nodeReadLine.close();
-                switch (usrAnswer.toLowerCase()){
-                
-                    // Init
-                    case 'y':
-                        grpp_initPath();
-                        resolve();
-                        break;
-                
-                    case 'n':
-                        reject();
-                        break;
-                
-                    default:
-                        reject();
-                        break;
-                
-                }
-            });
-        
+        // Try loading settings
+        try {
+            grppSettings = JSON.parse(module_fs.readFileSync(filePath, 'utf-8'));
+        } catch (err) {
+            throw err;
         }
 
-    });
+    } else {
+        console.warn(`WARN - Unable to load settings because this location isn\'t initialized! GRPP will initialize this folder before moving on...`);
+        grpp_initPath();
+    }
 
 }
 
@@ -109,11 +79,7 @@ export async function grpp_saveSettings(){
     * @param postAction [Function] function to be executed after initialization
 */
 async function grpp_init(postAction:Function){
-    grpp_loadSettings().then(function(){
-        postAction();
-    }).catch(function(){
-        console.info('INFO - User canceled action.\n');
-    });
+    grpp_loadSettings().then(function(){ postAction(); });
 }
 
 /**
