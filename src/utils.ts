@@ -40,6 +40,7 @@ export function grpp_printStatus(){
     * Display main logo
 */
 export function grpp_displayMainLogo(){
+    console.clear();
     console.info("\n   <=============================================================>");
     console.info("   <=|          Git Repo Preservation Project (GRPP)           |=>");
     console.info("   <=|     Created by Juliana (@julianaheartz.bsky.social)     |=>");

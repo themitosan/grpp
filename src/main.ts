@@ -11,8 +11,8 @@
 
 import { grpp_initPath } from "./init";
 import { grpp_startUpdate } from "./update";
-import { grpp_importBatch, grpp_startImport } from "./import";
 import { grpp_getUserRepos } from "./getUserRepos";
+import { grpp_importBatch, grpp_startImport } from "./import";
 import { grppRepoEntry, grppSettingsFile, grppSettingsFile_Defaults } from "./database";
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_printStatus, preventMinMax } from "./utils";
 
@@ -95,8 +95,7 @@ export function grpp_importRepoDatabase(newRepoData:grppRepoEntry){
 */
 async function startApp(){
 
-    // Clear console, display main logo, create vars and check if needs to display help string
-    console.clear();
+    // Display main logo, create vars and check if needs to display help string
     grpp_displayMainLogo();
     var execFn:Function | null = null;
     if (process.argv.indexOf('--help') === -1){

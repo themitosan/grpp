@@ -48,7 +48,7 @@ export async function grpp_startImport(cloneURL:string){
 
         // Check if no url was provided
         if (cloneURL.length === 0){
-            reasonList.push('You must provide a git url to import!')
+            reasonList.push('You must provide a git url to import!');
         }
 
         // Check if can continue
@@ -120,12 +120,12 @@ export async function grpp_importBatch(urlList:string){
     const urlArray = urlList.split('\n');
     for (const url of urlArray){
         if (url.length > 0){
-            console.clear();
             grpp_displayMainLogo();
             console.info(`INFO - [${(urlArray.indexOf(url) + 1)} of ${urlArray.length}] Processing URL: ${url}`);
             await grpp_startImport(url);
         }
     }
+    grpp_displayMainLogo();
 
 }
 
