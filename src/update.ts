@@ -9,7 +9,7 @@
     Import TS modules
 */
 
-import { grpp_loadSettings } from './main';
+import { checkConnection } from './utils';
 
 /*
     Functions
@@ -19,12 +19,11 @@ import { grpp_loadSettings } from './main';
     * Start GRPP update process
 */
 export function grpp_startUpdate(){
-
-    // Load settings before moving on
-    grpp_loadSettings(function(){
+    checkConnection().then(function(){
         // WIP
+    }).catch(function(err){
+        console.error(`ERROR - Unable to start update process because GRPP connection test failed!\nDetails: ${err}\n`);
     });
-
 }
 
 // Export module

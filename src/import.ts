@@ -10,8 +10,13 @@
 */
 
 import { grppRepoEntry } from './database';
-import { grpp_loadSettings } from './main';
 import { convertArrayToString, execReasonListCheck } from './utils';
+
+/*
+    Require node modules
+*/
+
+import * as module_fs from 'fs';
 
 /*
     Functions
@@ -23,29 +28,32 @@ import { convertArrayToString, execReasonListCheck } from './utils';
 */
 export async function grpp_startImport(url:string){
 
-    // Load settings before continue
-    grpp_loadSettings(function(){
+    // Create vars before checking if can continue
+    var reasonList:string[] = [];
+    const
+        urlData = url.split('/'),
+        repoName = urlData[urlData.length - 1],
+        repoOwner = urlData[urlData.length - 2],
+        repoPath = `${process.cwd()}/${urlData[2]}/${repoOwner}/${repoName}`;
 
-        // Create vars before checking if can continue
-        var reasonList:string[] = [];
-        const
-            urlData = url.split('/'),
-            repoName = urlData[urlData.length - 1],
-            repoOwner = urlData[urlData.length - 2],
-            repoPath = `${process.cwd()}/${urlData[2]}/${repoOwner}/${repoName}`,
-            newRepoData:grppRepoEntry = {
-                repoPath,
-                repoName,
-                repoOwner,
-                repoUrl: url,
-                updateCounter: 0,
-                lastUpdatedOn: 'Never'
-            };
-    
-        // Check if can continue
-        execReasonListCheck(reasonList, `WARN - Unable to clone repo!\nReason: ${convertArrayToString(reasonList)}`, function(){
-            // WIP
-        });
+    // Check if repo already exists
+    if (module_fs.existsSync(`${repoPath}/HEAD`) === !0){
+        reasonList.push('This repo already exists on filesystem!');
+    }
+
+    // Check if can continue
+    execReasonListCheck(reasonList, `WARN - Unable to clone repo!\nReason: ${convertArrayToString(reasonList)}`, function(){
+
+        // Create new repo entry var
+        const newRepoEntry:grppRepoEntry = {
+            repoPath,
+            repoName,
+            repoOwner,
+            repoUrl: url,
+            canUpdate: !0,
+            updateCounter: 0,
+            lastUpdatedOn: 'Never'
+        };
 
     });
 

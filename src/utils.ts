@@ -8,6 +8,13 @@
 */
 
 /*
+    Require node modules
+*/
+
+import * as module_dns from 'dns';
+import { grppSettings } from './main';
+
+/*
     Functions
 */
 
@@ -47,19 +54,34 @@ export function convertArrayToString(str:string[], rep:string = '\n'):string {
 /**
 	* Execute reasonList check
 	* @param reasonList list with reasons to not continue
-	* @param langError string from langDatabase with main warn message
-	* @param action function to be executed can execute
+	* @param warnMsg Base warn message informing that was unable to proceed
+	* @param action function to be executed if reasonList is empty
 */
-export function execReasonListCheck(reasonList:string[], langError:string, action:Function) {
+export function execReasonListCheck(reasonList:string[], warnMsg:string, action:Function) {
 
 	// Check if can execute action
 	if (reasonList.length === 0){
 		return action();
 	} else {
-        throw langError;
+        throw warnMsg;
 	}
 
 }
+
+/**
+    * Check web connection
+    * @returns Promise with result
+*/
+export async function checkConnection() {
+    return new Promise(function(resolve, reject){
+        module_dns.lookup(grppSettings.connectionTestURL, function(err, address){
+            if (err){
+                reject(err);
+            };
+            resolve(address);
+        });
+    });
+};
 
 // Export module
 export * from './utils';

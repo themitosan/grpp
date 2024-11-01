@@ -53,10 +53,10 @@ export function grpp_displayMainLogo(){
 */
 function grpp_displayHelp(){
     console.info("   <=============================================================>");
-    console.info('   <=|       Here is a list of all available functions:        |=>');
+    console.info('   <=|        Here is a list of all available commands:        |=>');
     console.info("   <=============================================================>\n");
     Object.keys(grpp_flagList).forEach(function(currentFlag:any){
-        console.info(`   ${currentFlag} - ${grpp_flagList[currentFlag]}`);
+        console.info(`===> ${currentFlag}\n     ${grpp_flagList[currentFlag]}\n`);
     });
 }
 
@@ -64,7 +64,7 @@ function grpp_displayHelp(){
     * Load settings
     * @param postAction function to be executed ONLY after loading settings 
 */
-export async function grpp_loadSettings(postAction:Function){
+export async function grpp_loadSettings(){
 
     // Create settings file path and check if it exists
     const filePath = `${process.cwd()}/grpp_settings.json`;
@@ -73,23 +73,33 @@ export async function grpp_loadSettings(postAction:Function){
         // Try loading settings
         try {
             grppSettings = JSON.parse(module_fs.readFileSync(filePath, 'utf-8'));
-            postAction();
         } catch (err) {
             throw err;
         }
 
     } else {
         console.warn(`WARN - Unable to load settings because this location isn\'t initialized! GRPP will initialize this folder before moving on...`);
-        grpp_initPath()
-        .then(function(){ postAction(); });
+        grpp_initPath();
     }
 
+}
+
+/**
+    * Initialize GRPP before running any action
+    * @param postAction [Function] function to be executed after initialization
+*/
+async function grpp_init(postAction:Function){
+    grpp_loadSettings()
+    .then(function(){ postAction(); });
 }
 
 /**
     * Start main app
 */
 async function startApp(){
+
+    // Declare vars
+    var execFn:Function | null = null;
 
     // Clear console, display main logo and check if needs to display help string
     console.clear();
@@ -100,13 +110,9 @@ async function startApp(){
         console.info("   <=============================================================>\n");
     }
 
-    // Process main app run flags
+    // Process run flags for settings
     for (var i = 0; i < process.argv.length; i++){
         const currentFlag = process.argv[i];
-
-        /*
-            Settings
-        */
 
         // Set max runners
         if (currentFlag.indexOf('--setMaxRunners=') !== -1){
@@ -123,9 +129,16 @@ async function startApp(){
             process.chdir(`\"${currentFlag.replace('--setPath=', '')}\"`);
         }
 
-        /*
-            Functions
-        */
+        // Set web test url
+        if (currentFlag.indexOf('--setConnectionTestURL=') !== -1){
+            grppSettings.connectionTestURL = currentFlag.replace('--setConnectionTestURL=', '');
+        }
+
+    }
+
+    // Process run flags for settings
+    for (var i = 0; i < process.argv.length; i++){
+        const currentFlag = process.argv[i];
 
         // Display help menu
         if (currentFlag.indexOf('--help') !== -1){
@@ -145,13 +158,17 @@ async function startApp(){
 
         // Get user repos
         if (currentFlag.indexOf('--getUserRepos=') !== -1){
-            grpp_getUserRepos(currentFlag.replace('--getUserRepos=', ''));
+            execFn = function(){
+                grpp_getUserRepos(currentFlag.replace('--getUserRepos=', ''));
+            };
             break;
         }
 
         // Import repo
         if (currentFlag.indexOf('--import=') !== -1){
-            grpp_startImport(currentFlag.replace('--import=', ''));
+            execFn = function(){
+                grpp_startImport(currentFlag.replace('--import=', ''));
+            };
             break;
         }
 
@@ -162,14 +179,19 @@ async function startApp(){
 
         // Start GRPP update process
         if (currentFlag.indexOf('--startUpdate') !== -1){
-            grpp_startUpdate();
+            execFn = grpp_startUpdate;
             break;
         }
 
     }
 
-    // If no args were provided
-    if (process.argv.length < 3){
+    // If have functions to execute, run init process and then, execute it!
+    if (execFn !== null){
+        execFn();
+    }
+
+    // Check if no flags were provided
+    if (execFn === null && process.argv.length < 3){
         console.info("   <=============================================================>");
         console.info("   | ...Since no args were provided, We wish you a great day! <3 |");
         console.info("   <=============================================================>\n");

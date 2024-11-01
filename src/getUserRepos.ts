@@ -10,6 +10,7 @@
 */
 
 import { grpp_displayMainLogo, grppSettings } from './main';
+import { checkConnection, convertArrayToString, execReasonListCheck } from './utils';
 
 /*
     Require node modules
@@ -26,61 +27,76 @@ import * as module_readLine from 'node:readline';
     * Get user repos
     * @param userName [string] user name
 */
-export function grpp_getUserRepos(userName:string){
+export async function grpp_getUserRepos(userName:string){
 
-    // Create vars
-    const nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
-    var urlBase:string = '',
-        canFetch:boolean = !0;
+    // Check if we have some connection
+    await checkConnection().then(function(){
 
-    // Prompt user
-    nodeReadLine.question(`Please, insert where GRPP should seek repos:\n\n   1) GitHub (default)\n   2) GitLab\n   3) Gitea based server\n\nYour choice: `, function(usrAnswer){
+        // Create vars
+        const nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
+        var urlBase:string = '',
+            canFetch:boolean = !0,
+            reasonList:string[] = [];
 
-        // Switch answer
-        nodeReadLine.close();
-        switch (usrAnswer){
-
-            // GitHub
-            case '1':
-                urlBase = `https://api.github.com/users/${userName}/repos?per_page=100&page=`;
-                break;
-
-            // GitLab
-            case '2':
-                urlBase = `https://gitlab.com/api/v4/users/${userName}/projects?per_page=100&page=`;
-                break;
-
-            // Gitea based server
-            case '3':
-                canFetch = !1;
-                promptGiteaUrl(userName);
-                break;
-
-            // Default (GitHub)
-            default:
-                urlBase = `https://api.github.com/users/${userName}/repos?per_page=100&page=`;
-                break;
-
+        // Check if username was provided
+        if (userName.length < 1){
+            reasonList.push('You must provide a username!');
         }
 
-        // Start fetch process and close readLine
-        if (canFetch === !0){
-            startUserFetch(urlBase);
-        }
+        // Check if can prompt user
+        execReasonListCheck(reasonList, `ERROR - Unable to seek repos from user!\nReason: ${convertArrayToString(reasonList)}`, function(){
+        
+            // Prompt user, close nodeReadLine and switch user input
+            nodeReadLine.question(`Please, insert where GRPP should seek repos:\n\n   1) GitHub (default)\n   2) GitLab\n   3) Gitea based server\n\nYour choice: `, function(usrAnswer){
+                nodeReadLine.close();
+                switch (usrAnswer){
+                
+                    // GitHub
+                    case '1':
+                        urlBase = `https://api.github.com/users/${userName}/repos?per_page=100&page=`;
+                        break;
+                
+                    // GitLab
+                    case '2':
+                        urlBase = `https://gitlab.com/api/v4/users/${userName}/projects?per_page=100&page=`;
+                        break;
+                
+                    // Gitea based server
+                    case '3':
+                        canFetch = !1;
+                        promptGiteaUrl(userName);
+                        break;
+                
+                    // Default (GitHub)
+                    default:
+                        urlBase = `https://api.github.com/users/${userName}/repos?per_page=100&page=`;
+                        break;
+                
+                }
+            
+                // Start fetch process and close readLine
+                if (canFetch === !0){
+                    startUserFetch(urlBase);
+                }
+            
+            });
+        });
 
+    }).catch(function(err){
+        console.error(`ERROR - Unable to proceed because GRPP failed to connect to internet!\nDetails: ${err}\n`);
     });
 
 }
 
 /**
-    * Prompt gitea base url 
+    * Prompt Gitea base url
 */
 function promptGiteaUrl(userName:string){
 
     // Create vars and prompt base url
     var urlBase:string = '';
     const nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
-    nodeReadLine.question('\nPlease, insert base domain where gitea server is hosted (Example: \"192.168.15.200:3000\")\nYour answer: ', function(giteaUrl){
+    nodeReadLine.question('\nPlease, insert base domain where gitea server is hosted (Example: \"192.168.1.150:3000\")\nYour answer: ', function(giteaUrl){
 
         // Set url, start user fetch and close readline
         urlBase = `http://${giteaUrl}/api/v1/users/${userName}/repos?per_page=100&page=`;
@@ -202,6 +218,11 @@ function processRepoChunk(repoChunk:any[]){
                 grpp_displayMainLogo();
                 module_fs.writeFileSync(`${process.cwd()}/grpp_fetch_res.txt`, repoList, 'utf-8');
                 console.info(`INFO - Process Complete!\nFile path: ${process.cwd()}/grpp_fetch_res.txt\n\nTo import repos from a file, use the following flag: \"--importList=PATH_TO_FILE\"\n`);
+                break;
+
+            // Default
+            default:
+                // WIP
                 break;
 
         }
