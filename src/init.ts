@@ -27,13 +27,13 @@ import * as module_fs from 'fs';
 */
 export async function grpp_initPath(path:string = process.cwd()){
 
-    // Check if settings file exists
-    console.info(`INFO - Creating settings file at \"${path}\"`);
+    // Log and check if settings file exists
+    console.info(`INFO - Creating settings file at \"${path}\"...`);
     if (module_fs.existsSync(`${path}/grpp_settings.json`) !== !0){
         module_fs.writeFileSync(`${path}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
         console.info('INFO - Process complete!\n');
     } else {
-        console.warn('WARN - Unable to create settings file on selected location because it already exists!\n');
+        console.warn('WARN - Settings file detected on provided location! Skipping...\n');
     }
 
 }

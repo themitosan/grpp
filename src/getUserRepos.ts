@@ -9,8 +9,8 @@
     Import TS modules
 */
 
-import { grpp_displayMainLogo, grppSettings } from './main';
-import { checkConnection, convertArrayToString, execReasonListCheck } from './utils';
+import { grppSettings } from './main';
+import { checkConnection, convertArrayToString, execReasonListCheck, grpp_displayMainLogo } from './utils';
 
 /*
     Require node modules
@@ -29,7 +29,7 @@ import * as module_readLine from 'node:readline';
 */
 export async function grpp_getUserRepos(userName:string){
 
-    // Check if we have some connection
+    // Check if we have internet connection
     await checkConnection().then(function(){
 
         // Create vars
@@ -83,7 +83,7 @@ export async function grpp_getUserRepos(userName:string){
         });
 
     }).catch(function(err){
-        console.error(`ERROR - Unable to proceed because GRPP failed to connect to internet!\nDetails: ${err}\n`);
+        throw `ERROR - Unable to proceed because GRPP failed to connect to internet!\nDetails: ${err}\n`;
     });
 
 }

@@ -6,6 +6,7 @@
 
 # Project folders
 App/
+test/
 Build/
 node_modules/
 

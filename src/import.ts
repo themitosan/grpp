@@ -10,7 +10,8 @@
 */
 
 import { grppRepoEntry } from './database';
-import { convertArrayToString, execReasonListCheck } from './utils';
+import { grpp_importRepoDatabase } from './main';
+import { checkConnection, convertArrayToString, execReasonListCheck, runExternalCommand } from './utils';
 
 /*
     Require node modules
@@ -24,37 +25,84 @@ import * as module_fs from 'fs';
 
 /**
     * Start import process
-    * @param url [string] git url to be imported
+    * @param cloneURL [string] git url to be imported
 */
-export async function grpp_startImport(url:string){
+export async function grpp_startImport(cloneURL:string){
 
-    // Create vars before checking if can continue
-    var reasonList:string[] = [];
-    const
-        urlData = url.split('/'),
-        repoName = urlData[urlData.length - 1],
-        repoOwner = urlData[urlData.length - 2],
-        repoPath = `${process.cwd()}/${urlData[2]}/${repoOwner}/${repoName}`;
+    // Check if we have some internet
+    await checkConnection().then(function(){
 
-    // Check if repo already exists
-    if (module_fs.existsSync(`${repoPath}/HEAD`) === !0){
-        reasonList.push('This repo already exists on filesystem!');
-    }
+        // Create vars before checking if can continue
+        var reasonList:string[] = [];
+        const
+            date = new Date(),
+            urlData = cloneURL.split('/'),
+            repoName = urlData[urlData.length - 1],
+            repoOwner = urlData[urlData.length - 2],
+            originalChdir = structuredClone(process.cwd()),
+            repoPath = `${process.cwd()}/${urlData[2]}/${repoOwner}/${repoName}`;
 
-    // Check if can continue
-    execReasonListCheck(reasonList, `WARN - Unable to clone repo!\nReason: ${convertArrayToString(reasonList)}`, function(){
+        // Check if repo already exists
+        if (module_fs.existsSync(`${repoPath}/HEAD`) === !0){
+            reasonList.push('This repo already exists on filesystem!');
+        }
 
-        // Create new repo entry var
-        const newRepoEntry:grppRepoEntry = {
-            repoPath,
-            repoName,
-            repoOwner,
-            repoUrl: url,
-            canUpdate: !0,
-            updateCounter: 0,
-            lastUpdatedOn: 'Never'
-        };
+        // Check if can continue
+        execReasonListCheck(reasonList, `WARN - Unable to clone repo!\nReason: ${convertArrayToString(reasonList)}\n`, function(){
+        
+            // Create new repo entry var
+            const newRepoEntry:grppRepoEntry = {
+                repoPath,
+                repoName,
+                repoOwner,
+                canUpdate: !0,
+                updateCounter: 0,
+                repoUrl: cloneURL,
+                lastUpdatedOn: 'Never',
+                importDate: date.toString()
+            };
+        
+            // Start creating directory structure
+            console.info('INFO - Creating directory structure...');
+            [
+                `${process.cwd()}/${urlData[2]}`,
+                `${process.cwd()}/${urlData[2]}/${repoOwner}`
+            ].forEach(function(cEntry){
 
+                // Check if folder exists. If not, create it
+                if (module_fs.existsSync(cEntry) === !1){
+                    module_fs.mkdirSync(cEntry);
+                }
+            
+            });
+        
+            // Add repo to list
+            const pushRepoToList = function(){
+                console.info(`INFO - Pushing repo ${repoName} [${cloneURL}] to GRPP database...`);
+                grpp_importRepoDatabase(newRepoEntry);
+                console.info('\nINFO - Process complete!\n');
+            };
+        
+            // Set git to fetch all refs
+            const getAllRefs = function(){
+                console.info('INFO - Setting git config to fetch all refs from origin...');
+                runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', repoPath, setGitSafeDir);
+            };
+        
+            // Set clone dir as safe
+            const setGitSafeDir = function(){
+                console.info(`INFO - Setting repo dir ${repoName} as safe...`);
+                runExternalCommand(`git config --global --add safe.directory ${repoPath}`, originalChdir, pushRepoToList);
+            };
+        
+            // Start clone process
+            console.info('INFO - Starting clone process...');
+            runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, `${process.cwd()}/${urlData[2]}/${repoOwner}`, getAllRefs);
+        
+        });
+
+    }).catch(function(err){
+        throw `ERROR - Unable to start clone process because GRPP failed to connect to internet!\nDetails: ${err}\n`;
     });
 
 }

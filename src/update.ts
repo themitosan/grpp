@@ -19,11 +19,16 @@ import { checkConnection } from './utils';
     * Start GRPP update process
 */
 export function grpp_startUpdate(){
+
+    // Check if we have some internet connection
     checkConnection().then(function(){
+
         // WIP
+
     }).catch(function(err){
-        console.error(`ERROR - Unable to start update process because GRPP connection test failed!\nDetails: ${err}\n`);
+        throw `ERROR - Unable to start update process because GRPP connection test failed!\nDetails: ${err}\n`;
     });
+
 }
 
 // Export module

@@ -16,8 +16,9 @@ export interface grppRepoEntry {
     repoName:string,
     repoOwner:string,
     canUpdate:boolean,
+    importDate:string,
     updateCounter:number,
-    lastUpdatedOn:string,
+    lastUpdatedOn:string
 }
 
 // GRPP Settings file

@@ -10,11 +10,11 @@
 */
 
 import { grpp_initPath } from "./init";
-import { preventMinMax } from "./utils";
 import { grpp_startUpdate } from "./update";
 import { grpp_startImport } from "./import";
 import { grpp_getUserRepos } from "./getUserRepos";
-import { grpp_flagList, grppSettingsFile, grppSettingsFile_Defaults } from "./database";
+import { grpp_displayHelp, grpp_displayMainLogo, preventMinMax } from "./utils";
+import { grppRepoEntry, grppSettingsFile, grppSettingsFile_Defaults } from "./database";
 
 /*
     Require node modules
@@ -36,33 +36,8 @@ export var
 */
 
 /**
-    * Display main logo
-*/
-export function grpp_displayMainLogo(){
-    console.info("\n   <=============================================================>");
-    console.info("   <=|          Git Repo Preservation Project (GRPP)           |=>");
-    console.info("   <=|     Created by Juliana (@julianaheartz.bsky.social)     |=>");
-    console.info("   <=============================================================>");
-    console.info("   <=|             A classic quote from an old one:            |=>");
-    console.info("   <=|                   \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"                   |=>");
-    console.info("   <=============================================================>\n");
-}
-
-/**
-    * Display help menu
-*/
-function grpp_displayHelp(){
-    console.info("   <=============================================================>");
-    console.info('   <=|        Here is a list of all available commands:        |=>');
-    console.info("   <=============================================================>\n");
-    Object.keys(grpp_flagList).forEach(function(currentFlag:any){
-        console.info(`===> ${currentFlag}\n     ${grpp_flagList[currentFlag]}\n`);
-    });
-}
-
-/**
-    * Load settings
-    * @param postAction function to be executed ONLY after loading settings 
+    * Load GRPP settings
+    * @param postAction function to be executed ONLY after loading settings
 */
 export async function grpp_loadSettings(){
 
@@ -85,12 +60,34 @@ export async function grpp_loadSettings(){
 }
 
 /**
+    * Save GRPP settings
+*/
+export async function grpp_saveSettings(){
+    
+    try {
+        console.info('INFO - Updating GRPP Settings file...');
+        module_fs.writeFileSync(`${process.cwd()}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
+    } catch (err) {
+        throw err;
+    }
+
+}
+
+/**
     * Initialize GRPP before running any action
     * @param postAction [Function] function to be executed after initialization
 */
 async function grpp_init(postAction:Function){
-    grpp_loadSettings()
-    .then(function(){ postAction(); });
+    grpp_loadSettings().then(function(){ postAction(); });
+}
+
+/**
+    * Import repo to list
+    * @param newRepoData [grppRepoEntry] new repo to be imported 
+*/
+export function grpp_importRepoDatabase(newRepoData:grppRepoEntry){
+    grppSettings.repoEntries.push(newRepoData);
+    grpp_saveSettings();
 }
 
 /**
@@ -98,19 +95,19 @@ async function grpp_init(postAction:Function){
 */
 async function startApp(){
 
-    // Declare vars
-    var execFn:Function | null = null;
-
-    // Clear console, display main logo and check if needs to display help string
+    // Clear console, display main logo, create vars and check if needs to display help string
     console.clear();
     grpp_displayMainLogo();
+    var execFn:Function | null = null;
     if (process.argv.indexOf('--help') === -1){
         console.info("   <=============================================================>");
         console.info('   <=|           Use \"--help\" in order to know more.           |=>');
         console.info("   <=============================================================>\n");
     }
 
-    // Process run flags for settings
+    /*
+        Process run flags for settings
+    */
     for (var i = 0; i < process.argv.length; i++){
         const currentFlag = process.argv[i];
 
@@ -126,7 +123,7 @@ async function startApp(){
 
         // Set working path
         if (currentFlag.indexOf('--setPath=') !== -1){
-            process.chdir(`\"${currentFlag.replace('--setPath=', '')}\"`);
+            process.chdir(currentFlag.replace('--setPath=', ''));
         }
 
         // Set web test url
@@ -136,7 +133,9 @@ async function startApp(){
 
     }
 
-    // Process run flags for settings
+    /*
+        Process run flags for functions
+    */
     for (var i = 0; i < process.argv.length; i++){
         const currentFlag = process.argv[i];
 
@@ -187,7 +186,7 @@ async function startApp(){
 
     // If have functions to execute, run init process and then, execute it!
     if (execFn !== null){
-        execFn();
+        grpp_init(execFn);
     }
 
     // Check if no flags were provided
