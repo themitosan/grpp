@@ -35,6 +35,7 @@ export interface grppSettingsFile {
     runCounter:number,
     userEditor:string,
     updateRuntime:number,
+    fetchStartPage:number,
     connectionTestURL:string,
     repoEntries:grppRepoEntry[]
 }
@@ -44,13 +45,14 @@ export interface grppSettingsFile {
 */
 
 // Default settings file
-export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'threads' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'userEditor'> = {
+export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'threads' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'userEditor' | 'fetchStartPage'> = {
     threads: 4,
     maxPages: 5,
     runCounter: 0,
     repoEntries: [],
     lastRun: 'Never',
     updateRuntime: 0,
+    fetchStartPage: 1,
     userEditor: 'nano',
     connectionTestURL: '1.1.1.1'
 }
@@ -71,6 +73,7 @@ export const grpp_flagList:any = {
     '--path=[PATH]': `Set current working directory.`,
     '--init=[PATH]': `Set a location where GRPP will initialize and backup your repos. You can also just use \"--init\" to initialize where you currently are!`,
     '--setMaxRunners=[NUMBER]': `Set how many instances will be running on GRPP processes. (Default: ${grppSettingsFile_Defaults.threads})`,
+    '--setStartPage=[NUMBER]': `Set which page GRPP should start fetching user repos from git hosting website.`,
     '--setMaxFetchPages=[NUMBER]': `Set maximum of pages GRPP will fetch from remote on get user repos process. (Default: ${grppSettingsFile_Defaults.maxPages})`,
     '--setConnectionTestURL=[URL]': `Set URL which GRPP will use to test internet connection. (Default: ${grppSettingsFile_Defaults.connectionTestURL})`,
     '--getUserRepos=[USERNAME]': `Set a username to GRPP seek all repos available.`,

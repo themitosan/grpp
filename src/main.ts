@@ -141,6 +141,11 @@ function init(){
             grppSettings.connectionTestURL = currentFlag.replace('--setConnectionTestURL=', '');
         }
 
+        // Set starting fetch page
+        if (currentFlag.indexOf('--setStartPage=') !== -1){
+            grppSettings.fetchStartPage = preventMinMax(Number(currentFlag.replace('--setStartPage=', '')), 0, 9999);
+        }
+
     }
 
     /*

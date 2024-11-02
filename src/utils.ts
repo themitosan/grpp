@@ -58,7 +58,7 @@ export function grpp_displayHelp(){
     console.info('   <=|        Here is a list of all available commands:        |=>');
     console.info("   <=============================================================>\n");
     Object.keys(grpp_flagList).forEach(function(currentFlag:any){
-        console.info(`──┬─> ${currentFlag}\n  └─■ ${grpp_flagList[currentFlag]}\n`);
+        console.info(`──┬── ${currentFlag}\n  └── ${grpp_flagList[currentFlag]}\n`);
     });
 }
 

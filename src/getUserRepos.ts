@@ -115,8 +115,8 @@ function promptGiteaUrl(userName:string){
 function startUserFetch(urlBase:string){
 
     // Declare vars
-    var currentPage = 1,
-        repoChunk:any[] = [];
+    var repoChunk:any[] = [],
+        currentPage = grppSettings.fetchStartPage;
 
     /*
         Declare functions

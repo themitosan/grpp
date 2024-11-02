@@ -59,8 +59,8 @@ function startUpdate(){
     });
 
     // Split update list on given runners
-    const test = spliceArrayIntoChunks(updateList, grppSettings.threads);
-    console.info(test.length);
+    updateList = spliceArrayIntoChunks(updateList, grppSettings.threads);
+    console.info(updateList.length);
 
 }
 
