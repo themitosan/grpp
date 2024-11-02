@@ -19,7 +19,9 @@ npm run buildWebpack
 The final script will be on `Build/`
 
 ## How to use
+
 The first thing you need to do is initialize a folder, where it will store it's settings file and all repos.
+
 To do this, run the following command:
 
 ```shell
@@ -41,9 +43,11 @@ node grpp.js --import=http://github.com/themitosan/themitosan.git
 ```
 
 If everything is fine, you will be able to import this git repo to your current location organized by host/user/repo.
-On this case, `themitosan.git` will be located on `ỲOUR_CURRENT_PATH/github.com/themitosan/themitosan.git`
+
+_(On this case, `themitosan.git` will be located on `ỲOUR_CURRENT_PATH/github.com/themitosan/themitosan.git`)_
 
 IMPORTANT: All repos always will be imported as bare format!
+
 Since the scope of this project is preserve git repos, you will need to clone them on another place in order to interact with it's files.
 
 ### Multiple repos
@@ -60,7 +64,8 @@ IMPORTANT: Make sure to leave one git url per line!
 
 ### Getting all repos from a provided user
 
-Since common git hosting websites (like github or gitlab) API's allows fetching user data, GRPP is capable to get all repos from a selected list of users and importing them!
+Since common git hosting websites _(like github or gitlab)_ API's allows fetching user data, GRPP is capable to get all repos from a selected list of users and importing them!
+
 In order to do that, you can use the following command:
 
 ```shell
@@ -68,9 +73,11 @@ node grpp.js --getUserRepos=themitosan
 ```
 
 You will be prompted asking where GRPP should seek `themitosan` repos.
+
 After selecting one of selected options, it will display all repos from the provided user and asking if you want to import. 
 
 IMPORTANT: Since some git hosting websites limits each ip that fetches data very often, GRPP is configured to fetch only 500 repos per user (100 repos per fetch).
+
 If you want to start fetching data from a specific page or fetch a specific number of pages, you can use these commands below:
 
 ```shell
