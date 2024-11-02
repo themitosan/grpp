@@ -28,7 +28,6 @@ import * as module_fs from 'fs';
     * @param cloneURL [string] git url to be imported
 */
 export async function grpp_startImport(cloneURL:string){
-
     return new Promise<void>(function(resolve){
 
         // Create vars before checking if can continue
@@ -43,7 +42,7 @@ export async function grpp_startImport(cloneURL:string){
 
         // Check if repo already exists
         if (module_fs.existsSync(`${repoPath}/HEAD`) === !0){
-            reasonList.push('This repo already exists on filesystem!');
+            reasonList.push(`This repo already exists on filesystem!\nPath: ${repoPath}`);
         }
 
         // Check if no url was provided
@@ -107,7 +106,6 @@ export async function grpp_startImport(cloneURL:string){
         }, resolve);
 
     });
-
 }
 
 /**
@@ -116,16 +114,16 @@ export async function grpp_startImport(cloneURL:string){
 */
 export async function grpp_importBatch(urlList:string){
 
-    // Create url array and start processing it
+    // Clear screen. create url array and start processing it
+    grpp_displayMainLogo();
     const urlArray = urlList.split('\n');
+    console.info(`INFO - Starting cloning process...\n`);
     for (const url of urlArray){
         if (url.length > 0){
-            grpp_displayMainLogo();
             console.info(`INFO - [${(urlArray.indexOf(url) + 1)} of ${urlArray.length}] Processing URL: ${url}`);
             await grpp_startImport(url);
         }
     }
-    grpp_displayMainLogo();
 
 }
 

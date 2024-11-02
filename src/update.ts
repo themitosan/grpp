@@ -9,25 +9,58 @@
     Import TS modules
 */
 
-import { checkConnection } from './utils';
+import { grppSettings } from './main';
+import { grppRepoEntry } from './database';
+import { checkConnection, convertArrayToString, execReasonListCheck, spliceArrayIntoChunks } from './utils';
 
 /*
     Functions
 */
 
 /**
-    * Start GRPP update process
+    * Check if can start update
 */
-export function grpp_startUpdate(){
+export async function grpp_checkBeforeUpdateProcess(){
 
     // Check if we have some internet connection
-    checkConnection().then(function(){
+    await checkConnection().then(function(){
 
-        // WIP
+        // Declare vars and check if there is repos to be updated
+        var reasonList:string[] = [];
+        if (grppSettings.repoEntries.length === 0){
+            reasonList.push('You must import any repo before starting GRPP update process!');
+        }
+
+        // Check if can start
+        execReasonListCheck(reasonList, `ERROR - Unable to start update process!\nReason: ${convertArrayToString(reasonList)}`, startUpdate);
 
     }).catch(function(err){
         throw `ERROR - Unable to start update process because GRPP connection test failed!\nDetails: ${err}\n`;
     });
+
+}
+
+/**
+    * Start GRPP update process 
+*/
+function startUpdate(){
+
+    // Declare vars
+    var completedRunners = 0,
+        updateList:grppRepoEntry[] = [];
+
+    // Filter repos that cannot be updated
+    grppSettings.repoEntries.forEach(function(currentRepo:grppRepoEntry){
+        if (currentRepo.canUpdate === !0){
+            updateList.push(currentRepo);
+        } else {
+            console.warn(`WARN - Skipping ${currentRepo.repoName} (${currentRepo.repoPath}) because it was disabled!`);
+        }
+    });
+
+    // Split update list on given runners
+    const test = spliceArrayIntoChunks(updateList, grppSettings.threads);
+    console.info(test.length);
 
 }
 

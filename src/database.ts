@@ -6,6 +6,12 @@
 */
 
 /*
+    Require node modules
+*/
+
+import * as module_os from 'os';
+
+/*
     Interfaces
 */
 
@@ -23,10 +29,11 @@ export interface grppRepoEntry {
 
 // GRPP Settings file
 export interface grppSettingsFile {
-    runners:number,
+    threads:number,
     lastRun:string,
     maxPages:number,
     runCounter:number,
+    userEditor:string,
     updateRuntime:number,
     connectionTestURL:string,
     repoEntries:grppRepoEntry[]
@@ -37,13 +44,14 @@ export interface grppSettingsFile {
 */
 
 // Default settings file
-export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'runners' | 'maxPages' | 'connectionTestURL' | 'updateRuntime'> = {
-    runners: 1,
+export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'threads' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'userEditor'> = {
+    threads: 4,
     maxPages: 5,
     runCounter: 0,
     repoEntries: [],
     lastRun: 'Never',
     updateRuntime: 0,
+    userEditor: 'nano',
     connectionTestURL: '1.1.1.1'
 }
 
@@ -54,13 +62,15 @@ export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repo
 // Help menu
 export const grpp_flagList:any = {
 
-    '--help': `Display this menu.`,
-    '--startUpdate': `Start GRPP update process.`,
+    // Functions
+    '--help': `Display this menu. (Hello ${module_os.userInfo().username}! <3)`,
+    '--start': `Start GRPP update process.`,
     '--status': `Display GRPP status from a initialized dir.`,
 
+    // Settings
     '--path=[PATH]': `Set current working directory.`,
     '--init=[PATH]': `Set a location where GRPP will initialize and backup your repos. You can also just use \"--init\" to initialize where you currently are!`,
-    '--setMaxRunners=[NUMBER]': `Set how many instances will be running on GRPP processes. (Default: ${grppSettingsFile_Defaults.runCounter})`,
+    '--setMaxRunners=[NUMBER]': `Set how many instances will be running on GRPP processes. (Default: ${grppSettingsFile_Defaults.threads})`,
     '--setMaxFetchPages=[NUMBER]': `Set maximum of pages GRPP will fetch from remote on get user repos process. (Default: ${grppSettingsFile_Defaults.maxPages})`,
     '--setConnectionTestURL=[URL]': `Set URL which GRPP will use to test internet connection. (Default: ${grppSettingsFile_Defaults.connectionTestURL})`,
     '--getUserRepos=[USERNAME]': `Set a username to GRPP seek all repos available.`,

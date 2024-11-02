@@ -201,7 +201,7 @@ function processRepoChunk(resultArray:any[]){
 
     // Clear window and display info
     grpp_displayMainLogo();
-    nodeReadLine.question(`INFO - GRPP managed to find ${resultArray.length} repos. Here is the full list:\n\n${repoList}\n\nHere is what you can do:\n\n   1) Import all repos\n   2) Save repo list on a file to import later\n\nYour choice: `, function(userAction){
+    nodeReadLine.question(`INFO - GRPP managed to find ${resultArray.length} repos. Here is the full list:\n\n${repoList}\n\nHere is what you can do:\n\n   1) Import all repos (default)\n   2) Save repo list on a file to import later\n   3) Cancel\n\nYour choice: `, function(userAction){
 
         // Close nodeReadLine and switch user action
         nodeReadLine.close();
@@ -217,6 +217,11 @@ function processRepoChunk(resultArray:any[]){
                 grpp_displayMainLogo();
                 module_fs.writeFileSync(`${process.cwd()}/grpp_fetch_res.txt`, repoList, 'utf-8');
                 console.info(`INFO - Process Complete!\nFile path: ${process.cwd()}/grpp_fetch_res.txt\n\nTo import repos from a file, use the following flag: \"--importList=PATH_TO_FILE\"\n`);
+                break;
+
+            // Cancel
+            case '3':
+                process.exit();
                 break;
 
             // Default

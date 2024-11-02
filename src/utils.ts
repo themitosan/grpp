@@ -58,7 +58,7 @@ export function grpp_displayHelp(){
     console.info('   <=|        Here is a list of all available commands:        |=>');
     console.info("   <=============================================================>\n");
     Object.keys(grpp_flagList).forEach(function(currentFlag:any){
-        console.info(`===> ${currentFlag}\n     ${grpp_flagList[currentFlag]}\n`);
+        console.info(`──┬─> ${currentFlag}\n  └─■ ${grpp_flagList[currentFlag]}\n`);
     });
 }
 
@@ -163,12 +163,33 @@ export function runExternalCommand(cmd:string, chdir:string = process.cwd(), pos
 	* Convert ms to HH:MM:SS format
 	* Original code: https://stackoverflow.com/questions/6312993/javascript-seconds-to-time-string-with-format-hhmmss
 	* @param ms [number] ms to be converted
-	* @returns string on HH:MM:SS format 
+	* @returns [string] Time on HH:MM:SS format 
 */
 export function converMsToHHMMSS(ms:number):string {
 	const nDate = new Date(0);
 	nDate.setSeconds(ms / 1000);
 	return nDate.toISOString().substring(11, 19);
+}
+
+/**
+    * Split array into chunks
+    * Original code: https://stackabuse.com/how-to-split-an-array-into-even-chunks-in-javascript
+    * @param arr [array] Array with objects
+    * @param chunkSize [number] number of chinks main array will be splitted (default: 2)
+    * @returns array with smaller chunks
+*/
+export function spliceArrayIntoChunks(target:any[], chunkSize:number = 2):any[] {
+
+    // Define res var and process array
+    const res:any[] = [];
+    while (target.length > 0){
+        const chunk:any[] = target.splice(0, chunkSize);
+        res.push(chunk);
+    }
+
+    // Return result
+    return res;
+
 }
 
 // Export module

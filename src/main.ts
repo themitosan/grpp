@@ -10,8 +10,8 @@
 */
 
 import { grpp_initPath } from "./init";
-import { grpp_startUpdate } from "./update";
 import { grpp_getUserRepos } from "./getUserRepos";
+import { grpp_checkBeforeUpdateProcess } from "./update";
 import { grpp_importBatch, grpp_startImport } from "./import";
 import { grppRepoEntry, grppSettingsFile, grppSettingsFile_Defaults } from "./database";
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_printStatus, preventMinMax } from "./utils";
@@ -63,14 +63,12 @@ export async function grpp_loadSettings(){
     * Save GRPP settings
 */
 export async function grpp_saveSettings(){
-    
     try {
         console.info('INFO - Updating GRPP Settings file...');
         module_fs.writeFileSync(`${process.cwd()}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
     } catch (err) {
         throw err;
     }
-
 }
 
 /**
@@ -91,9 +89,9 @@ export function grpp_importRepoDatabase(newRepoData:grppRepoEntry){
 }
 
 /**
-    * Start main app
+    * Main function
 */
-async function startApp(){
+function init(){
 
     // Display main logo, create vars and check if needs to display help string
     grpp_displayMainLogo();
@@ -110,9 +108,9 @@ async function startApp(){
     for (var i = 0; i < process.argv.length; i++){
         const currentFlag = process.argv[i];
 
-        // Set max runners
-        if (currentFlag.indexOf('--setMaxRunners=') !== -1){
-            grppSettings.runners = preventMinMax(Number(currentFlag.replace('--setMaxRunners=', '')), 0, 1000);
+        // Set max threads
+        if (currentFlag.indexOf('--threads=') !== -1){
+            grppSettings.threads = preventMinMax(Number(currentFlag.replace('--threads=', '')), 0, 1000);
         }
 
         // Set max fetch pages
@@ -195,8 +193,8 @@ async function startApp(){
         }
 
         // Start GRPP update process
-        if (currentFlag.indexOf('--startUpdate') !== -1){
-            execFn = grpp_startUpdate;
+        if (currentFlag.indexOf('--start') !== -1){
+            execFn = grpp_checkBeforeUpdateProcess;
             break;
         }
 
@@ -217,4 +215,4 @@ async function startApp(){
 }
 
 // Start GRPP
-startApp();
+init();
