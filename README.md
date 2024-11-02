@@ -16,7 +16,7 @@ In order to compile, run the following commands:
 npm ci
 npm run buildWebpack
 ```
-The final script will be on `Build/`
+The final script will be on `Build/` dir.
 
 ## How to use
 
@@ -60,19 +60,19 @@ node grpp.js --importList=YOUR_GIT_REPOS_LIST.txt
 
 Doing that, all repos on `YOUR_GIT_REPOS_LIST.txt` will be imported to your current path.
 
-IMPORTANT: Make sure to leave one git url per line!
+IMPORTANT: Make sure to leave one `git` url per line!
 
-### Getting all repos from a provided user
+### Getting all repos from a specifc user
 
 Since common git hosting websites _(like github or gitlab)_ API's allows fetching user data, GRPP is capable to get all repos from a selected list of users and importing them!
 
 In order to do that, you can use the following command:
 
 ```shell
-node grpp.js --getUserRepos=themitosan
+node grpp.js --getUserRepos=USERNAME
 ```
 
-You will be prompted asking where GRPP should seek `themitosan` repos.
+You will be prompted asking where GRPP should seek `USERNAME` repos.
 
 After selecting one of selected options, it will display all repos from the provided user and asking if you want to import. 
 
@@ -81,12 +81,21 @@ IMPORTANT: Since some git hosting websites limits each ip that fetches data very
 If you want to start fetching data from a specific page or fetch a specific number of pages, you can use these commands below:
 
 ```shell
-# Fetch 10 pages (Default: 5)
+# Fetch 10 repo pages (Default: 5)
 node grpp.js --setMaxFetchPages=10 --getUserRepos=themitosan
 
-# Set start page (Default: 1)
+# Set start fetch page to 4 (Default: 1)
 node grpp.js --setStartPage=4 --getUserRepos=themitosan
 ```
 
 ## External tools used on this project
 - Photopea: https://www.photopea.com
+- Webpack: https://webpack.js.org
+
+<sup><i>
+
+Some parts of this software derivates from TMS Engine
+
+
+
+</i></sup>
