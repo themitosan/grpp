@@ -18,6 +18,14 @@ import { convertArrayToString, execReasonListCheck, grpp_displayMainLogo, runExt
 */
 
 import * as module_fs from 'fs';
+import * as module_crypto from 'crypto';
+
+/*
+    Variables
+*/
+
+// Current repo being imported
+var currentRepo:any;
 
 /*
     Functions
@@ -52,9 +60,9 @@ export async function grpp_startImport(cloneURL:string){
 
         // Check if can continue
         execReasonListCheck(reasonList, `WARN - Unable to clone repo!\nReason: ${convertArrayToString(reasonList)}\n`, function(){
-        
-            // Create new repo entry var
-            const newRepoEntry:grppRepoEntry = {
+
+            // Set current repo var
+            currentRepo = {
                 repoPath,
                 repoName,
                 repoOwner,
@@ -64,45 +72,48 @@ export async function grpp_startImport(cloneURL:string){
                 lastUpdatedOn: 'Never',
                 importDate: date.toString()
             };
-        
+
             // Start creating directory structure
             console.info('INFO - Creating directory structure...');
             [
                 `${process.cwd()}/${urlData[2]}`,
                 `${process.cwd()}/${urlData[2]}/${repoOwner}`
             ].forEach(function(cEntry){
-            
+
                 // Check if folder exists. If not, create it
                 if (module_fs.existsSync(cEntry) === !1){
                     module_fs.mkdirSync(cEntry);
                 }
-            
+
             });
-        
+
             // Add repo to list
             const pushRepoToList = function(){
-                console.info(`INFO - Pushing repo ${repoName} [${cloneURL}] to GRPP database...`);
-                grpp_importRepoDatabase(newRepoEntry);
-                console.info('\nINFO - Process complete!\n');
+                
+                // Create temp hash and import to repo database
+                const tempHash = module_crypto.randomBytes(16).toString('hex');
+                grpp_importRepoDatabase(currentRepo, tempHash);
+                console.info(`\nINFO - Process complete!\n   Repo hash: ${tempHash}\n`);
                 resolve();
+
             };
-        
+
             // Set git to fetch all refs
             const getAllRefs = function(){
                 console.info('INFO - Setting git config to fetch all refs from origin...');
                 runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', repoPath, setGitSafeDir);
             };
-        
+
             // Set clone dir as safe
             const setGitSafeDir = function(){
                 console.info(`INFO - Setting repo dir ${repoName} as safe...`);
                 runExternalCommand(`git config --global --add safe.directory ${repoPath}`, originalChdir, pushRepoToList);
             };
-        
+
             // Start clone process
             console.info('INFO - Starting clone process...');
             runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, `${process.cwd()}/${urlData[2]}/${repoOwner}`, getAllRefs);
-        
+
         }, resolve);
 
     });
@@ -114,10 +125,10 @@ export async function grpp_startImport(cloneURL:string){
 */
 export async function grpp_importBatch(urlList:string){
 
-    // Clear screen. create url array and start processing it
+    // Clear screen, create url array and start processing it
     grpp_displayMainLogo();
-    const urlArray = urlList.split('\n');
     console.info(`INFO - Starting cloning process...\n`);
+    const urlArray = urlList.split('\n');
     for (const url of urlArray){
         if (url.length > 0){
             console.info(`INFO - [${(urlArray.indexOf(url) + 1)} of ${urlArray.length}] Processing URL: ${url}`);

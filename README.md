@@ -97,6 +97,6 @@ node grpp.js --setStartPage=4 --getUserRepos=themitosan
 
 <sup><i>
 
-Some parts of this software derivates from TMS Engine
+Some parts of this software derivates from TMS Engine.
 
 </i></sup>

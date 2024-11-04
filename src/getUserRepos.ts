@@ -219,10 +219,9 @@ function processRepoChunk(resultArray:any[]){
                 console.info(`INFO - Process Complete!\nFile path: ${process.cwd()}/grpp_fetch_res.txt\n\nTo import repos from a file, use the following flag: \"--importList=PATH_TO_FILE\"\n`);
                 break;
 
-            // Cancel
+            // Cancel action
             case '3':
                 process.exit();
-                break;
 
             // Default
             default:

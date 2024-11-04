@@ -17,6 +17,7 @@ import * as module_os from 'os';
 
 // GRPP Repo Entry
 export interface grppRepoEntry {
+    hash:string,
     repoUrl:string,
     repoPath:string,
     repoName:string,
@@ -32,12 +33,12 @@ export interface grppSettingsFile {
     threads:number,
     lastRun:string,
     maxPages:number,
+    repoEntries:any,
     runCounter:number,
     userEditor:string,
     updateRuntime:number,
     fetchStartPage:number,
-    connectionTestURL:string,
-    repoEntries:grppRepoEntry[]
+    connectionTestURL:string
 }
 
 /*
@@ -77,6 +78,7 @@ export const grpp_flagList:any = {
     '--setMaxFetchPages=[NUMBER]': `Set maximum of pages GRPP will fetch from remote on get user repos process. (Default: ${grppSettingsFile_Defaults.maxPages})`,
     '--setConnectionTestURL=[URL]': `Set URL which GRPP will use to test internet connection. (Default: ${grppSettingsFile_Defaults.connectionTestURL})`,
     '--getUserRepos=[USERNAME]': `Set a username to GRPP seek all repos available.`,
+    '--getRepoData=[PATH]': `Get information about a previously imported repo.`,
     '--import=[GIT_URL]': `Imports a git repository to database.`,
     '--importList=[PATH]': `Import a list of git repositories from a text file.`
 

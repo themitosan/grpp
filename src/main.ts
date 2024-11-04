@@ -14,7 +14,7 @@ import { grpp_getUserRepos } from "./getUserRepos";
 import { grpp_checkBeforeUpdateProcess } from "./update";
 import { grpp_importBatch, grpp_startImport } from "./import";
 import { grppRepoEntry, grppSettingsFile, grppSettingsFile_Defaults } from "./database";
-import { grpp_displayHelp, grpp_displayMainLogo, grpp_printStatus, preventMinMax } from "./utils";
+import { grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus, preventMinMax } from "./utils";
 
 /*
     Require node modules
@@ -81,10 +81,11 @@ async function grpp_init(postAction:Function){
 
 /**
     * Import repo to list
-    * @param newRepoData [grppRepoEntry] new repo to be imported 
+    * @param newRepoData [grppRepoEntry] new repo to be imported
+    * @param hash [string] repo hash identifier
 */
-export function grpp_importRepoDatabase(newRepoData:grppRepoEntry){
-    grppSettings.repoEntries.push(newRepoData);
+export function grpp_importRepoDatabase(newRepoData:grppRepoEntry, hash:string){
+    grppSettings.repoEntries[hash] = newRepoData;
     grpp_saveSettings();
 }
 
@@ -197,6 +198,13 @@ function init(){
             grpp_importBatch(module_fs.readFileSync(currentFlag.replace('--importList=', ''), 'utf-8'));
         }
 
+        // Get info from a previously imported repo
+        if (currentFlag.indexOf('--getRepoData=') !== -1){
+            execFn = function(){
+                grpp_getRepoInfo(currentFlag.replace('--getRepoData=', ''));
+            }
+        }
+
         // Start GRPP update process
         if (currentFlag.indexOf('--start') !== -1){
             execFn = grpp_checkBeforeUpdateProcess;
@@ -212,9 +220,7 @@ function init(){
 
     // Check if no flags were provided
     if (execFn === null && process.argv.length < 3){
-        console.info("   <=============================================================>");
-        console.info("   | ...Since no args were provided, We wish you a great day! <3 |");
-        console.info("   <=============================================================>\n");
+        console.info("==> Since no args were provided, We wish you a great day! <3");
     }
 
 }

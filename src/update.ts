@@ -14,6 +14,12 @@ import { grppRepoEntry } from './database';
 import { checkConnection, convertArrayToString, execReasonListCheck, spliceArrayIntoChunks } from './utils';
 
 /*
+    Require node modules
+*/
+
+import * as module_childProcess from 'child_process';
+
+/*
     Functions
 */
 
@@ -32,7 +38,7 @@ export async function grpp_checkBeforeUpdateProcess(){
         }
 
         // Check if can start
-        execReasonListCheck(reasonList, `ERROR - Unable to start update process!\nReason: ${convertArrayToString(reasonList)}`, startUpdate);
+        execReasonListCheck(reasonList, `ERROR - Unable to start update process!\nReason: ${convertArrayToString(reasonList)}`, startUpdateAll);
 
     }).catch(function(err){
         throw `ERROR - Unable to start update process because GRPP connection test failed!\nDetails: ${err}\n`;
@@ -41,9 +47,17 @@ export async function grpp_checkBeforeUpdateProcess(){
 }
 
 /**
-    * Start GRPP update process 
+    * Update GRPP Repo
+    * @param hash [string] repo hash identifier
 */
-function startUpdate(){
+async function grpp_updateRepo(hash:string){
+    // WIP
+}
+
+/**
+    * Start GRPP update process [WIP]
+*/
+function startUpdateAll(){
 
     // Declare vars
     var completedRunners = 0,

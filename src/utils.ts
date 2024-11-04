@@ -12,7 +12,7 @@
 */
 
 import { grppSettings } from './main';
-import { grpp_flagList } from './database';
+import { grpp_flagList, grppRepoEntry } from './database';
 
 /*
     Require node modules
@@ -26,53 +26,16 @@ import * as module_childProcess from 'child_process';
 */
 
 /**
-    * Print GRPP status
-*/
-export function grpp_printStatus(){
-    console.info(`==> GRPP Status:\n    Current path: ${process.cwd()}\n`);
-    console.info(`   ┌ Total times GRPP Update executed: ${grppSettings.runCounter}`);
-    console.info(`   ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]`);
-    console.info(`   ├ Last time GRPP Update was executed: ${grppSettings.lastRun}`);
-    console.info(`   └ Total repos preserved: ${grppSettings.repoEntries.length}\n`);
-}
-
-/**
-    * Display main logo
-*/
-export function grpp_displayMainLogo(){
-    console.clear();
-    console.info("\n   <=============================================================>");
-    console.info("   <=|          Git Repo Preservation Project (GRPP)           |=>");
-    console.info("   <=|     Created by Juliana (@julianaheartz.bsky.social)     |=>");
-    console.info("   <=============================================================>");
-    console.info("   <=|             A classic quote from an old one:            |=>");
-    console.info("   <=|                   \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"                   |=>");
-    console.info("   <=============================================================>\n");
-}
-
-/**
-    * Display help menu
-*/
-export function grpp_displayHelp(){
-    console.info("   <=============================================================>");
-    console.info('   <=|        Here is a list of all available commands:        |=>');
-    console.info("   <=============================================================>\n");
-    Object.keys(grpp_flagList).forEach(function(currentFlag:any){
-        console.info(`──┬── ${currentFlag}\n  └── ${grpp_flagList[currentFlag]}\n`);
-    });
-}
-
-/**
     * Prevent number being lower than a specified value
     * @param num [number] input number
     * @param min [number] minimum value
     * @param max [number] maximum value
-    * @returns fixed number 
+    * @returns fixed number
 */
-export function preventMinMax(num:number, min:number = 0, max:number = 1):number {
+export function preventMinMax(num:number, min:number, max:number):number {
 
     // Declare vars and check num value
-    var res:number = min;
+    var res = min;
     if (num < min){
         num = min;
     }
@@ -188,6 +151,110 @@ export function spliceArrayIntoChunks(target:any[], chunkSize:number = 2):any[] 
     }
 
     // Return result
+    return res;
+
+}
+
+/*
+    GRPP Utils
+*/
+
+/**
+    * Print GRPP status
+*/
+export function grpp_printStatus(){
+    console.info(`==> GRPP Status:\n    Current path: ${process.cwd()}\n`);
+    console.info(`   ┌ Total times GRPP Update executed: ${grppSettings.runCounter}`);
+    console.info(`   ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]`);
+    console.info(`   ├ Last time GRPP Update was executed: ${grppSettings.lastRun}`);
+    console.info(`   └ Total repos preserved: ${Object.keys(grppSettings.repoEntries).length}\n`);
+}
+
+/**
+    * Display main logo
+*/
+export function grpp_displayMainLogo(){
+    console.clear();
+    console.info("\n   <=============================================================>");
+    console.info("   <=|          Git Repo Preservation Project (GRPP)           |=>");
+    console.info("   <=|     Created by Juliana (@julianaheartz.bsky.social)     |=>");
+    console.info("   <=============================================================>");
+    console.info("   <=|             A classic quote from an old one:            |=>");
+    console.info("   <=|                   \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"                   |=>");
+    console.info("   <=============================================================>\n");
+}
+
+/**
+    * Display help menu
+*/
+export function grpp_displayHelp(){
+    console.info("   <=============================================================>");
+    console.info('   <=|        Here is a list of all available commands:        |=>');
+    console.info("   <=============================================================>\n");
+    Object.keys(grpp_flagList).forEach(function(currentFlag:any){
+        console.info(`──┬── ${currentFlag}\n  └── ${grpp_flagList[currentFlag]}\n`);
+    });
+}
+
+/**
+    * Get repo info
+    * @param hash [string] repo hash identifier
+*/
+export function grpp_getRepoInfo(hash:string){
+
+    // Declare vars
+    var reasonList:string[] = [],
+        repoIndex:number | null = grpp_getRepoIndex(hash);
+
+    // Check if user imported any repos
+    if (grppSettings.repoEntries.length < 1){
+        reasonList.push('You must import any repo before using this option.');
+    }
+
+    // Check if user provided hash
+    if (hash.length < 1){
+        reasonList.push('You must provide a repo hash to search!');
+    }
+
+    // Check if repo with provided hash exists
+    if (repoIndex === null){
+        reasonList.push(`Unable to find repo with provided hash!`);
+    }
+
+    // Check if can continue
+    execReasonListCheck(reasonList, `ERROR - Unable to get repo info!\nReason: ${convertArrayToString(reasonList)}`, function(){
+        console.info(`==> Repo info:\n\n${JSON.stringify(grppSettings.repoEntries[repoIndex!], null, 4)}\n`);
+    });
+
+}
+
+/**
+    * Get repo index
+    * @param hash repo hash
+    * @return [number | null]
+*/
+export function grpp_getRepoIndex(hash:string):number | null {
+
+    // Create variables and check if full hash was provided
+    var res:number | null = null;
+    if (grppSettings.repoEntries[hash] === void 0){
+
+        // Start seeking current repo hash
+        const repoArray = Object.keys(grppSettings.repoEntries);
+        for (var currentRepo = 0; currentRepo < repoArray.length; currentRepo++){
+
+            // Check if found current repo
+            if (repoArray[currentRepo].indexOf(hash) !== -1){
+                res = currentRepo;
+                break;
+            }
+        }
+
+    } else {
+        res = Object.keys(grppSettings.repoEntries).indexOf(hash);
+    }
+
+    // Return res
     return res;
 
 }
