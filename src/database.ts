@@ -50,7 +50,7 @@ export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repo
     threads: 4,
     maxPages: 5,
     runCounter: 0,
-    repoEntries: [],
+    repoEntries: {},
     lastRun: 'Never',
     updateRuntime: 0,
     fetchStartPage: 1,

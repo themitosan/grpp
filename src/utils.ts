@@ -164,7 +164,7 @@ export function spliceArrayIntoChunks(target:any[], chunkSize:number = 2):any[] 
 */
 export function grpp_printStatus(){
     console.info(`==> GRPP Status:\n    Current path: ${process.cwd()}\n`);
-    console.info(`   ┌ Total times GRPP Update executed: ${grppSettings.runCounter}`);
+    console.info(`───┬ Total times GRPP Update executed: ${grppSettings.runCounter}`);
     console.info(`   ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]`);
     console.info(`   ├ Last time GRPP Update was executed: ${grppSettings.lastRun}`);
     console.info(`   └ Total repos preserved: ${Object.keys(grppSettings.repoEntries).length}\n`);
@@ -188,11 +188,9 @@ export function grpp_displayMainLogo(){
     * Display help menu
 */
 export function grpp_displayHelp(){
-    console.info("   <=============================================================>");
-    console.info('   <=|        Here is a list of all available commands:        |=>');
-    console.info("   <=============================================================>\n");
+    console.info('==> Here is a list of all available commands:\n');
     Object.keys(grpp_flagList).forEach(function(currentFlag:any){
-        console.info(`──┬── ${currentFlag}\n  └── ${grpp_flagList[currentFlag]}\n`);
+        console.info(`─┬─ ${currentFlag}\n └─ ${grpp_flagList[currentFlag]}\n`);
     });
 }
 

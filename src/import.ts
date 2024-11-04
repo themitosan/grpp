@@ -93,7 +93,7 @@ export async function grpp_startImport(cloneURL:string){
                 // Create temp hash and import to repo database
                 const tempHash = module_crypto.randomBytes(16).toString('hex');
                 grpp_importRepoDatabase(currentRepo, tempHash);
-                console.info(`\nINFO - Process complete!\n   Repo hash: ${tempHash}\n`);
+                console.info(`\nINFO - Process complete!\nRepo hash: ${tempHash}\n`);
                 resolve();
 
             };
