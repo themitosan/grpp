@@ -11,8 +11,8 @@
 
 import { grpp_initPath } from "./init";
 import { grpp_getUserRepos } from "./getUserRepos";
-import { grpp_checkBeforeUpdateProcess } from "./update";
 import { grpp_importBatch, grpp_startImport } from "./import";
+import { grpp_checkBeforeUpdateProcess, grpp_updateRepo } from "./update";
 import { grppRepoEntry, grppSettingsFile, grppSettingsFile_Defaults } from "./database";
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus, preventMinMax } from "./utils";
 
@@ -203,8 +203,15 @@ function init(){
             }
         }
 
-        // Start GRPP update process
-        if (currentFlag.indexOf('--start') !== -1){
+        // Update an specific repo
+        if (currentFlag.indexOf('--update=') !== -1){
+            execFn = function(){
+                grpp_updateRepo(currentFlag.replace('--update=', ''));
+            }
+        }
+
+        // Update all repos
+        if (currentFlag.indexOf('--updateAll') !== -1){
             execFn = grpp_checkBeforeUpdateProcess;
             break;
         }

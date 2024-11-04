@@ -50,7 +50,7 @@ export async function grpp_checkBeforeUpdateProcess(){
     * Update GRPP Repo
     * @param hash [string] repo hash identifier
 */
-async function grpp_updateRepo(hash:string){
+export async function grpp_updateRepo(hash:string){
     // WIP
 }
 

@@ -67,7 +67,7 @@ export const grpp_flagList:any = {
 
     // Functions
     '--help': `Display this menu. (Hello ${module_os.userInfo().username}! <3)`,
-    '--start': `Start GRPP update process.`,
+    '--updateAll': `Update all imported repos`,
     '--status': `Display GRPP status from a initialized dir.`,
 
     // Settings
@@ -80,7 +80,8 @@ export const grpp_flagList:any = {
     '--getUserRepos=[USERNAME]': `Set a username to GRPP seek all repos available.`,
     '--getRepoData=[PATH]': `Get information about a previously imported repo.`,
     '--import=[GIT_URL]': `Imports a git repository to database.`,
-    '--importList=[PATH]': `Import a list of git repositories from a text file.`
+    '--importList=[PATH]': `Import a list of git repositories from a text file.`,
+    '--update=[HASH]': `Updates a previously imported repo.`
 
 };
 
