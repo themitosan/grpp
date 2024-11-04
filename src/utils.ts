@@ -221,7 +221,14 @@ export function grpp_getRepoInfo(hash:string){
 
     // Check if can continue
     execReasonListCheck(reasonList, `ERROR - Unable to get repo info!\nReason: ${convertArrayToString(reasonList)}`, function(){
-        console.info(`==> Repo info:\n\n${JSON.stringify(grppSettings.repoEntries[repoIndex!], null, 4)}\n`);
+
+        // Get repo data
+        const 
+            fullHash:string = Object.keys(grppSettings.repoEntries)[repoIndex!],
+            currentRepoData:grppRepoEntry = grppSettings.repoEntries[fullHash];
+
+        console.info(`==> Repo info:\n\n${JSON.stringify(currentRepoData, null, 4)}\nFull hash: ${fullHash}\n`);
+    
     });
 
 }

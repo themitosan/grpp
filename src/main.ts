@@ -98,9 +98,7 @@ function init(){
     grpp_displayMainLogo();
     var execFn:Function | null = null;
     if (process.argv.indexOf('--help') === -1){
-        console.info("   <=============================================================>");
-        console.info('   <=|           Use \"--help\" in order to know more.           |=>');
-        console.info("   <=============================================================>\n");
+        console.info('==> Use \"--help\" for more details');
     }
 
     /*
@@ -220,7 +218,7 @@ function init(){
 
     // Check if no flags were provided
     if (execFn === null && process.argv.length < 3){
-        console.info("==> Since no args were provided, We wish you a great day! <3");
+        console.info(`==> Since no args / flags were provided, We wish you a great day! <3\n`);
     }
 
 }
