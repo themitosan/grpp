@@ -10,7 +10,7 @@
 */
 
 import { grppRepoEntry } from './database';
-import { grpp_importRepoDatabase } from './main';
+import { grpp_updateRepoData } from './main';
 import { convertArrayToString, execReasonListCheck, grpp_displayMainLogo, runExternalCommand } from './utils';
 
 /*
@@ -58,7 +58,7 @@ export async function grpp_startImport(cloneURL:string){
         }
 
         // Check if can continue
-        execReasonListCheck(reasonList, `WARN - Unable to clone repo!\nReason: ${convertArrayToString(reasonList)}\n`, function(){
+        execReasonListCheck(reasonList, `WARN - Unable to clone repo!\nReason: ${convertArrayToString(reasonList)}\n`, async function(){
 
             // Set current repo var
             currentRepo = {
@@ -85,31 +85,24 @@ export async function grpp_startImport(cloneURL:string){
 
             });
 
-            // Add repo to list
-            const pushRepoToList = function(){
-                
-                // Create temp hash and import to repo database
-                grpp_importRepoDatabase(currentRepo, repoPath);
+            // Start clone process
+            await runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, `${process.cwd()}/${urlData[2]}/${repoOwner}`)
+            .then(function(){
+                console.info('INFO - Setting git config to fetch all refs from origin...');
+                runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', repoPath);
+            })
+            .then(function(){
+                console.info(`INFO - Setting repo dir ${repoName} as safe...`);
+                runExternalCommand(`git config --global --add safe.directory ${repoPath}`, originalChdir);
+            })
+            .then(function(){
+
+                // Import to repo database and finish process
+                grpp_updateRepoData(currentRepo, repoPath);
                 console.info(`\nINFO - Process complete!\nRepo path: ${repoPath}\n`);
                 resolve();
 
-            };
-
-            // Set git to fetch all refs
-            const getAllRefs = function(){
-                console.info('INFO - Setting git config to fetch all refs from origin...');
-                runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', repoPath, setGitSafeDir);
-            };
-
-            // Set clone dir as safe
-            const setGitSafeDir = function(){
-                console.info(`INFO - Setting repo dir ${repoName} as safe...`);
-                runExternalCommand(`git config --global --add safe.directory ${repoPath}`, originalChdir, pushRepoToList);
-            };
-
-            // Start clone process
-            console.info('INFO - Starting clone process...');
-            runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, `${process.cwd()}/${urlData[2]}/${repoOwner}`, getAllRefs);
+            });
 
         }, resolve);
 

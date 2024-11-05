@@ -26,6 +26,19 @@ import * as module_childProcess from 'child_process';
 */
 
 /**
+	* Converts negative numbers to positive
+	* @param number [number] Number to be converted
+	* @returns [number] positive number
+*/
+export function parsePositive(n:number):number {
+	var res = ((n - n) - n);
+	if (res < 0){
+		res = ((res - res) - res);
+	}
+	return res;
+}
+
+/**
     * Prevent number being lower than a specified value
     * @param num [number] input number
     * @param min [number] minimum value
@@ -95,31 +108,35 @@ export async function checkConnection() {
 /**
     * Run external commands
     * @param cmd [string] command to be executed
-    * @param chdir [string] chdir where commands will be executed
-    * @param postAction [Function] function to be executed after process exit
+    * @param chdir [string] chdir where commands will be executed (default: current working dir)
 */
-export function runExternalCommand(cmd:string, chdir:string = process.cwd(), postAction:Function){
+export async function runExternalCommand(cmd:string, chdir:string = process.cwd()){
+    return new Promise<string>(function(resolve){
 
-    // Change current working directory and declare some vars
-    process.chdir(chdir);
-    const
-        originalCwd = structuredClone(process.cwd()),
-        execCmd = module_childProcess.exec(cmd);
+        // Change current working directory and declare some vars
+        var stdData:string = '';
+        process.chdir(chdir);
+        const
+            originalCwd = structuredClone(process.cwd()),
+            execCmd = module_childProcess.exec(cmd);
 
-    // Print data
-    execCmd.stderr?.on('data', function(data){
-        console.info(data);
+        // Print data
+        execCmd.stderr?.on('data', function(data){
+            stdData = `${stdData}${data}\n`;
+            console.info(data);
+        });
+        execCmd.stdout?.on('data', function(data){
+            stdData = `${stdData}${data}\n`;
+            console.info(data);
+        });
+
+        // Reset chdir and resolve after closing process
+        execCmd.on('exit', function(){
+            process.chdir(originalCwd);
+            resolve(stdData.slice(0, (stdData.length - 1)));
+        });
+
     });
-    execCmd.stdout?.on('data', function(data){
-        console.info(data);
-    });
-
-    // Execute actions after closing process
-    execCmd.on('exit', function(){
-        process.chdir(originalCwd);
-        postAction();
-    });
-
 }
 
 /**
@@ -214,7 +231,7 @@ export function grpp_getRepoInfo(path:string){
         reasonList.push('You must provide repo path!');
     }
 
-    // Check if repo with provided hash exists
+    // Check if repo with provided path exists
     if (repoIndex === null){
         reasonList.push(`Unable to find repo with provided path!`);
     }
@@ -235,16 +252,16 @@ export function grpp_getRepoInfo(path:string){
 
 /**
     * Get repo index
-    * @param path repo hash
+    * @param path repo path
     * @return [number | null] Repo index or null if not found
 */
 export function grpp_getRepoIndex(path:string):number | null {
 
-    // Create variables and check if full hash was provided
+    // Create variables and check if full path was provided
     var res:number | null = null;
     if (grppSettings.repoEntries[path] === void 0){
 
-        // Start seeking current repo hash
+        // Start seeking current repo path
         const repoArray = Object.keys(grppSettings.repoEntries);
         for (var currentRepo = 0; currentRepo < repoArray.length; currentRepo++){
 

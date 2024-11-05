@@ -9,15 +9,9 @@
     Import TS modules
 */
 
-import { grppSettings } from './main';
 import { grppRepoEntry } from './database';
-import { checkConnection, convertArrayToString, execReasonListCheck, spliceArrayIntoChunks } from './utils';
-
-/*
-    Require node modules
-*/
-
-import * as module_childProcess from 'child_process';
+import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
+import { checkConnection, convertArrayToString, execReasonListCheck, parsePositive, runExternalCommand, spliceArrayIntoChunks } from './utils';
 
 /*
     Functions
@@ -48,10 +42,46 @@ export async function grpp_checkBeforeUpdateProcess(){
 
 /**
     * Update GRPP Repo
-    * @param hash [string] repo hash identifier
+    * @param path [string] repo path
 */
-export async function grpp_updateRepo(hash:string){
-    // WIP
+export async function grpp_updateRepo(path:string){
+
+    // Declare vars and check if repo exists on database
+    var reasonList:string[] = [];
+    if (grppSettings.repoEntries[path] === void 0){
+        reasonList.push(`Unable to find the following path on database: ${path}`);
+    }
+
+    // Check if can continue
+    execReasonListCheck(reasonList, `ERROR: Unable to update repo!\nReason: ${convertArrayToString(reasonList)}\n`, async function(){
+
+        // Declare vars
+        var updateRuntime = 0,
+            updateStartTime = performance.now();
+
+        // Get current repo data and start fetching updates
+        const currentRepoData:grppRepoEntry = grppSettings.repoEntries[path];
+        await runExternalCommand('git fetch --all', path).then(function(stdData:string){
+
+            // Set Check if there was updates
+            updateRuntime = parsePositive(updateStartTime - performance.now());
+            if (stdData.length === 0){
+                console.info(`INFO - ${currentRepoData.repoName} is up to date!`);
+            }
+
+            // Check if needs to update current repo data
+            if (stdData.length !== 0 && stdData.indexOf('fatal: ') === -1){
+                currentRepoData.updateCounter++;
+                currentRepoData.lastUpdatedOn = new Date().toString();
+                grpp_updateRepoData(currentRepoData, path);
+            }
+
+            // Update GRPP settings
+            grpp_updateSettings({ updateRuntime });
+
+        });
+    });
+
 }
 
 /**

@@ -74,6 +74,15 @@ export async function grpp_saveSettings(){
 }
 
 /**
+    * Update GRPP settings
+    * @param data [grppSettingsFile] settings to be updated 
+*/
+export function grpp_updateSettings(data:any){
+    grppSettings = { ...grppSettings, ...data };
+    grpp_saveSettings();
+}
+
+/**
     * Initiaite GRPP path
     * @param path [string] path to be initialized 
 */
@@ -95,7 +104,7 @@ export async function grpp_initPath(path:string = process.cwd()){
     * @param newRepoData [grppRepoEntry] new repo to be imported
     * @param path [string] local repo path
 */
-export function grpp_importRepoDatabase(newRepoData:grppRepoEntry, path:string){
+export function grpp_updateRepoData(newRepoData:grppRepoEntry, path:string){
     grppSettings.repoEntries[path] = newRepoData;
     grpp_saveSettings();
 }
