@@ -196,27 +196,27 @@ export function grpp_displayHelp(){
 
 /**
     * Get repo info
-    * @param hash [string] repo hash identifier
+    * @param path [string] database path to repo
 */
-export function grpp_getRepoInfo(hash:string){
+export function grpp_getRepoInfo(path:string){
 
     // Declare vars
     var reasonList:string[] = [],
-        repoIndex:number | null = grpp_getRepoIndex(hash);
+        repoIndex:number | null = grpp_getRepoIndex(path);
 
     // Check if user imported any repos
     if (grppSettings.repoEntries.length < 1){
         reasonList.push('You must import any repo before using this option.');
     }
 
-    // Check if user provided hash
-    if (hash.length < 1){
-        reasonList.push('You must provide a repo hash to search!');
+    // Check if user provided path
+    if (path.length < 1){
+        reasonList.push('You must provide repo path!');
     }
 
     // Check if repo with provided hash exists
     if (repoIndex === null){
-        reasonList.push(`Unable to find repo with provided hash!`);
+        reasonList.push(`Unable to find repo with provided path!`);
     }
 
     // Check if can continue
@@ -224,10 +224,10 @@ export function grpp_getRepoInfo(hash:string){
 
         // Get repo data
         const 
-            fullHash:string = Object.keys(grppSettings.repoEntries)[repoIndex!],
-            currentRepoData:grppRepoEntry = grppSettings.repoEntries[fullHash];
+            fullPath:string = Object.keys(grppSettings.repoEntries)[repoIndex!],
+            currentRepoData:grppRepoEntry = grppSettings.repoEntries[fullPath];
 
-        console.info(`==> Repo info:\n\n${JSON.stringify(currentRepoData, null, 4)}\nFull hash: ${fullHash}\n`);
+        console.info(`==> Repo info:\n\n${JSON.stringify(currentRepoData, null, 4)}\n`);
     
     });
 
@@ -235,28 +235,28 @@ export function grpp_getRepoInfo(hash:string){
 
 /**
     * Get repo index
-    * @param hash repo hash
-    * @return [number | null]
+    * @param path repo hash
+    * @return [number | null] Repo index or null if not found
 */
-export function grpp_getRepoIndex(hash:string):number | null {
+export function grpp_getRepoIndex(path:string):number | null {
 
     // Create variables and check if full hash was provided
     var res:number | null = null;
-    if (grppSettings.repoEntries[hash] === void 0){
+    if (grppSettings.repoEntries[path] === void 0){
 
         // Start seeking current repo hash
         const repoArray = Object.keys(grppSettings.repoEntries);
         for (var currentRepo = 0; currentRepo < repoArray.length; currentRepo++){
 
             // Check if found current repo
-            if (repoArray[currentRepo].indexOf(hash) !== -1){
+            if (repoArray[currentRepo].indexOf(path) !== -1){
                 res = currentRepo;
                 break;
             }
         }
 
     } else {
-        res = Object.keys(grppSettings.repoEntries).indexOf(hash);
+        res = Object.keys(grppSettings.repoEntries).indexOf(path);
     }
 
     // Return res

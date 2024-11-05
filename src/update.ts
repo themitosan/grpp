@@ -61,15 +61,19 @@ function startUpdateAll(){
 
     // Declare vars
     var completedRunners = 0,
-        updateList:grppRepoEntry[] = [];
+        updateList:string[] = [];
 
     // Filter repos that cannot be updated
-    grppSettings.repoEntries.forEach(function(currentRepo:grppRepoEntry){
-        if (currentRepo.canUpdate === !0){
+    Object.keys(grppSettings.repoEntries).forEach(function(currentRepo){
+
+        // Get current repo data and check if can update
+        const repoData:grppRepoEntry = grppSettings.repoEntries[currentRepo];
+        if (repoData.canUpdate === !0){
             updateList.push(currentRepo);
         } else {
-            console.warn(`WARN - Skipping ${currentRepo.repoName} (${currentRepo.repoPath}) because it was disabled!`);
+            console.warn(`WARN - Skipping ${repoData.repoName} (${currentRepo}) because it was disabled!`);
         }
+
     });
 
     // Split update list on given runners

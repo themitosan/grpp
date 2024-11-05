@@ -17,9 +17,7 @@ import * as module_os from 'os';
 
 // GRPP Repo Entry
 export interface grppRepoEntry {
-    hash:string,
     repoUrl:string,
-    repoPath:string,
     repoName:string,
     repoOwner:string,
     canUpdate:boolean,
@@ -81,7 +79,7 @@ export const grpp_flagList:any = {
     '--getRepoData=[PATH]': `Get information about a previously imported repo.`,
     '--import=[GIT_URL]': `Imports a git repository to database.`,
     '--importList=[PATH]': `Import a list of git repositories from a text file.`,
-    '--update=[HASH]': `Updates a previously imported repo.`
+    '--update=[PATH]': `Updates a previously imported repo.`
 
 };
 

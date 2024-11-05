@@ -18,14 +18,13 @@ import { convertArrayToString, execReasonListCheck, grpp_displayMainLogo, runExt
 */
 
 import * as module_fs from 'fs';
-import * as module_crypto from 'crypto';
 
 /*
     Variables
 */
 
 // Current repo being imported
-var currentRepo:any;
+var currentRepo:grppRepoEntry;
 
 /*
     Functions
@@ -63,7 +62,6 @@ export async function grpp_startImport(cloneURL:string){
 
             // Set current repo var
             currentRepo = {
-                repoPath,
                 repoName,
                 repoOwner,
                 canUpdate: !0,
@@ -91,9 +89,8 @@ export async function grpp_startImport(cloneURL:string){
             const pushRepoToList = function(){
                 
                 // Create temp hash and import to repo database
-                const tempHash = module_crypto.randomBytes(16).toString('hex');
-                grpp_importRepoDatabase(currentRepo, tempHash);
-                console.info(`\nINFO - Process complete!\nRepo hash: ${tempHash}\n`);
+                grpp_importRepoDatabase(currentRepo, repoPath);
+                console.info(`\nINFO - Process complete!\nRepo path: ${repoPath}\n`);
                 resolve();
 
             };

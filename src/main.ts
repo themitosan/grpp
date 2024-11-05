@@ -93,10 +93,10 @@ export async function grpp_initPath(path:string = process.cwd()){
 /**
     * Import repo to list
     * @param newRepoData [grppRepoEntry] new repo to be imported
-    * @param hash [string] repo hash identifier
+    * @param path [string] local repo path
 */
-export function grpp_importRepoDatabase(newRepoData:grppRepoEntry, hash:string){
-    grppSettings.repoEntries[hash] = newRepoData;
+export function grpp_importRepoDatabase(newRepoData:grppRepoEntry, path:string){
+    grppSettings.repoEntries[path] = newRepoData;
     grpp_saveSettings();
 }
 
