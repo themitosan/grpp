@@ -164,10 +164,10 @@ export function spliceArrayIntoChunks(target:any[], chunkSize:number = 2):any[] 
 */
 export function grpp_printStatus(){
     console.info(`==> GRPP Status:\n    Current path: ${process.cwd()}\n`);
-    console.info(`───┬ Total times GRPP Update executed: ${grppSettings.runCounter}`);
-    console.info(`   ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]`);
-    console.info(`   ├ Last time GRPP Update was executed: ${grppSettings.lastRun}`);
-    console.info(`   └ Total repos preserved: ${Object.keys(grppSettings.repoEntries).length}\n`);
+    console.info(`──┬ Total times GRPP Update executed: ${grppSettings.runCounter}`);
+    console.info(`  ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]`);
+    console.info(`  ├ Last time GRPP Update was executed: ${grppSettings.lastRun}`);
+    console.info(`  └ Total repos preserved: ${Object.keys(grppSettings.repoEntries).length}\n`);
 }
 
 /**
@@ -262,6 +262,13 @@ export function grpp_getRepoIndex(hash:string):number | null {
     // Return res
     return res;
 
+}
+
+/**
+    * Sync database
+*/
+export async function grpp_syncDatabase(){
+    // WIP
 }
 
 // Export module

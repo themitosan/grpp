@@ -35,7 +35,6 @@ export interface grppSettingsFile {
     maxPages:number,
     repoEntries:any,
     runCounter:number,
-    userEditor:string,
     updateRuntime:number,
     fetchStartPage:number,
     connectionTestURL:string
@@ -46,7 +45,7 @@ export interface grppSettingsFile {
 */
 
 // Default settings file
-export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'threads' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'userEditor' | 'fetchStartPage'> = {
+export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'threads' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage'> = {
     threads: 4,
     maxPages: 5,
     runCounter: 0,
@@ -54,7 +53,6 @@ export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repo
     lastRun: 'Never',
     updateRuntime: 0,
     fetchStartPage: 1,
-    userEditor: 'nano',
     connectionTestURL: '1.1.1.1'
 }
 
@@ -69,6 +67,8 @@ export const grpp_flagList:any = {
     '--help': `Display this menu. (Hello ${module_os.userInfo().username}! <3)`,
     '--updateAll': `Update all imported repos`,
     '--status': `Display GRPP status from a initialized dir.`,
+    '--saveSettings': `Use this option to update current settings file.\n    Example: \"node grpp.js --setConnectionTestURL=8.8.8.8 --saveSettings\" will set main connection test to google dns and save it to settings file.`,
+    '--repairDatabase': `This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.`,
 
     // Settings
     '--path=[PATH]': `Set current working directory.`,

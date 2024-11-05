@@ -9,12 +9,11 @@
     Import TS modules
 */
 
-import { grpp_initPath } from "./init";
 import { grpp_getUserRepos } from "./getUserRepos";
 import { grpp_importBatch, grpp_startImport } from "./import";
 import { grpp_checkBeforeUpdateProcess, grpp_updateRepo } from "./update";
 import { grppRepoEntry, grppSettingsFile, grppSettingsFile_Defaults } from "./database";
-import { grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus, preventMinMax } from "./utils";
+import { grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus, grpp_syncDatabase, preventMinMax } from "./utils";
 
 /*
     Require node modules
@@ -37,26 +36,29 @@ export var
 
 /**
     * Load GRPP settings
-    * @param postAction function to be executed ONLY after loading settings
 */
-export async function grpp_loadSettings(){
+async function grpp_loadSettings(){
+    return new Promise<void>(function(resolve, reject){
 
-    // Create settings file path and check if it exists
-    const filePath = `${process.cwd()}/grpp_settings.json`;
-    if (module_fs.existsSync(filePath) === !0){
+        // Create settings file path and check if it exists
+        const filePath = `${process.cwd()}/grpp_settings.json`;
+        if (module_fs.existsSync(filePath) === !0){
 
-        // Try loading settings
-        try {
-            grppSettings = JSON.parse(module_fs.readFileSync(filePath, 'utf-8'));
-        } catch (err) {
-            throw err;
+            // Try loading settings
+            try {
+                grppSettings = JSON.parse(module_fs.readFileSync(filePath, 'utf-8'));
+                resolve();
+            } catch (err) {
+                reject(err);
+            }
+
+        } else {
+            console.warn(`WARN - Unable to load settings because this location isn\'t initialized! GRPP will initialize this folder before moving on...`);
+            grpp_initPath();
+            resolve();
         }
 
-    } else {
-        console.warn(`WARN - Unable to load settings because this location isn\'t initialized! GRPP will initialize this folder before moving on...`);
-        grpp_initPath();
-    }
-
+    });
 }
 
 /**
@@ -72,11 +74,20 @@ export async function grpp_saveSettings(){
 }
 
 /**
-    * Initialize GRPP before running any action
-    * @param postAction [Function] function to be executed after initialization
+    * Initiaite GRPP path
+    * @param path [string] path to be initialized 
 */
-async function grpp_init(postAction:Function){
-    grpp_loadSettings().then(function(){ postAction(); });
+export async function grpp_initPath(path:string = process.cwd()){
+
+    // Log and check if settings file exists
+    console.info(`INFO - Creating settings file at \"${path}\"...`);
+    if (module_fs.existsSync(`${path}/grpp_settings.json`) !== !0){
+        module_fs.writeFileSync(`${path}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
+        console.info('INFO - Process complete!\n');
+    } else {
+        console.warn('WARN - Settings file detected on provided location! Skipping...\n');
+    }
+
 }
 
 /**
@@ -92,13 +103,13 @@ export function grpp_importRepoDatabase(newRepoData:grppRepoEntry, hash:string){
 /**
     * Main function
 */
-function init(){
+async function init(){
 
     // Display main logo, create vars and check if needs to display help string
     grpp_displayMainLogo();
     var execFn:Function | null = null;
     if (process.argv.indexOf('--help') === -1){
-        console.info('==> Use \"--help\" for more details');
+        console.info('==> Use \"--help\" for more details\n');
     }
 
     /*
@@ -165,6 +176,12 @@ function init(){
             break;
         }
 
+        // Save / update settings
+        if (currentFlag.indexOf('--saveSettings') !== -1){
+            execFn = grpp_saveSettings;
+            break;
+        }
+
         // Initialize folder / path
         if (currentFlag.indexOf('--init=') !== -1){
             grpp_initPath(currentFlag.replace('--init=', ''));
@@ -172,6 +189,12 @@ function init(){
         }
         if (currentFlag.indexOf('--init') !== -1){
             grpp_initPath();
+            break;
+        }
+
+        // Sync database
+        if (currentFlag.indexOf('--repairDatabase') !== -1){
+            execFn = grpp_syncDatabase;
             break;
         }
 
@@ -220,7 +243,9 @@ function init(){
 
     // If have functions to execute, run init process and then, execute it!
     if (execFn !== null){
-        grpp_init(execFn);
+        await grpp_loadSettings().then(function(){
+            execFn!();
+        });
     }
 
     // Check if no flags were provided
@@ -231,4 +256,4 @@ function init(){
 }
 
 // Start GRPP
-init();
+await init();
