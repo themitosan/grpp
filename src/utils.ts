@@ -249,11 +249,11 @@ export function grpp_displayMainLogo(){
 export function grpp_displayHelp(){
     createLogEntry('==> Function list:\n');
     Object.keys(grpp_commandList).forEach(function(currentFlag:any){
-        createLogEntry(`─┬─ ${currentFlag}\n └─ ${grpp_commandList[currentFlag]}\n`);
+        createLogEntry(`${currentFlag}\n${grpp_commandList[currentFlag]}\n`);
     });
-    createLogEntry('==> Option list:\n');
+    createLogEntry('==> Options list:\n');
     Object.keys(grpp_optionList).forEach(function(currentFlag:any){
-        createLogEntry(`─┬─ ${currentFlag}\n └─ ${grpp_optionList[currentFlag]}\n`);
+        createLogEntry(`${currentFlag}\n${grpp_optionList[currentFlag]}\n`);
     });
 }
 

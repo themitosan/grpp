@@ -21,13 +21,13 @@ export const grpp_commandList:any = {
     '--updateAll': `Update all imported repos`,
     '--status': `Display GRPP status from a initialized dir.`,
     '--silent': `Only print errors on screen.`,
-    '--saveSettings': `Use this option to update current settings file.\n    Example: \"node grpp.js --setConnectionTestURL=8.8.8.8 --saveSettings\" will set main connection test to google dns and save it to settings file.`,
+    '--saveSettings': `Use this option to update current settings file.\nExample: \"node grpp.js --setConnectionTestURL=8.8.8.8 --saveSettings\" will set main connection test to google dns and save it to settings file.`,
     '--repairDatabase': `This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.`
 };
 
 // Option list
 export const grpp_optionList:any = {
-    '--init=[PATH]': `Set a location where GRPP will initialize and backup your repos. You can also just use \"--init\" to initialize where you currently are!`,
+    '--init=[PATH]': `Set a location where GRPP will initialize and backup your repos.\nYou can also just use \"--init\" to initialize where you currently are!`,
     '--import=[GIT_URL]': `Imports a git repository to database.`,
     '--importList=[PATH]': `Import a list of git repositories from a text file.`,
     '--path=[PATH]': `Set GRPP current working directory.`,

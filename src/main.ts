@@ -19,6 +19,7 @@ import { createLogEntry, grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInf
 */
 
 import * as module_fs from 'fs';
+import * as module_os from 'os';
 
 /*
     Interfaces
@@ -298,7 +299,7 @@ async function init(){
 
     // Check if no flags were provided
     if (execFn === null && process.argv.length < 3){
-        createLogEntry(`==> Since no args / flags were provided, We wish you a great day! <3\n`);
+        createLogEntry(`==> Since no args / flags were provided, We wish someone called ${module_os.userInfo().username} a great day! <3\n`);
     }
 
 }
