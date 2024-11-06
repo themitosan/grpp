@@ -10,8 +10,8 @@
 */
 
 import { grpp_getUserRepos } from "./getUserRepos";
-import { grpp_importBatch, grpp_startImport } from "./import";
-import { grpp_checkBeforeUpdateProcess, grpp_updateRepo } from "./update";
+import { grpp_importBatch, grpp_startImport, grppRepoEntry } from "./import";
+import { grpp_checkBeforeUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from "./update";
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus, grpp_syncDatabase, preventMinMax } from "./utils";
 
 /*
@@ -23,17 +23,6 @@ import * as module_fs from 'fs';
 /*
     Interfaces
 */
-
-// GRPP Repo Entry
-export interface grppRepoEntry {
-    repoUrl:string,
-    repoName:string,
-    repoOwner:string,
-    canUpdate:boolean,
-    importDate:string,
-    updateCounter:number,
-    lastUpdatedOn:string
-}
 
 // GRPP Settings file
 export interface grppSettingsFile {
@@ -67,10 +56,8 @@ export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repo
     Variables
 */
 
-export var
-
-    // App settings
-    grppSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
+// App settings
+export var grppSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
 
 /*
     Functions
@@ -243,7 +230,7 @@ async function init(){
             break;
         }
 
-        // Sync database
+        // Sync database [WIP]
         if (currentFlag.indexOf('--repairDatabase') !== -1){
             execFn = grpp_syncDatabase;
             break;
@@ -253,7 +240,7 @@ async function init(){
         if (currentFlag.indexOf('--getUserRepos=') !== -1){
             execFn = function(){
                 grpp_getUserRepos(currentFlag.replace('--getUserRepos=', ''));
-            };
+            }
             break;
         }
 
@@ -261,7 +248,7 @@ async function init(){
         if (currentFlag.indexOf('--import=') !== -1){
             execFn = function(){
                 grpp_startImport(currentFlag.replace('--import=', ''));
-            };
+            }
             break;
         }
 
@@ -290,6 +277,13 @@ async function init(){
             break;
         }
 
+        // Process GRPP batch files
+        if (currentFlag.indexOf('--processBatchFile=') !== -1){
+            execFn = function(){
+                grpp_processBatchFile(Number(currentFlag.replace('--processBatchFile=', '')));
+            }
+        }
+
     }
 
     // If have functions to execute, run init process and then, execute it!
@@ -307,4 +301,4 @@ async function init(){
 }
 
 // Start GRPP
-await init();
+init();

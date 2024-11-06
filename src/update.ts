@@ -9,32 +9,52 @@
     Import TS modules
 */
 
-import { grppRepoEntry } from './main';
+import { grppRepoEntry } from './import';
 import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
 import { checkConnection, convertArrayToString, execReasonListCheck, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks } from './utils';
+
+/*
+    Require node modules
+*/
+
+import * as module_fs from 'fs';
+import * as module_path from 'path';
 
 /*
     Interfaces
 */
 
 // Batch update file
-interface grpp_batchUpdateFile {
+interface batchUpdate_list {
     repoList:string[]
+}
+
+// Batch update results
+interface batchUpdate_results {
+    errorData:string[],
+    updateData:string[],
+    errorCounter:number,
+    updateCounter:number
+}
+
+/*
+    Defaults
+*/
+
+// Batch update results
+const batchUpdateResults_Defaults:Pick <batchUpdate_results, 'errorCounter' | 'errorData' | 'updateCounter' | 'updateData'> = {
+    errorData: [],
+    updateData: [],
+    errorCounter: 0,
+    updateCounter: 0
 }
 
 /*
     Variables
 */
 
-var
-
-    // Update / error counter
-    grpp_errorCounter = 0,
-    grpp_updateCounter = 0,
-    
-    // Update / error data
-    grpp_errorData:string[] = [],
-    grpp_updateData:string[] = [];
+// Update results
+const grpp_updateResults:batchUpdate_results = { ...batchUpdateResults_Defaults };
 
 /*
     Functions
@@ -53,7 +73,7 @@ export async function grpp_checkBeforeUpdateProcess(){
         if (grppSettings.repoEntries.length === 0){
             reasonList.push('You must import any repo before starting GRPP update process!');
         }
-        execReasonListCheck(reasonList, `ERROR - Unable to start update process!\nReason: ${convertArrayToString(reasonList)}`, startUpdateAll);
+        execReasonListCheck(reasonList, `ERROR - Unable to start update process!\nReason: ${convertArrayToString(reasonList)}`, startUpdateAllRepos);
 
     }).catch(function(err){
         throw `ERROR - Unable to start update process because GRPP connection test failed!\nDetails: ${err}\n`;
@@ -95,8 +115,8 @@ export async function grpp_updateRepo(path:string){
 
                 // Print update data, push process output to update data and bump update counter
                 console.info(`INFO - Update data:\n${processOutput.stdData}`);
-                grpp_updateData.push(processOutput.stdData);
-                grpp_updateCounter++;
+                grpp_updateResults.updateData.push(processOutput.stdData);
+                grpp_updateResults.updateCounter++;
 
                 // Update current repo data
                 currentRepoData.updateCounter++;
@@ -104,8 +124,8 @@ export async function grpp_updateRepo(path:string){
                 grpp_updateRepoData(path, currentRepoData);
 
             } else {
-                grpp_errorCounter++;
-                grpp_errorData.push(processOutput.stdData);
+                grpp_updateResults.errorCounter++;
+                grpp_updateResults.errorData.push(processOutput.stdData);
                 console.warn(processOutput.stdData);
             }
 
@@ -118,13 +138,42 @@ export async function grpp_updateRepo(path:string){
 }
 
 /**
+    * Process batch file
+    * @param id [number] batch file id
+*/
+export async function grpp_processBatchFile(id:number){
+
+    // Create batch file path const and check if exists
+    const batchFilePath = `${process.cwd()}/temp/GRPP_BATCH_${id}.json`;
+    if (module_fs.existsSync(batchFilePath) === !0){
+        
+        // Read batch update file and start processing repos
+        const batchFile:batchUpdate_list = JSON.parse(module_fs.readFileSync(batchFilePath, 'utf-8'));
+        for (const repoEntry in batchFile.repoList){
+            await grpp_updateRepo(repoEntry);
+        }
+
+        // Create log entry, save batch file results and exit 
+        const resFilePath = `${module_path.parse(batchFilePath).dir}/GRPP_BATCH_RES_${id}.json`;
+        console.info(`INFO - Saving batch result...\nPath: ${resFilePath}`);
+        module_fs.writeFileSync(resFilePath, JSON.stringify(grpp_updateResults), 'utf-8');
+        process.exit();
+
+    } else {
+        console.error(`ERROR - Unable to locate batch file with id ${id}!\n`);
+    }
+
+}
+
+/**
     * Start GRPP update process [WIP]
 */
-function startUpdateAll(){
+function startUpdateAllRepos(){
 
     // Declare vars
     var completedRunners = 0,
-        updateList:string[] = [];
+        updateList:string[] = [],
+        batchFileList:batchUpdate_list[]
 
     // Filter repos that cannot be updated
     Object.keys(grppSettings.repoEntries).forEach(function(currentRepo){
@@ -139,9 +188,12 @@ function startUpdateAll(){
 
     });
 
-    // Split update list on given runners
+    // Split update list on given runners and create GRPP batch files
     updateList = spliceArrayIntoChunks(updateList, grppSettings.threads);
-    console.info(updateList.length);
+    updateList.forEach(function(currentUpdateList){
+        // batchFileList.push({ repoList: updateList[currentUpdateList] });
+    });
+    
 
 }
 

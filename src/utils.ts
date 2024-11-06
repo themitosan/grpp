@@ -11,8 +11,9 @@
     Import TS modules
 */
 
+import { grppSettings } from './main';
+import { grppRepoEntry } from './import';
 import { grpp_flagList } from './database';
-import { grppRepoEntry, grppSettings } from './main';
 
 /*
     Require node modules

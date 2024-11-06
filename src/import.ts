@@ -9,7 +9,6 @@
     Import TS modules
 */
 
-import { grppRepoEntry } from './main';
 import { grpp_updateRepoData } from './main';
 import { convertArrayToString, execReasonListCheck, grpp_displayMainLogo, runExternalCommand, runExternalCommand_Defaults } from './utils';
 
@@ -18,6 +17,21 @@ import { convertArrayToString, execReasonListCheck, grpp_displayMainLogo, runExt
 */
 
 import * as module_fs from 'fs';
+
+/*
+    Interfaces
+*/
+
+// GRPP Repo Entry
+export interface grppRepoEntry {
+    repoUrl:string,
+    repoName:string,
+    repoOwner:string,
+    canUpdate:boolean,
+    importDate:string,
+    updateCounter:number,
+    lastUpdatedOn:string
+}
 
 /*
     Variables
@@ -117,7 +131,7 @@ export async function grpp_importBatch(urlList:string){
 
     // Clear screen, create url array and start processing it
     grpp_displayMainLogo();
-    console.info(`INFO - Starting cloning process...\n`);
+    console.info(`INFO - Starting clone process...\n`);
     const urlArray = urlList.split('\n');
     for (const url of urlArray){
         if (url.length > 0){
