@@ -98,7 +98,7 @@ export async function grpp_startImport(cloneURL:string){
             .then(function(){
 
                 // Import to repo database and finish process
-                grpp_updateRepoData(currentRepo, repoPath);
+                grpp_updateRepoData(repoPath, currentRepo);
                 console.info(`\nINFO - Process complete!\nRepo path: ${repoPath}\n`);
                 resolve();
 

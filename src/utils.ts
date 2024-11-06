@@ -28,6 +28,7 @@ import * as module_childProcess from 'child_process';
 // Run external command options
 export interface runExternalCommandOptions {
     chdir:string,
+    enableConsoleLog:boolean,
     removeBlankLines:boolean
 }
 
@@ -42,10 +43,11 @@ export interface runExternalCommand_output {
 */
 
 // Run external command options
-export const runExternalCommand_Defaults:Pick <runExternalCommandOptions, 'chdir' | 'removeBlankLines'> = {
+export const runExternalCommand_Defaults:Pick <runExternalCommandOptions, 'chdir' | 'removeBlankLines' | 'enableConsoleLog'> = {
     chdir: process.cwd(),
+    enableConsoleLog: !0,
     removeBlankLines: !1
-}
+};
 
 /*
     Functions
@@ -73,25 +75,19 @@ export function parsePositive(n:number):number {
 */
 export function preventMinMax(num:number, min:number, max:number):number {
 
-    // Declare vars and check num value
+    // Declare vars, check num value and return res
     var res = min;
-    if (num < min){
-        num = min;
-    }
-    if (num > max){
-        num = max;
-    }
-
-    // Return value
+    if (num < min) num = min;
+    if (num > max) num = max;
     return res;
 
 }
 
 /**
-	* Convert array to string, replacing comma with defined value (default: break line)
-	* @param str - array to be converted
-	* @param rep - values to be instead of comma
-	* @returns string converted from array
+	* Convert array to string, replacing comma with defined value (Default: line-break [\n])
+	* @param str [string] Array to be converted
+	* @param rep [string] Values to be instead of comma
+	* @returns [string] String converted from array
 */
 export function convertArrayToString(str:string[], rep:string = '\n'):string {
 	return str.toString().replace(RegExp(',', 'gi'), rep);
@@ -99,20 +95,18 @@ export function convertArrayToString(str:string[], rep:string = '\n'):string {
 
 /**
 	* Execute reasonList check
-	* @param reasonList list with reasons to not continue
-	* @param warnMsg Base warn message informing that was unable to proceed
-	* @param action function to be executed if reasonList is empty
+	* @param reasonList [string[]] String list with reasons to not continue
+	* @param warnMsg [string] Base warn message informing that was unable to proceed
+	* @param action [Function] Function to be executed if reasonList is empty
+    * @param onError [Function] Function to be executed if reasonList isn't empty
 */
-export function execReasonListCheck(reasonList:string[], warnMsg:string, action:Function, onError:Function = function(){return;}) {
-
-	// Check if can execute action
-	if (reasonList.length === 0){
+export function execReasonListCheck(reasonList:string[], warnMsg:string, action:Function, onError:Function = function(){return;}){
+    if (reasonList.length === 0){
 		action();
 	} else {
         console.error(warnMsg);
         onError();
 	}
-
 }
 
 /**
@@ -123,9 +117,7 @@ export function execReasonListCheck(reasonList:string[], warnMsg:string, action:
 export async function checkConnection(){
     return new Promise(function(resolve, reject){
         module_dns.lookup(grppSettings.connectionTestURL, function(err, address){
-            if (err){
-                reject(err);
-            }
+            if (err) reject(err);
             resolve(address);
         });
     });
@@ -149,11 +141,11 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
         // Print data
         execCmd.stderr?.on('data', function(data){
             stdData = `${stdData}${data}\n`;
-            console.info(data);
+            if (options.enableConsoleLog === !0) console.info(data);
         });
         execCmd.stdout?.on('data', function(data){
             stdData = `${stdData}${data}\n`;
-            console.info(data);
+            if (options.enableConsoleLog === !0) console.info(data);
         });
 
         // Reset chdir and resolve after closing process
@@ -166,9 +158,7 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
                 // Create temp var and process all lines
                 var tempString = '';
                 finalStd.split('\n').forEach(function(currentLine){
-                    if (currentLine !== ''){
-                        tempString = `${tempString}${currentLine}\n`;
-                    }
+                    if (currentLine !== '') tempString = `${tempString}${currentLine}\n`;
                 });
                 finalStd = tempString.slice(0, (tempString.length - 1));
 

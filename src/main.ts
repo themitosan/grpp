@@ -117,7 +117,7 @@ export async function grpp_saveSettings(){
 
 /**
     * Update GRPP settings
-    * @param data [grppSettingsFile] settings to be updated 
+    * @param data [grppSettingsFile] settings to be updated
 */
 export function grpp_updateSettings(data:any){
     grppSettings = { ...grppSettings, ...data };
@@ -126,7 +126,7 @@ export function grpp_updateSettings(data:any){
 
 /**
     * Initiaite GRPP path
-    * @param path [string] path to be initialized 
+    * @param path [string] path to be initialized (Default: current working dir)
 */
 export async function grpp_initPath(path:string = process.cwd()){
 
@@ -143,11 +143,11 @@ export async function grpp_initPath(path:string = process.cwd()){
 
 /**
     * Import repo to list
-    * @param newRepoData [grppRepoEntry] new repo to be imported
     * @param path [string] local repo path
+    * @param repoData [grppRepoEntry] new repo to be imported / updated
 */
-export function grpp_updateRepoData(newRepoData:grppRepoEntry, path:string){
-    grppSettings.repoEntries[path] = newRepoData;
+export function grpp_updateRepoData(path:string, repoData:grppRepoEntry){
+    grppSettings.repoEntries[path] = repoData;
     grpp_saveSettings();
 }
 
@@ -164,7 +164,7 @@ async function init(){
     }
 
     /*
-        Process run flags for settings
+        Process settings flags
     */
     for (var i = 0; i < process.argv.length; i++){
         const currentFlag = process.argv[i];
@@ -210,7 +210,7 @@ async function init(){
     }
 
     /*
-        Process run flags for functions
+        Process functions flags
     */
     for (var i = 0; i < process.argv.length; i++){
         const currentFlag = process.argv[i];
