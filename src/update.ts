@@ -73,8 +73,6 @@ export async function grpp_checkBeforeUpdateProcess(){
         if (grppSettings.repoEntries.length === 0) reasonList.push('You must import any repo before starting GRPP update process!');
         execReasonListCheck(reasonList, `ERROR - Unable to start update process!\nReason: ${convertArrayToString(reasonList)}`, startUpdateAllRepos);
 
-    }).catch(function(err){
-        throw `ERROR - Unable to start update process because GRPP connection test failed!\nDetails: ${err}\n`;
     });
 
 }
@@ -171,7 +169,7 @@ function startUpdateAllRepos(){
         tempDir = `${process.cwd()}/temp`;
         
     // Create temp dir and filter repos that cannot be updated
-    module_fs.mkdirSync(tempDir);
+    if (module_fs.existsSync(tempDir) !== !0) module_fs.mkdirSync(tempDir);
     Object.keys(grppSettings.repoEntries).forEach(function(currentRepo){
 
         // Get current repo data and check if can update
@@ -188,7 +186,6 @@ function startUpdateAllRepos(){
     spliceArrayIntoChunks(updateList, grppSettings.threads).forEach(function(currentList:string[], listIndex){
         module_fs.writeFileSync(`${tempDir}/GRPP_BATCH_${listIndex}.json`, JSON.stringify({ repoList: currentList }), 'utf-8');
     });
-
 
 }
 

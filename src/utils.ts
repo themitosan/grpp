@@ -13,7 +13,7 @@
 
 import { grppSettings } from './main';
 import { grppRepoEntry } from './import';
-import { grpp_flagList } from './database';
+import { grpp_commandList, grpp_optionList } from './database';
 
 /*
     Require node modules
@@ -247,9 +247,13 @@ export function grpp_displayMainLogo(){
     * Display help menu
 */
 export function grpp_displayHelp(){
-    createLogEntry('==> Here is a list of all available commands:\n');
-    Object.keys(grpp_flagList).forEach(function(currentFlag:any){
-        createLogEntry(`─┬─ ${currentFlag}\n └─ ${grpp_flagList[currentFlag]}\n`);
+    createLogEntry('==> Function list:\n');
+    Object.keys(grpp_commandList).forEach(function(currentFlag:any){
+        createLogEntry(`─┬─ ${currentFlag}\n └─ ${grpp_commandList[currentFlag]}\n`);
+    });
+    createLogEntry('==> Option list:\n');
+    Object.keys(grpp_optionList).forEach(function(currentFlag:any){
+        createLogEntry(`─┬─ ${currentFlag}\n └─ ${grpp_optionList[currentFlag]}\n`);
     });
 }
 
