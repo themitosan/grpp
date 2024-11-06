@@ -11,7 +11,7 @@
 
 import { grppRepoEntry } from './import';
 import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
-import { checkConnection, convertArrayToString, execReasonListCheck, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks } from './utils';
+import { checkConnection, convertArrayToString, createLogEntry, execReasonListCheck, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks } from './utils';
 
 /*
     Require node modules
@@ -107,14 +107,14 @@ export async function grpp_updateRepo(path:string){
             // Measure fetch time duration and check if process output any data
             updateRuntime = parsePositive(updateStartTime - performance.now());
             if (processOutput.stdData.length === 0){
-                console.info(`INFO - ${currentRepoData.repoName} is up to date!`);
+                createLogEntry(`INFO - ${currentRepoData.repoName} is up to date!`);
             }
 
             // Check if fetch process printed any data without errors (update)
             if (processOutput.stdData.length !== 0 && processOutput.stdData.indexOf('fatal: ') === -1){
 
                 // Print update data, push process output to update data and bump update counter
-                console.info(`INFO - Update data:\n${processOutput.stdData}`);
+                createLogEntry(`INFO - Update data:\n${processOutput.stdData}`);
                 grpp_updateResults.updateData.push(processOutput.stdData);
                 grpp_updateResults.updateCounter++;
 
@@ -153,10 +153,11 @@ export async function grpp_processBatchFile(id:number){
             await grpp_updateRepo(repoEntry);
         }
 
-        // Create log entry, save batch file results and exit 
+        // Create log entry, save results, remove batch file and exit 
         const resFilePath = `${module_path.parse(batchFilePath).dir}/GRPP_BATCH_RES_${id}.json`;
-        console.info(`INFO - Saving batch result...\nPath: ${resFilePath}`);
+        createLogEntry(`INFO - Saving batch result...\nPath: ${resFilePath}`);
         module_fs.writeFileSync(resFilePath, JSON.stringify(grpp_updateResults), 'utf-8');
+        module_fs.unlinkSync(batchFilePath);
         process.exit();
 
     } else {
@@ -173,9 +174,10 @@ function startUpdateAllRepos(){
     // Declare vars
     var completedRunners = 0,
         updateList:string[] = [],
-        batchFileList:batchUpdate_list[]
-
-    // Filter repos that cannot be updated
+        tempDir = `${process.cwd()}/temp`;
+        
+    // Create temp dir and filter repos that cannot be updated
+    module_fs.mkdirSync(tempDir);
     Object.keys(grppSettings.repoEntries).forEach(function(currentRepo){
 
         // Get current repo data and check if can update
@@ -189,11 +191,10 @@ function startUpdateAllRepos(){
     });
 
     // Split update list on given runners and create GRPP batch files
-    updateList = spliceArrayIntoChunks(updateList, grppSettings.threads);
-    updateList.forEach(function(currentUpdateList){
-        // batchFileList.push({ repoList: updateList[currentUpdateList] });
+    spliceArrayIntoChunks(updateList, grppSettings.threads).forEach(function(currentList:string[], listIndex){
+        module_fs.writeFileSync(`${tempDir}/GRPP_BATCH_${listIndex}.json`, JSON.stringify({ repoList: currentList }), 'utf-8');
     });
-    
+
 
 }
 

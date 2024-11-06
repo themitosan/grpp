@@ -11,7 +11,7 @@
 
 import { grppSettings } from './main';
 import { grpp_importBatch } from './import';
-import { checkConnection, convertArrayToString, execReasonListCheck, grpp_displayMainLogo } from './utils';
+import { checkConnection, convertArrayToString, createLogEntry, execReasonListCheck, grpp_displayMainLogo } from './utils';
 
 /*
     Require node modules
@@ -163,7 +163,7 @@ function startUserFetch(urlBase:string){
 
         // Create fetch url, log and fetch data
         const fetchUrl = `${urlBase}${currentPage}`;
-        console.info(`INFO - Fetching url: ${fetchUrl}`);
+        createLogEntry(`INFO - Fetching url: ${fetchUrl}`);
         fetch(fetchUrl).then(function(fetchRes){
 
             // If fetch result is ok, process output. If not, get error data and display it
@@ -180,7 +180,7 @@ function startUserFetch(urlBase:string){
     };
 
     // Start process
-    console.info(`INFO - Starting fetch process...`);
+    createLogEntry(`INFO - Starting fetch process...`);
     fetchData();
 
 }
@@ -216,7 +216,7 @@ function processRepoChunk(resultArray:any[]){
             case '2':
                 grpp_displayMainLogo();
                 module_fs.writeFileSync(`${process.cwd()}/grpp_fetch_res.txt`, repoList, 'utf-8');
-                console.info(`INFO - Process Complete!\nFile path: ${process.cwd()}/grpp_fetch_res.txt\n\nTo import repos from a file, use the following flag: \"--importList=PATH_TO_FILE\"\n`);
+                createLogEntry(`INFO - Process Complete!\nFile path: ${process.cwd()}/grpp_fetch_res.txt\n\nTo import repos from a file, use the following flag: \"--importList=PATH_TO_FILE\"\n`);
                 break;
 
             // Cancel action

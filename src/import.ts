@@ -10,7 +10,7 @@
 */
 
 import { grpp_updateRepoData } from './main';
-import { convertArrayToString, execReasonListCheck, grpp_displayMainLogo, runExternalCommand, runExternalCommand_Defaults } from './utils';
+import { convertArrayToString, createLogEntry, execReasonListCheck, grpp_displayMainLogo, runExternalCommand, runExternalCommand_Defaults } from './utils';
 
 /*
     Require node modules
@@ -86,7 +86,7 @@ export async function grpp_startImport(cloneURL:string){
             };
 
             // Start creating directory structure
-            console.info('INFO - Creating directory structure...');
+            createLogEntry('INFO - Creating directory structure...');
             [
                 `${process.cwd()}/${urlData[2]}`,
                 `${process.cwd()}/${urlData[2]}/${repoOwner}`
@@ -102,18 +102,18 @@ export async function grpp_startImport(cloneURL:string){
             // Start clone process
             await runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, { ...runExternalCommand_Defaults, chdir: `${process.cwd()}/${urlData[2]}/${repoOwner}` })
             .then(function(){
-                console.info('INFO - Setting git config to fetch all refs from origin...');
+                createLogEntry('INFO - Setting git config to fetch all refs from origin...');
                 runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: repoPath });
             })
             .then(function(){
-                console.info(`INFO - Setting repo dir ${repoName} as safe...`);
+                createLogEntry(`INFO - Setting repo dir ${repoName} as safe...`);
                 runExternalCommand(`git config --global --add safe.directory ${repoPath}`, { ...runExternalCommand_Defaults, chdir: originalChdir });
             })
             .then(function(){
 
                 // Import to repo database and finish process
                 grpp_updateRepoData(repoPath, currentRepo);
-                console.info(`\nINFO - Process complete!\nRepo path: ${repoPath}\n`);
+                createLogEntry(`\nINFO - Process complete!\nRepo path: ${repoPath}\n`);
                 resolve();
 
             });
@@ -131,11 +131,11 @@ export async function grpp_importBatch(urlList:string){
 
     // Clear screen, create url array and start processing it
     grpp_displayMainLogo();
-    console.info(`INFO - Starting clone process...\n`);
+    createLogEntry(`INFO - Starting clone process...\n`);
     const urlArray = urlList.split('\n');
     for (const url of urlArray){
         if (url.length > 0){
-            console.info(`INFO - [${(urlArray.indexOf(url) + 1)} of ${urlArray.length}] Processing URL: ${url}`);
+            createLogEntry(`INFO - [${(urlArray.indexOf(url) + 1)} of ${urlArray.length}] Processing URL: ${url}`);
             await grpp_startImport(url);
         }
     }

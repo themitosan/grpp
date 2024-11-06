@@ -4,6 +4,9 @@
 #   .gitignore
 #
 
+# IDE folders
+.vscode/
+
 # Project folders
 App/
 test/

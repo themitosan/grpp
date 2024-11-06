@@ -12,7 +12,7 @@
 import { grpp_getUserRepos } from "./getUserRepos";
 import { grpp_importBatch, grpp_startImport, grppRepoEntry } from "./import";
 import { grpp_checkBeforeUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from "./update";
-import { grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus, grpp_syncDatabase, preventMinMax } from "./utils";
+import { createLogEntry, grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus, grpp_syncDatabase, preventMinMax } from "./utils";
 
 /*
     Require node modules
@@ -95,7 +95,7 @@ async function grpp_loadSettings(){
 */
 export async function grpp_saveSettings(){
     try {
-        console.info('INFO - Updating GRPP Settings file...');
+        createLogEntry('INFO - Updating GRPP Settings file...');
         module_fs.writeFileSync(`${process.cwd()}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
     } catch (err) {
         throw err;
@@ -118,10 +118,10 @@ export function grpp_updateSettings(data:any){
 export async function grpp_initPath(path:string = process.cwd()){
 
     // Log and check if settings file exists
-    console.info(`INFO - Creating settings file at \"${path}\"...`);
+    createLogEntry(`INFO - Creating settings file at \"${path}\"...`);
     if (module_fs.existsSync(`${path}/grpp_settings.json`) !== !0){
         module_fs.writeFileSync(`${path}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
-        console.info('INFO - Process complete!\n');
+        createLogEntry('INFO - Process complete!\n');
     } else {
         console.warn('WARN - Settings file detected on provided location! Skipping...\n');
     }
@@ -147,7 +147,7 @@ async function init(){
     grpp_displayMainLogo();
     var execFn:Function | null = null;
     if (process.argv.indexOf('--help') === -1){
-        console.info('==> Use \"--help\" for more details\n');
+        createLogEntry('==> Use \"--help\" for more details\n');
     }
 
     /*
@@ -295,7 +295,7 @@ async function init(){
 
     // Check if no flags were provided
     if (execFn === null && process.argv.length < 3){
-        console.info(`==> Since no args / flags were provided, We wish you a great day! <3\n`);
+        createLogEntry(`==> Since no args / flags were provided, We wish you a great day! <3\n`);
     }
 
 }

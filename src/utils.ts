@@ -55,15 +55,21 @@ export const runExternalCommand_Defaults:Pick <runExternalCommandOptions, 'chdir
 */
 
 /**
-	* Converts negative numbers to positive
+    * Create log entry only if --silent flag is not present
+    * @param data content to print on screen
+*/
+export function createLogEntry(data:any){
+    if (process.argv.indexOf('--silent') === -1) console.info(data);
+}
+
+/**
+	* Convert negative number to positive
 	* @param number [number] Number to be converted
 	* @returns [number] positive number
 */
 export function parsePositive(n:number):number {
 	var res = ((n - n) - n);
-	if (res < 0){
-		res = ((res - res) - res);
-	}
+	if (res < 0) res = ((res - res) - res);
 	return res;
 }
 
@@ -142,18 +148,18 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
         // Print data
         execCmd.stderr?.on('data', function(data){
             stdData = `${stdData}${data}\n`;
-            if (options.enableConsoleLog === !0) console.info(data);
+            if (options.enableConsoleLog === !0) createLogEntry(data);
         });
         execCmd.stdout?.on('data', function(data){
             stdData = `${stdData}${data}\n`;
-            if (options.enableConsoleLog === !0) console.info(data);
+            if (options.enableConsoleLog === !0) createLogEntry(data);
         });
 
         // Reset chdir and resolve after closing process
         execCmd.on('exit', function(exitCode){
 
             // Log exit code, create final string var and check if needs to clean output
-            console.info(`INFO - ${cmd} exited with code ${exitCode}`);
+            createLogEntry(`INFO - ${cmd} exited with code ${exitCode}`);
             var finalStd = stdData.slice(0, (stdData.length - 1));
             if (options.removeBlankLines === !0){
 
@@ -216,11 +222,11 @@ export function spliceArrayIntoChunks(target:any[], chunkSize:number = 2):any[] 
     * Print GRPP status
 */
 export function grpp_printStatus(){
-    console.info(`==> GRPP Status:\n    Current path: ${process.cwd()}\n`);
-    console.info(`──┬ Total times GRPP Update executed: ${grppSettings.runCounter}`);
-    console.info(`  ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]`);
-    console.info(`  ├ Last time GRPP Update was executed: ${grppSettings.lastRun}`);
-    console.info(`  └ Total repos preserved: ${Object.keys(grppSettings.repoEntries).length}\n`);
+    createLogEntry(`==> GRPP Status:\n    Current path: ${process.cwd()}\n`);
+    createLogEntry(`──┬ Total times GRPP Update executed: ${grppSettings.runCounter}`);
+    createLogEntry(`  ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]`);
+    createLogEntry(`  ├ Last time GRPP Update was executed: ${grppSettings.lastRun}`);
+    createLogEntry(`  └ Total repos preserved: ${Object.keys(grppSettings.repoEntries).length}\n`);
 }
 
 /**
@@ -228,22 +234,22 @@ export function grpp_printStatus(){
 */
 export function grpp_displayMainLogo(){
     console.clear();
-    console.info("\n   <=============================================================>");
-    console.info("   <=|          Git Repo Preservation Project (GRPP)           |=>");
-    console.info("   <=|     Created by Juliana (@julianaheartz.bsky.social)     |=>");
-    console.info("   <=============================================================>");
-    console.info("   <=|             A classic quote from an old one:            |=>");
-    console.info("   <=|                   \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"                   |=>");
-    console.info("   <=============================================================>\n");
+    createLogEntry("\n   <=============================================================>");
+    createLogEntry("   <=|          Git Repo Preservation Project (GRPP)           |=>");
+    createLogEntry("   <=|     Created by Juliana (@julianaheartz.bsky.social)     |=>");
+    createLogEntry("   <=============================================================>");
+    createLogEntry("   <=|             A classic quote from an old one:            |=>");
+    createLogEntry("   <=|                   \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"                   |=>");
+    createLogEntry("   <=============================================================>\n");
 }
 
 /**
     * Display help menu
 */
 export function grpp_displayHelp(){
-    console.info('==> Here is a list of all available commands:\n');
+    createLogEntry('==> Here is a list of all available commands:\n');
     Object.keys(grpp_flagList).forEach(function(currentFlag:any){
-        console.info(`─┬─ ${currentFlag}\n └─ ${grpp_flagList[currentFlag]}\n`);
+        createLogEntry(`─┬─ ${currentFlag}\n └─ ${grpp_flagList[currentFlag]}\n`);
     });
 }
 
@@ -279,7 +285,7 @@ export function grpp_getRepoInfo(path:string){
         const 
             fullPath:string = Object.keys(grppSettings.repoEntries)[repoIndex!],
             currentRepoData:grppRepoEntry = grppSettings.repoEntries[fullPath];
-        console.info(`==> Repo info:\n\n${JSON.stringify(currentRepoData, null, 4)}\n`);
+        createLogEntry(`==> Repo info:\n\n${JSON.stringify(currentRepoData, null, 4)}\n`);
     
     });
 
