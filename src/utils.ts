@@ -11,8 +11,8 @@
     Import TS modules
 */
 
-import { grppSettings } from './main';
-import { grpp_flagList, grppRepoEntry } from './database';
+import { grpp_flagList } from './database';
+import { grppRepoEntry, grppSettings } from './main';
 
 /*
     Require node modules
@@ -20,6 +20,32 @@ import { grpp_flagList, grppRepoEntry } from './database';
 
 import * as module_dns from 'dns';
 import * as module_childProcess from 'child_process';
+
+/*
+    Interfaces
+*/
+
+// Run external command options
+export interface runExternalCommandOptions {
+    chdir:string,
+    removeBlankLines:boolean
+}
+
+// Run external command output
+export interface runExternalCommand_output {
+    stdData:string,
+    exitCode:number | null
+}
+
+/*
+    Defaults
+*/
+
+// Run external command options
+export const runExternalCommand_Defaults:Pick <runExternalCommandOptions, 'chdir' | 'removeBlankLines'> = {
+    chdir: process.cwd(),
+    removeBlankLines: !1
+}
 
 /*
     Functions
@@ -94,12 +120,12 @@ export function execReasonListCheck(reasonList:string[], warnMsg:string, action:
     * This function was written based on hurricane response on: https://stackoverflow.com/questions/54887025/get-ip-address-by-domain-with-dns-lookup-node-js
     * @returns Promise with result
 */
-export async function checkConnection() {
+export async function checkConnection(){
     return new Promise(function(resolve, reject){
         module_dns.lookup(grppSettings.connectionTestURL, function(err, address){
             if (err){
                 reject(err);
-            };
+            }
             resolve(address);
         });
     });
@@ -108,14 +134,14 @@ export async function checkConnection() {
 /**
     * Run external commands
     * @param cmd [string] command to be executed
-    * @param chdir [string] chdir where commands will be executed (default: current working dir)
+    * @param options [] chdir where commands will be executed (default: current working dir)
 */
-export async function runExternalCommand(cmd:string, chdir:string = process.cwd()){
-    return new Promise<string>(function(resolve){
+export async function runExternalCommand(cmd:string, options:runExternalCommandOptions = { ...runExternalCommand_Defaults }){
+    return new Promise<runExternalCommand_output>(function(resolve){
 
         // Change current working directory and declare some vars
         var stdData:string = '';
-        process.chdir(chdir);
+        process.chdir(options.chdir);
         const
             originalCwd = structuredClone(process.cwd()),
             execCmd = module_childProcess.exec(cmd);
@@ -131,9 +157,27 @@ export async function runExternalCommand(cmd:string, chdir:string = process.cwd(
         });
 
         // Reset chdir and resolve after closing process
-        execCmd.on('exit', function(){
+        execCmd.on('exit', function(exitCode){
+
+            // Create final string var and check if needs to clean output
+            var finalStd = stdData.slice(0, (stdData.length - 1));
+            if (options.removeBlankLines === !0){
+
+                // Create temp var and process all lines
+                var tempString = '';
+                finalStd.split('\n').forEach(function(currentLine){
+                    if (currentLine !== ''){
+                        tempString = `${tempString}${currentLine}\n`;
+                    }
+                });
+                finalStd = tempString.slice(0, (tempString.length - 1));
+
+            }
+
+            // Return working dir to current path, execute 
             process.chdir(originalCwd);
-            resolve(stdData.slice(0, (stdData.length - 1)));
+            resolve({ exitCode, stdData: finalStd });
+
         });
 
     });
@@ -243,7 +287,6 @@ export function grpp_getRepoInfo(path:string){
         const 
             fullPath:string = Object.keys(grppSettings.repoEntries)[repoIndex!],
             currentRepoData:grppRepoEntry = grppSettings.repoEntries[fullPath];
-
         console.info(`==> Repo info:\n\n${JSON.stringify(currentRepoData, null, 4)}\n`);
     
     });

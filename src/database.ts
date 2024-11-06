@@ -6,53 +6,16 @@
 */
 
 /*
+    Import TS modules
+*/
+
+import { grppSettingsFile_Defaults } from './main';
+
+/*
     Require node modules
 */
 
 import * as module_os from 'os';
-
-/*
-    Interfaces
-*/
-
-// GRPP Repo Entry
-export interface grppRepoEntry {
-    repoUrl:string,
-    repoName:string,
-    repoOwner:string,
-    canUpdate:boolean,
-    importDate:string,
-    updateCounter:number,
-    lastUpdatedOn:string
-}
-
-// GRPP Settings file
-export interface grppSettingsFile {
-    threads:number,
-    lastRun:string,
-    maxPages:number,
-    repoEntries:any,
-    runCounter:number,
-    updateRuntime:number,
-    fetchStartPage:number,
-    connectionTestURL:string
-}
-
-/*
-    Defaults
-*/
-
-// Default settings file
-export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'threads' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage'> = {
-    threads: 4,
-    maxPages: 5,
-    runCounter: 0,
-    repoEntries: {},
-    lastRun: 'Never',
-    updateRuntime: 0,
-    fetchStartPage: 1,
-    connectionTestURL: '1.1.1.1'
-}
 
 /*
     Variables

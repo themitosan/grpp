@@ -12,7 +12,6 @@
 import { grpp_getUserRepos } from "./getUserRepos";
 import { grpp_importBatch, grpp_startImport } from "./import";
 import { grpp_checkBeforeUpdateProcess, grpp_updateRepo } from "./update";
-import { grppRepoEntry, grppSettingsFile, grppSettingsFile_Defaults } from "./database";
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus, grpp_syncDatabase, preventMinMax } from "./utils";
 
 /*
@@ -20,6 +19,49 @@ import { grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printSta
 */
 
 import * as module_fs from 'fs';
+
+/*
+    Interfaces
+*/
+
+// GRPP Repo Entry
+export interface grppRepoEntry {
+    repoUrl:string,
+    repoName:string,
+    repoOwner:string,
+    canUpdate:boolean,
+    importDate:string,
+    updateCounter:number,
+    lastUpdatedOn:string
+}
+
+// GRPP Settings file
+export interface grppSettingsFile {
+    threads:number,
+    lastRun:string,
+    maxPages:number,
+    repoEntries:any,
+    runCounter:number,
+    updateRuntime:number,
+    fetchStartPage:number,
+    connectionTestURL:string
+}
+
+/*
+    Defaults
+*/
+
+// Default settings file
+export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'threads' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage'> = {
+    threads: 4,
+    maxPages: 5,
+    runCounter: 0,
+    repoEntries: {},
+    lastRun: 'Never',
+    updateRuntime: 0,
+    fetchStartPage: 1,
+    connectionTestURL: '1.1.1.1'
+}
 
 /*
     Variables

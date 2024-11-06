@@ -9,9 +9,9 @@
     Import TS modules
 */
 
-import { grppRepoEntry } from './database';
+import { grppRepoEntry } from './main';
 import { grpp_updateRepoData } from './main';
-import { convertArrayToString, execReasonListCheck, grpp_displayMainLogo, runExternalCommand } from './utils';
+import { convertArrayToString, execReasonListCheck, grpp_displayMainLogo, runExternalCommand, runExternalCommand_Defaults } from './utils';
 
 /*
     Require node modules
@@ -86,14 +86,14 @@ export async function grpp_startImport(cloneURL:string){
             });
 
             // Start clone process
-            await runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, `${process.cwd()}/${urlData[2]}/${repoOwner}`)
+            await runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, { ...runExternalCommand_Defaults, chdir: `${process.cwd()}/${urlData[2]}/${repoOwner}` })
             .then(function(){
                 console.info('INFO - Setting git config to fetch all refs from origin...');
-                runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', repoPath);
+                runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: repoPath });
             })
             .then(function(){
                 console.info(`INFO - Setting repo dir ${repoName} as safe...`);
-                runExternalCommand(`git config --global --add safe.directory ${repoPath}`, originalChdir);
+                runExternalCommand(`git config --global --add safe.directory ${repoPath}`, { ...runExternalCommand_Defaults, chdir: originalChdir });
             })
             .then(function(){
 

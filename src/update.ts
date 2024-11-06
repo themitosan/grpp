@@ -9,9 +9,9 @@
     Import TS modules
 */
 
-import { grppRepoEntry } from './database';
+import { grppRepoEntry } from './main';
 import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
-import { checkConnection, convertArrayToString, execReasonListCheck, parsePositive, runExternalCommand, spliceArrayIntoChunks } from './utils';
+import { checkConnection, convertArrayToString, execReasonListCheck, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks } from './utils';
 
 /*
     Functions
@@ -25,13 +25,11 @@ export async function grpp_checkBeforeUpdateProcess(){
     // Check if we have some internet connection
     await checkConnection().then(function(){
 
-        // Declare vars and check if there is repos to be updated
+        // Declare vars, check if there is repos to be updated and check if can continue
         var reasonList:string[] = [];
         if (grppSettings.repoEntries.length === 0){
             reasonList.push('You must import any repo before starting GRPP update process!');
         }
-
-        // Check if can start
         execReasonListCheck(reasonList, `ERROR - Unable to start update process!\nReason: ${convertArrayToString(reasonList)}`, startUpdateAll);
 
     }).catch(function(err){
@@ -61,16 +59,16 @@ export async function grpp_updateRepo(path:string){
 
         // Get current repo data and start fetching updates
         const currentRepoData:grppRepoEntry = grppSettings.repoEntries[path];
-        await runExternalCommand('git fetch --all', path).then(function(stdData:string){
+        await runExternalCommand('git fetch --all', { ...runExternalCommand_Defaults, chdir: path }).then(function(processOutput:runExternalCommand_output){
 
             // Set Check if there was updates
             updateRuntime = parsePositive(updateStartTime - performance.now());
-            if (stdData.length === 0){
+            if (processOutput.stdData.length === 0){
                 console.info(`INFO - ${currentRepoData.repoName} is up to date!`);
             }
 
             // Check if needs to update current repo data
-            if (stdData.length !== 0 && stdData.indexOf('fatal: ') === -1){
+            if (processOutput.stdData.length !== 0 && processOutput.stdData.indexOf('fatal: ') === -1){
                 currentRepoData.updateCounter++;
                 currentRepoData.lastUpdatedOn = new Date().toString();
                 grpp_updateRepoData(currentRepoData, path);
