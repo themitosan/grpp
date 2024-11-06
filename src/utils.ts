@@ -151,7 +151,8 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
         // Reset chdir and resolve after closing process
         execCmd.on('exit', function(exitCode){
 
-            // Create final string var and check if needs to clean output
+            // Log exit code, create final string var and check if needs to clean output
+            console.info(`INFO - ${cmd} exited with code ${exitCode}`);
             var finalStd = stdData.slice(0, (stdData.length - 1));
             if (options.removeBlankLines === !0){
 

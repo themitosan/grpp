@@ -19,10 +19,22 @@ import { checkConnection, convertArrayToString, execReasonListCheck, parsePositi
 
 // Batch update file
 interface grpp_batchUpdateFile {
-    repoList:string[],
-    errorCounter:number,
-    updateCounter:number
+    repoList:string[]
 }
+
+/*
+    Variables
+*/
+
+var
+
+    // Update / error counter
+    grpp_errorCounter = 0,
+    grpp_updateCounter = 0,
+    
+    // Update / error data
+    grpp_errorData:string[] = [],
+    grpp_updateData:string[] = [];
 
 /*
     Functions
@@ -70,7 +82,7 @@ export async function grpp_updateRepo(path:string){
 
         // Get current repo data and start fetching updates
         const currentRepoData:grppRepoEntry = grppSettings.repoEntries[path];
-        await runExternalCommand('git fetch --all', { ...runExternalCommand_Defaults, chdir: path, enableConsoleLog: !1 }).then(function(processOutput:runExternalCommand_output){
+        await runExternalCommand('git fetch --all', { ...runExternalCommand_Defaults, chdir: path, enableConsoleLog: !1, removeBlankLines: !0 }).then(function(processOutput:runExternalCommand_output){
 
             // Measure fetch time duration and check if process output any data
             updateRuntime = parsePositive(updateStartTime - performance.now());
@@ -81,13 +93,19 @@ export async function grpp_updateRepo(path:string){
             // Check if fetch process printed any data without errors (update)
             if (processOutput.stdData.length !== 0 && processOutput.stdData.indexOf('fatal: ') === -1){
 
-                // Print update data, bump update counter, update last updated time and save updated repo data to settings file
+                // Print update data, push process output to update data and bump update counter
                 console.info(`INFO - Update data:\n${processOutput.stdData}`);
+                grpp_updateData.push(processOutput.stdData);
+                grpp_updateCounter++;
+
+                // Update current repo data
                 currentRepoData.updateCounter++;
                 currentRepoData.lastUpdatedOn = new Date().toString();
                 grpp_updateRepoData(path, currentRepoData);
 
             } else {
+                grpp_errorCounter++;
+                grpp_errorData.push(processOutput.stdData);
                 console.warn(processOutput.stdData);
             }
 
