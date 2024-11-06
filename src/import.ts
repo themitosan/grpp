@@ -61,15 +61,9 @@ export async function grpp_startImport(cloneURL:string){
             originalChdir = structuredClone(process.cwd()),
             repoPath = `${process.cwd()}/${urlData[2]}/${repoOwner}/${repoName}`;
 
-        // Check if repo already exists
-        if (module_fs.existsSync(`${repoPath}/HEAD`) === !0){
-            reasonList.push(`This repo already exists on filesystem!\nPath: ${repoPath}`);
-        }
-
-        // Check if no url was provided
-        if (cloneURL.length === 0){
-            reasonList.push('You must provide a git url to import!');
-        }
+        // Check conditions
+        if (module_fs.existsSync(`${repoPath}/HEAD`) === !0) reasonList.push(`This repo already exists on filesystem!\nPath: ${repoPath}`);
+        if (cloneURL.length === 0) reasonList.push('You must provide a git url to import!');
 
         // Check if can continue
         execReasonListCheck(reasonList, `WARN - Unable to clone repo!\nReason: ${convertArrayToString(reasonList)}\n`, async function(){

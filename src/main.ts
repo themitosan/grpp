@@ -262,6 +262,7 @@ async function init(){
             execFn = function(){
                 grpp_getRepoInfo(currentFlag.replace('--getRepoData=', ''));
             }
+            break;
         }
 
         // Update an specific repo
@@ -269,6 +270,7 @@ async function init(){
             execFn = function(){
                 grpp_updateRepo(currentFlag.replace('--update=', ''));
             }
+            break;
         }
 
         // Update all repos
@@ -282,6 +284,7 @@ async function init(){
             execFn = function(){
                 grpp_processBatchFile(Number(currentFlag.replace('--processBatchFile=', '')));
             }
+            break;
         }
 
     }

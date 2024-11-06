@@ -263,20 +263,10 @@ export function grpp_getRepoInfo(path:string){
     var reasonList:string[] = [],
         repoIndex:number | null = grpp_getRepoIndex(path);
 
-    // Check if user imported any repos
-    if (grppSettings.repoEntries.length < 1){
-        reasonList.push('You must import any repo before using this option.');
-    }
-
-    // Check if user provided path
-    if (path.length < 1){
-        reasonList.push('You must provide repo path!');
-    }
-
-    // Check if repo with provided path exists
-    if (repoIndex === null){
-        reasonList.push(`Unable to find repo with provided path!`);
-    }
+    // Start checking conditions
+    if (grppSettings.repoEntries.length < 1) reasonList.push('You must import any repo before using this option.');
+    if (path.length < 1) reasonList.push('You must provide repo path!');
+    if (repoIndex === null) reasonList.push(`Unable to find repo with provided path!`);
 
     // Check if can continue
     execReasonListCheck(reasonList, `ERROR - Unable to get repo info!\nReason: ${convertArrayToString(reasonList)}`, function(){
@@ -323,7 +313,7 @@ export function grpp_getRepoIndex(path:string):number | null {
 }
 
 /**
-    * Sync database
+    * Sync database [WIP]
 */
 export async function grpp_syncDatabase(){
     // WIP

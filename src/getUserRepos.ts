@@ -40,9 +40,7 @@ export async function grpp_getUserRepos(userName:string){
             reasonList:string[] = [];
 
         // Check if username was provided
-        if (userName.length < 1){
-            reasonList.push('You must provide a username!');
-        }
+        if (userName.length < 1) reasonList.push('You must provide a username!');
 
         // Check if can prompt user
         execReasonListCheck(reasonList, `ERROR - Unable to seek repos from user!\nReason: ${convertArrayToString(reasonList)}`, function(){
@@ -127,16 +125,10 @@ function startUserFetch(urlBase:string){
 
         // Create error string and check if there is repos available
         var errorList:string[] = [];
-        if (fetchResult.length === 0 && repoChunk.length === 0){
-            errorList.push('No repos available for this user.');
-        }
+        if (fetchResult.length === 0 && repoChunk.length === 0) errorList.push('No repos available for this user.');
 
-        // Check if had 404 error
-        if (fetchResult['status'] !== void 0 && fetchResult['status'].toString() === "404"){
-            errorList.push(fetchResult.status);
-        }
-
-        // Check if can continue
+        // Check if had 404 error and if can continue
+        if (fetchResult['status'] !== void 0 && fetchResult['status'].toString() === "404") errorList.push(fetchResult.status);
         if (errorList.length === 0){
 
             // Check if have results. If so, push to repo chunk

@@ -70,9 +70,7 @@ export async function grpp_checkBeforeUpdateProcess(){
 
         // Declare vars, check if there is repos to be updated and check if can continue
         var reasonList:string[] = [];
-        if (grppSettings.repoEntries.length === 0){
-            reasonList.push('You must import any repo before starting GRPP update process!');
-        }
+        if (grppSettings.repoEntries.length === 0) reasonList.push('You must import any repo before starting GRPP update process!');
         execReasonListCheck(reasonList, `ERROR - Unable to start update process!\nReason: ${convertArrayToString(reasonList)}`, startUpdateAllRepos);
 
     }).catch(function(err){
@@ -89,9 +87,7 @@ export async function grpp_updateRepo(path:string){
 
     // Declare vars and check if repo exists on database
     var reasonList:string[] = [];
-    if (grppSettings.repoEntries[path] === void 0){
-        reasonList.push(`Unable to find the following path on database: ${path}`);
-    }
+    if (grppSettings.repoEntries[path] === void 0) reasonList.push(`Unable to find the following path on database: ${path}`);
 
     // Check if can continue
     execReasonListCheck(reasonList, `ERROR: Unable to update repo!\nReason: ${convertArrayToString(reasonList)}\n`, async function(){
@@ -106,9 +102,7 @@ export async function grpp_updateRepo(path:string){
 
             // Measure fetch time duration and check if process output any data
             updateRuntime = parsePositive(updateStartTime - performance.now());
-            if (processOutput.stdData.length === 0){
-                createLogEntry(`INFO - ${currentRepoData.repoName} is up to date!`);
-            }
+            if (processOutput.stdData.length === 0) createLogEntry(`INFO - ${currentRepoData.repoName} is up to date!`);
 
             // Check if fetch process printed any data without errors (update)
             if (processOutput.stdData.length !== 0 && processOutput.stdData.indexOf('fatal: ') === -1){
