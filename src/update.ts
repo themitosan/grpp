@@ -11,7 +11,7 @@
 
 import { grppRepoEntry } from './import';
 import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
-import { checkConnection, convertArrayToString, createLogEntry, execReasonListCheck, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks } from './utils';
+import { checkConnection, convertArrayToString, createLogEntry, execReasonListCheck, grpp_displayMainLogo, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks } from './utils';
 
 /*
     Require node modules
@@ -208,7 +208,16 @@ function startUpdateAllRepos(){
         });
     }
 
+    // Create wait interval
+    const waitAllThreadsExit = setInterval(function(){
 
+        // Check if process completed
+        if (completedRunners > (grppSettings.threads - 1)){
+            batchUpdateComplete();
+            clearInterval(waitAllThreadsExit);
+        }
+
+    }, 50);
 
 }
 
@@ -230,8 +239,17 @@ function processBatchStdData(stdData:string){
             updateCounter = runnerData[3],
             errorCounter = runnerData[4];
 
+        grpp_displayMainLogo();
+
     }
 
+}
+
+/**
+    * Batch update complete [WIP] 
+*/
+function batchUpdateComplete(){
+    // WIP
 }
 
 // Export module
