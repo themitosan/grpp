@@ -29,8 +29,9 @@ import * as module_childProcess from 'child_process';
 // Run external command options
 export interface runExternalCommandOptions {
     chdir:string,
+    onStdData:Function,
     enableConsoleLog:boolean,
-    removeBlankLines:boolean
+    removeBlankLines:boolean,
 }
 
 // Run external command output
@@ -44,10 +45,11 @@ export interface runExternalCommand_output {
 */
 
 // Run external command options
-export const runExternalCommand_Defaults:Pick <runExternalCommandOptions, 'chdir' | 'removeBlankLines' | 'enableConsoleLog'> = {
+export const runExternalCommand_Defaults:Pick <runExternalCommandOptions, 'chdir' | 'removeBlankLines' | 'enableConsoleLog' | 'onStdData'> = {
     chdir: process.cwd(),
     enableConsoleLog: !0,
-    removeBlankLines: !1
+    removeBlankLines: !1,
+    onStdData: function(){return;}
 };
 
 /*
@@ -145,12 +147,14 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
             originalCwd = structuredClone(process.cwd()),
             execCmd = module_childProcess.exec(cmd);
 
-        // Print data
+        // Process std data
         execCmd.stderr?.on('data', function(data){
+            options.onStdData(data);
             stdData = `${stdData}${data}\n`;
             if (options.enableConsoleLog === !0) createLogEntry(data);
         });
         execCmd.stdout?.on('data', function(data){
+            options.onStdData(data);
             stdData = `${stdData}${data}\n`;
             if (options.enableConsoleLog === !0) createLogEntry(data);
         });

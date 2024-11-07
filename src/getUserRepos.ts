@@ -169,6 +169,7 @@ function startUserFetch(urlBase:string){
                 });
             }
         });
+
     };
 
     // Start process

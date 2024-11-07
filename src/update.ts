@@ -142,7 +142,13 @@ export async function grpp_processBatchFile(id:number){
         // Read batch update file and start processing repos
         const batchFile:batchUpdate_list = JSON.parse(module_fs.readFileSync(batchFilePath, 'utf-8'));
         for (const repoEntry in batchFile.repoList){
-            await grpp_updateRepo(repoEntry);
+
+            // Process current repo and output current status
+            await grpp_updateRepo(repoEntry).then(function(){
+                console.clear();
+                console.info(`%GRPP%${id},${batchFile.repoList.indexOf(repoEntry)},${batchFile.repoList.length},${grpp_updateResults.updateCounter},${grpp_updateResults.errorCounter}`);
+            });
+
         }
 
         // Create log entry, save results, remove batch file and exit 
@@ -186,6 +192,45 @@ function startUpdateAllRepos(){
     spliceArrayIntoChunks(updateList, grppSettings.threads).forEach(function(currentList:string[], listIndex){
         module_fs.writeFileSync(`${tempDir}/GRPP_BATCH_${listIndex}.json`, JSON.stringify({ repoList: currentList }), 'utf-8');
     });
+
+    // Create log and create update processes [WIP]
+    createLogEntry(`INFO - Starting GRPP Batch Update process...`);
+    for (var currentThread = 0; currentThread < grppSettings.threads; currentThread++){
+        runExternalCommand(`node ${process.argv[1]} --path=${process.cwd()} --silent --processBatchFile=${currentThread}`, {
+            
+            ...runExternalCommand_Defaults,
+            onStdData: function(data:string){
+                processBatchStdData(data);
+            }
+
+        }).then(function(){
+            completedRunners++;
+        });
+    }
+
+
+
+}
+
+/**
+    * Process stdData from batch update process [WIP]
+    * @param stdData [string] output from batch update process
+*/
+function processBatchStdData(stdData:string){
+
+    // Check if GRPP special string was found
+    if (stdData.indexOf('%GRPP%') !== -1){
+
+        // WIP Reference for later
+        const
+            runnerData = stdData.split(','),
+            currentId = runnerData[0],
+            currentRepo = runnerData[1],
+            listLength = runnerData[2],
+            updateCounter = runnerData[3],
+            errorCounter = runnerData[4];
+
+    }
 
 }
 

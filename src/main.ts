@@ -151,6 +151,8 @@ async function init(){
         createLogEntry('==> Use \"--help\" for more details\n');
     }
 
+    console.info(process.argv);
+
     /*
         Process settings flags
     */
