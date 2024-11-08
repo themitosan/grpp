@@ -27,13 +27,13 @@ import * as module_os from 'os';
 
 // GRPP Settings file
 export interface grppSettingsFile {
-    threads:number,
     lastRun:string,
     maxPages:number,
     repoEntries:any,
     runCounter:number,
     updateRuntime:number,
     fetchStartPage:number,
+    maxReposPerList:number,
     connectionTestURL:string
 }
 
@@ -42,14 +42,14 @@ export interface grppSettingsFile {
 */
 
 // Default settings file
-export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'threads' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage'> = {
-    threads: 4,
+export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage'> = {
     maxPages: 5,
     runCounter: 0,
     repoEntries: {},
     lastRun: 'Never',
     updateRuntime: 0,
     fetchStartPage: 1,
+    maxReposPerList: 50,
     connectionTestURL: '1.1.1.1'
 }
 
@@ -57,11 +57,11 @@ export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repo
     Variables
 */
 
-const tempSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
+// Temp settings to be appended on main settings file
+const tempSettings:grppSettingsFile | any = {};
 
 // App settings
-export var 
-    grppSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
+export var grppSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
 
 /*
     Functions
@@ -160,9 +160,9 @@ async function init(){
     for (var i = 0; i < process.argv.length; i++){
         const currentFlag = process.argv[i];
 
-        // Set max threads
-        if (currentFlag.indexOf('--threads=') !== -1){
-            tempSettings.threads = preventMinMax(Number(currentFlag.replace('--threads=', '')), 1, 1000);
+        // Set max repos a batch file should have
+        if (currentFlag.indexOf('--maxReposPerList=') !== -1){
+            tempSettings.maxReposPerList = preventMinMax(Number(currentFlag.replace('--maxReposPerList=', '')), 1, 1000);
         }
 
         // Set max fetch pages
@@ -285,8 +285,8 @@ async function init(){
 
         // Process GRPP batch files
         if (currentFlag.indexOf('--processBatchFile=') !== -1){
-            execFn = function(){
-                grpp_processBatchFile(Number(currentFlag.replace('--processBatchFile=', '')));
+            execFn = async function(){
+                await grpp_processBatchFile(Number(currentFlag.replace('--processBatchFile=', '')));
             }
             break;
         }
