@@ -119,7 +119,7 @@ export function grpp_updateSettings(data:any){
     * Initiaite GRPP path
     * @param path [string] path to be initialized (Default: current working dir)
 */
-export async function grpp_initPath(path:string = process.cwd()){
+export function grpp_initPath(path:string = process.cwd()){
 
     // Log and check if settings file exists
     createLogEntry(`INFO - Creating settings file at \"${path}\"...`);

@@ -32,6 +32,7 @@ interface batchUpdate_list {
 // Batch update results
 interface batchUpdate_results {
     errorData:string[],
+    currentRepo:number,
     updateData:string[],
     errorCounter:number,
     updateCounter:number
@@ -42,9 +43,10 @@ interface batchUpdate_results {
 */
 
 // Batch update results
-const batchUpdateResults_Defaults:Pick <batchUpdate_results, 'errorCounter' | 'errorData' | 'updateCounter' | 'updateData'> = {
+const batchUpdateResults_Defaults:Pick <batchUpdate_results, 'errorCounter' | 'errorData' | 'updateCounter' | 'updateData' | 'currentRepo'> = {
     errorData: [],
     updateData: [],
+    currentRepo: 1,
     errorCounter: 0,
     updateCounter: 0
 }
@@ -82,51 +84,58 @@ export async function grpp_checkBeforeUpdateProcess(){
     * @param path [string] repo path
 */
 export async function grpp_updateRepo(path:string){
+    return new Promise<void>(function(resolve){
 
-    // Declare vars and check if repo exists on database
-    var reasonList:string[] = [];
-    if (grppSettings.repoEntries[path] === void 0) reasonList.push(`Unable to find the following path on database: ${path}`);
+        // Declare vars and check if repo exists on database
+        var reasonList:string[] = [];
+        if (grppSettings.repoEntries[path] === void 0) reasonList.push(`Unable to find the following path on database: ${path}`);
 
-    // Check if can continue
-    execReasonListCheck(reasonList, `ERROR: Unable to update repo!\nReason: ${convertArrayToString(reasonList)}\n`, async function(){
+        // Check if can continue
+        execReasonListCheck(reasonList, `ERROR: Unable to update repo!\nReason: ${convertArrayToString(reasonList)}\n`, async function(){
 
-        // Declare vars
-        var updateRuntime = 0,
-            updateStartTime = performance.now();
+            // Declare vars
+            var updateRuntime = 0,
+                updateStartTime = performance.now();
+        
+            // Get current repo data and start fetching updates
+            const currentRepoData:grppRepoEntry = grppSettings.repoEntries[path];
+            await runExternalCommand('git fetch --all', { ...runExternalCommand_Defaults, chdir: path, enableConsoleLog: !1, removeBlankLines: !0 }).then(function(processOutput:runExternalCommand_output){
+            
+                // Bump current repo, measure fetch time duration and check if process output any data
+                grpp_updateResults.currentRepo++;
+                updateRuntime = parsePositive(updateStartTime - performance.now());
+                if (processOutput.stdData.length === 0) createLogEntry(`INFO - ${currentRepoData.repoName} is up to date!`);
+            
+                // Check if fetch process printed any data without errors (update)
+                if (processOutput.stdData.length !== 0 && processOutput.stdData.indexOf('fatal: ') === -1){
+                
+                    // Print update data, push process output to update data and bump update counter
+                    createLogEntry(`INFO - Update data:\n${processOutput.stdData}`);
+                    grpp_updateResults.updateData.push(processOutput.stdData);
+                    grpp_updateResults.updateCounter++;
+                
+                    // Update current repo data
+                    currentRepoData.updateCounter++;
+                    currentRepoData.lastUpdatedOn = new Date().toString();
+                    grpp_updateRepoData(path, currentRepoData);
+                
+                }
 
-        // Get current repo data and start fetching updates
-        const currentRepoData:grppRepoEntry = grppSettings.repoEntries[path];
-        await runExternalCommand('git fetch --all', { ...runExternalCommand_Defaults, chdir: path, enableConsoleLog: !1, removeBlankLines: !0 }).then(function(processOutput:runExternalCommand_output){
-
-            // Measure fetch time duration and check if process output any data
-            updateRuntime = parsePositive(updateStartTime - performance.now());
-            if (processOutput.stdData.length === 0) createLogEntry(`INFO - ${currentRepoData.repoName} is up to date!`);
-
-            // Check if fetch process printed any data without errors (update)
-            if (processOutput.stdData.length !== 0 && processOutput.stdData.indexOf('fatal: ') === -1){
-
-                // Print update data, push process output to update data and bump update counter
-                createLogEntry(`INFO - Update data:\n${processOutput.stdData}`);
-                grpp_updateResults.updateData.push(processOutput.stdData);
-                grpp_updateResults.updateCounter++;
-
-                // Update current repo data
-                currentRepoData.updateCounter++;
-                currentRepoData.lastUpdatedOn = new Date().toString();
-                grpp_updateRepoData(path, currentRepoData);
-
-            } else {
-                grpp_updateResults.errorCounter++;
-                grpp_updateResults.errorData.push(processOutput.stdData);
-                console.warn(processOutput.stdData);
-            }
-
-            // Update GRPP settings
-            grpp_updateSettings({ updateRuntime });
-
+                // Check if we got any git error
+                if (processOutput.stdData.indexOf('fatal: ') !== -1){
+                    grpp_updateResults.errorCounter++;
+                    grpp_updateResults.errorData.push(processOutput.stdData);
+                    console.warn(processOutput.stdData);
+                }
+            
+                // Update GRPP settings
+                grpp_updateSettings({ updateRuntime });
+                resolve();
+            
+            });
         });
-    });
 
+    });
 }
 
 /**
@@ -146,16 +155,15 @@ export async function grpp_processBatchFile(id:number){
             // Process current repo and output current status
             const repoEntry = batchFile.repoList[repoIndex];
             await grpp_updateRepo(repoEntry).then(function(){
-                console.info(`%GRPP%${id},${(batchFile.repoList.indexOf(repoEntry) + 1)},${batchFile.repoList.length},${grpp_updateResults.updateCounter},${grpp_updateResults.errorCounter}`);
+                const resFilePath = `${module_path.parse(batchFilePath).dir}/GRPP_BATCH_RES_${id}.json`;
+                createLogEntry(`INFO - Saving batch result...\nPath: ${resFilePath}`);
+                module_fs.writeFileSync(resFilePath, JSON.stringify(grpp_updateResults), 'utf-8');
             });
 
         }
 
         // Create log entry, save results, remove batch file and exit 
-        const resFilePath = `${module_path.parse(batchFilePath).dir}/GRPP_BATCH_RES_${id}.json`;
-        createLogEntry(`INFO - Saving batch result...\nPath: ${resFilePath}`);
-        module_fs.writeFileSync(resFilePath, JSON.stringify(grpp_updateResults), 'utf-8');
-        // module_fs.unlinkSync(batchFilePath);
+        module_fs.unlinkSync(batchFilePath);
         process.exit();
 
     } else {
@@ -194,9 +202,6 @@ async function startUpdateAllRepos(){
 
     // Split update list on given runners and create GRPP batch files
     const chunkList = spliceArrayIntoChunks(updateList, grppSettings.maxReposPerList);
-
-    console.info(JSON.stringify(chunkList, void 0, 4));
-
     chunkList.forEach(function(currentList:string[], listIndex){
         module_fs.writeFileSync(`${tempDir}/GRPP_BATCH_${listIndex}.json`, JSON.stringify({ repoList: currentList }), 'utf-8');
     });
@@ -204,14 +209,7 @@ async function startUpdateAllRepos(){
     // Create log and create update processes
     createLogEntry(`INFO - Starting GRPP Batch Update Process... (Creating ${chunkList.length} processes, Max. ${grppSettings.maxReposPerList} per list)`);
     for (var currentList = 0; currentList < chunkList.length; currentList++){
-        runExternalCommand(`node ${process.argv[1]} --silent --path=${originalCwd} --processBatchFile=${currentList}`, {
-            
-            ...runExternalCommand_Defaults,
-            onStdData: function(data:string){
-                processBatchStdData(data);
-            }
-
-        }).then(function(){
+        runExternalCommand(`node ${process.argv[1]} --silent --path=${originalCwd} --processBatchFile=${currentList}`, { ...runExternalCommand_Defaults }).then(function(){
             completedRunners++;
         });
     }
