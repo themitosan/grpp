@@ -141,11 +141,11 @@ export async function grpp_processBatchFile(id:number){
         
         // Read batch update file and start processing repos
         const batchFile:batchUpdate_list = JSON.parse(module_fs.readFileSync(batchFilePath, 'utf-8'));
-        for (const repoEntry in batchFile.repoList){
+        for (const repoIndex in batchFile.repoList){
 
             // Process current repo and output current status
+            const repoEntry = batchFile.repoList[repoIndex];
             await grpp_updateRepo(repoEntry).then(function(){
-                console.clear();
                 console.info(`%GRPP%${id},${batchFile.repoList.indexOf(repoEntry)},${batchFile.repoList.length},${grpp_updateResults.updateCounter},${grpp_updateResults.errorCounter}`);
             });
 
@@ -159,7 +159,7 @@ export async function grpp_processBatchFile(id:number){
         process.exit();
 
     } else {
-        console.error(`ERROR - Unable to locate batch file with id ${id}!\n`);
+        console.error(`ERROR - Unable to locate batch file with id ${id}!\nPath: ${batchFilePath}`);
     }
 
 }
@@ -167,7 +167,7 @@ export async function grpp_processBatchFile(id:number){
 /**
     * Start GRPP update process [WIP]
 */
-function startUpdateAllRepos(){
+async function startUpdateAllRepos(){
 
     // Declare vars
     var completedRunners = 0,
@@ -193,10 +193,10 @@ function startUpdateAllRepos(){
         module_fs.writeFileSync(`${tempDir}/GRPP_BATCH_${listIndex}.json`, JSON.stringify({ repoList: currentList }), 'utf-8');
     });
 
-    // Create log and create update processes [WIP]
+    // Create log and create update processes
     createLogEntry(`INFO - Starting GRPP Batch Update process...`);
     for (var currentThread = 0; currentThread < grppSettings.threads; currentThread++){
-        runExternalCommand(`node ${process.argv[1]} --path=${process.cwd()} --silent --processBatchFile=${currentThread}`, {
+        runExternalCommand(`node ${process.argv[1]} --silent --path=${process.cwd()} --processBatchFile=${currentThread}`, {
             
             ...runExternalCommand_Defaults,
             onStdData: function(data:string){
@@ -212,7 +212,7 @@ function startUpdateAllRepos(){
     const waitAllThreadsExit = setInterval(function(){
 
         // Check if process completed
-        if (completedRunners > (grppSettings.threads - 1)){
+        if (completedRunners > grppSettings.threads){
             batchUpdateComplete();
             clearInterval(waitAllThreadsExit);
         }
@@ -239,17 +239,18 @@ function processBatchStdData(stdData:string){
             updateCounter = runnerData[3],
             errorCounter = runnerData[4];
 
-        grpp_displayMainLogo();
+        // grpp_displayMainLogo();
+        
 
     }
 
 }
 
 /**
-    * Batch update complete [WIP] 
+    * Batch update complete [WIP]
 */
 function batchUpdateComplete(){
-    // WIP
+    console.info('INFO - Process complete!');
 }
 
 // Export module

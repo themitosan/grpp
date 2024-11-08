@@ -83,13 +83,10 @@ export function parsePositive(n:number):number {
     * @returns fixed number
 */
 export function preventMinMax(num:number, min:number, max:number):number {
-
-    // Declare vars, check num value and return res
-    var res = min;
+    var res = num;
     if (num < min) num = min;
     if (num > max) num = max;
     return res;
-
 }
 
 /**

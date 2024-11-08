@@ -57,8 +57,11 @@ export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repo
     Variables
 */
 
+const tempSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
+
 // App settings
-export var grppSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
+export var 
+    grppSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
 
 /*
     Functions
@@ -76,7 +79,7 @@ async function grpp_loadSettings(){
 
             // Try loading settings
             try {
-                grppSettings = JSON.parse(module_fs.readFileSync(filePath, 'utf-8'));
+                grppSettings = { ...JSON.parse(module_fs.readFileSync(filePath, 'utf-8')), ...tempSettings };
                 resolve();
             } catch (err) {
                 reject(err);
@@ -151,8 +154,6 @@ async function init(){
         createLogEntry('==> Use \"--help\" for more details\n');
     }
 
-    console.info(process.argv);
-
     /*
         Process settings flags
     */
@@ -161,12 +162,22 @@ async function init(){
 
         // Set max threads
         if (currentFlag.indexOf('--threads=') !== -1){
-            grppSettings.threads = preventMinMax(Number(currentFlag.replace('--threads=', '')), 0, 1000);
+            tempSettings.threads = preventMinMax(Number(currentFlag.replace('--threads=', '')), 1, 1000);
         }
 
         // Set max fetch pages
         if (currentFlag.indexOf('--setMaxFetchPages=') !== -1){
-            grppSettings.maxPages = preventMinMax(Number(currentFlag.replace('--setMaxFetchPages=', '')), 0, 1000);
+            tempSettings.maxPages = preventMinMax(Number(currentFlag.replace('--setMaxFetchPages=', '')), 1, 1000);
+        }
+
+        // Set web test url
+        if (currentFlag.indexOf('--setConnectionTestURL=') !== -1){
+            tempSettings.connectionTestURL = currentFlag.replace('--setConnectionTestURL=', '');
+        }
+
+        // Set starting fetch page
+        if (currentFlag.indexOf('--setStartPage=') !== -1){
+            tempSettings.fetchStartPage = preventMinMax(Number(currentFlag.replace('--setStartPage=', '')), 0, 9999);
         }
 
         // Set GRPP path
@@ -185,16 +196,6 @@ async function init(){
                 throw `ERROR - Unable to set GRPP Path!\nDetails: ${err}\n`;
             }
 
-        }
-
-        // Set web test url
-        if (currentFlag.indexOf('--setConnectionTestURL=') !== -1){
-            grppSettings.connectionTestURL = currentFlag.replace('--setConnectionTestURL=', '');
-        }
-
-        // Set starting fetch page
-        if (currentFlag.indexOf('--setStartPage=') !== -1){
-            grppSettings.fetchStartPage = preventMinMax(Number(currentFlag.replace('--setStartPage=', '')), 0, 9999);
         }
 
     }
@@ -294,8 +295,8 @@ async function init(){
 
     // If have functions to execute, run init process and then, execute it!
     if (execFn !== null){
-        await grpp_loadSettings().then(function(){
-            execFn!();
+        await grpp_loadSettings().then(async function(){
+            await execFn!();
         });
     }
 
@@ -307,4 +308,4 @@ async function init(){
 }
 
 // Start GRPP
-init();
+await init();
