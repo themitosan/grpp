@@ -155,9 +155,12 @@ export async function grpp_processBatchFile(id:number){
             // Process current repo and output current status
             const repoEntry = batchFile.repoList[repoIndex];
             await grpp_updateRepo(repoEntry).then(function(){
+
+                // Create / update current process result
                 const resFilePath = `${module_path.parse(batchFilePath).dir}/GRPP_BATCH_RES_${id}.json`;
                 createLogEntry(`INFO - Saving batch result...\nPath: ${resFilePath}`);
                 module_fs.writeFileSync(resFilePath, JSON.stringify(grpp_updateResults), 'utf-8');
+
             });
 
         }
@@ -207,7 +210,7 @@ async function startUpdateAllRepos(){
     });
 
     // Create log and create update processes
-    createLogEntry(`INFO - Starting GRPP Batch Update Process... (Creating ${chunkList.length} processes, Max. ${grppSettings.maxReposPerList} per list)`);
+    createLogEntry(`INFO - Starting GRPP Batch Update Process... (Creating ${chunkList.length} processes, with at max. ${grppSettings.maxReposPerList} repos per list)`);
     for (var currentList = 0; currentList < chunkList.length; currentList++){
         runExternalCommand(`node ${process.argv[1]} --silent --path=${originalCwd} --processBatchFile=${currentList}`, { ...runExternalCommand_Defaults }).then(function(){
             completedRunners++;
@@ -224,28 +227,6 @@ async function startUpdateAllRepos(){
         }
 
     }, 50);
-
-}
-
-/**
-    * Process stdData from batch update process [WIP]
-    * @param stdData [string] output from batch update process
-*/
-function processBatchStdData(stdData:string){
-
-    // Check if GRPP special string was found
-    if (stdData.indexOf('%GRPP%') !== -1){
-
-        // WIP Reference for later
-        const
-            runnerData = stdData.split(','),
-            currentId = runnerData[0],
-            currentRepo = runnerData[1],
-            listLength = runnerData[2],
-            updateCounter = runnerData[3],
-            errorCounter = runnerData[4];
-
-    }
 
 }
 

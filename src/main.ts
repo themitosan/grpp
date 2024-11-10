@@ -150,9 +150,7 @@ async function init(){
     // Display main logo, create vars and check if needs to display help string
     grpp_displayMainLogo();
     var execFn:Function | null = null;
-    if (process.argv.indexOf('--help') === -1){
-        createLogEntry('==> Use \"--help\" for more details\n');
-    }
+    if (process.argv.indexOf('--help') === -1) createLogEntry('==> Use \"--help\" for more details\n');
 
     /*
         Process settings flags
@@ -161,40 +159,24 @@ async function init(){
         const currentFlag = process.argv[i];
 
         // Set max repos a batch file should have
-        if (currentFlag.indexOf('--maxReposPerList=') !== -1){
-            tempSettings.maxReposPerList = preventMinMax(Number(currentFlag.replace('--maxReposPerList=', '')), 1, 1000);
-        }
+        if (currentFlag.indexOf('--maxReposPerList=') !== -1) tempSettings.maxReposPerList = preventMinMax(Number(currentFlag.replace('--maxReposPerList=', '')), 1, 1000);
 
         // Set max fetch pages
-        if (currentFlag.indexOf('--setMaxFetchPages=') !== -1){
-            tempSettings.maxPages = preventMinMax(Number(currentFlag.replace('--setMaxFetchPages=', '')), 1, 1000);
-        }
+        if (currentFlag.indexOf('--setMaxFetchPages=') !== -1) tempSettings.maxPages = preventMinMax(Number(currentFlag.replace('--setMaxFetchPages=', '')), 1, 1000);
 
         // Set web test url
-        if (currentFlag.indexOf('--setConnectionTestURL=') !== -1){
-            tempSettings.connectionTestURL = currentFlag.replace('--setConnectionTestURL=', '');
-        }
+        if (currentFlag.indexOf('--setConnectionTestURL=') !== -1) tempSettings.connectionTestURL = currentFlag.replace('--setConnectionTestURL=', '');
 
         // Set starting fetch page
-        if (currentFlag.indexOf('--setStartPage=') !== -1){
-            tempSettings.fetchStartPage = preventMinMax(Number(currentFlag.replace('--setStartPage=', '')), 0, 9999);
-        }
+        if (currentFlag.indexOf('--setStartPage=') !== -1) tempSettings.fetchStartPage = preventMinMax(Number(currentFlag.replace('--setStartPage=', '')), 0, 9999);
 
         // Set GRPP path
         if (currentFlag.indexOf('--path=') !== -1){
 
-            try {
-
-                // Set new path var and check if it exists. If not, try creating it
-                const newPath = currentFlag.replace('--path=', '');
-                if (module_fs.existsSync(newPath) === !1){
-                    module_fs.mkdirSync(newPath);
-                }
-                process.chdir(newPath);
-
-            } catch (err) {
-                throw `ERROR - Unable to set GRPP Path!\nDetails: ${err}\n`;
-            }
+            // Set new path var and check if it exists. If not, try creating it
+            const newPath = currentFlag.replace('--path=', '');
+            if (module_fs.existsSync(newPath) === !1) module_fs.mkdirSync(newPath);
+            process.chdir(newPath);
 
         }
 
@@ -301,9 +283,7 @@ async function init(){
     }
 
     // Check if no flags were provided
-    if (execFn === null && process.argv.length < 3){
-        createLogEntry(`==> Since no args / flags were provided, We wish someone called ${module_os.userInfo().username} a great day! <3\n`);
-    }
+    if (execFn === null && process.argv.length < 3) createLogEntry(`==> Since no args / flags were provided, We wish someone called ${module_os.userInfo().username} a great day! <3\n`);
 
 }
 

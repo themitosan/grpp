@@ -74,9 +74,7 @@ export async function grpp_getUserRepos(userName:string){
                 }
             
                 // Start fetch process and close readLine
-                if (canFetch === !0){
-                    startUserFetch(urlBase);
-                }
+                if (canFetch === !0) startUserFetch(urlBase);
             
             });
         });

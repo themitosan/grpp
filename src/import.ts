@@ -85,12 +85,7 @@ export async function grpp_startImport(cloneURL:string){
                 `${process.cwd()}/${urlData[2]}`,
                 `${process.cwd()}/${urlData[2]}/${repoOwner}`
             ].forEach(function(cEntry){
-
-                // Check if folder exists. If not, create it
-                if (module_fs.existsSync(cEntry) === !1){
-                    module_fs.mkdirSync(cEntry);
-                }
-
+                if (module_fs.existsSync(cEntry) === !1) module_fs.mkdirSync(cEntry);
             });
 
             // Start clone process

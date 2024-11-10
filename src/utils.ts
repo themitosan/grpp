@@ -31,7 +31,7 @@ export interface runExternalCommandOptions {
     chdir:string,
     onStdData:Function,
     enableConsoleLog:boolean,
-    removeBlankLines:boolean,
+    removeBlankLines:boolean
 }
 
 // Run external command output
@@ -83,10 +83,9 @@ export function parsePositive(n:number):number {
     * @returns fixed number
 */
 export function preventMinMax(num:number, min:number, max:number):number {
-    var res = num;
     if (num < min) num = min;
     if (num > max) num = max;
-    return res;
+    return num;
 }
 
 /**
@@ -132,7 +131,7 @@ export async function checkConnection(){
 /**
     * Run external commands
     * @param cmd [string] command to be executed
-    * @param options [] chdir where commands will be executed (default: current working dir)
+    * @param options [runExternalCommandOptions] chdir where commands will be executed (default: current working dir)
 */
 export async function runExternalCommand(cmd:string, options:runExternalCommandOptions = { ...runExternalCommand_Defaults }){
     return new Promise<runExternalCommand_output>(function(resolve){
@@ -159,8 +158,11 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
         // Reset chdir and resolve after closing process
         execCmd.on('exit', function(exitCode){
 
-            // Log exit code, create final string var and check if needs to clean output
-            createLogEntry(`INFO - ${cmd} exited with code ${exitCode}`);
+            // Check if had exit code and create log entry if it was higher than 1
+            if (exitCode !== null && exitCode > 1)
+                createLogEntry(`INFO - ${cmd} exited with code ${exitCode}`);
+            
+            // Create final string var and check if needs to clean output
             var finalStd = stdData.slice(0, (stdData.length - 1));
             if (options.removeBlankLines === !0){
 
@@ -199,7 +201,7 @@ export function converMsToHHMMSS(ms:number):string {
     * Original code: https://stackabuse.com/how-to-split-an-array-into-even-chunks-in-javascript
     * @param arr [array] Array with objects
     * @param chunkSize [number] number of chinks main array will be splitted (default: 2)
-    * @returns array with smaller chunks
+    * @returns [any[]] array with smaller chunks
 */
 export function spliceArrayIntoChunks(target:any[], chunkSize:number = 2):any[] {
 
@@ -288,7 +290,7 @@ export function grpp_getRepoInfo(path:string){
 
 /**
     * Get repo index
-    * @param path repo path
+    * @param path [string] repo path
     * @return [number | null] Repo index or null if not found
 */
 export function grpp_getRepoIndex(path:string):number | null {
