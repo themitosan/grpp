@@ -65,6 +65,16 @@ export function createLogEntry(data:any){
 }
 
 /**
+	* Get current percentage of a current number based on maximum factor
+	* @param current [number] Current number to be checked
+	* @param maximum [number] Maximum factor of current number
+	* @returns [number] Percentage of current based on maximum factor.
+*/
+export function parsePercentage(current:number, maximum:number):number {
+	return Math.floor((current / maximum) * 100);
+}
+
+/**
 	* Convert negative number to positive
 	* @param number [number] Number to be converted
 	* @returns [number] positive number
