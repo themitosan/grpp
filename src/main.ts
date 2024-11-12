@@ -100,7 +100,7 @@ async function grpp_loadSettings(){
 export async function grpp_saveSettings(){
     try {
         createLogEntry('INFO - Updating GRPP Settings file...');
-        module_fs.writeFileSync(`${process.cwd()}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
+        module_fs.writeFileSync(`${process.cwd()}/grpp_settings.json`, JSON.stringify(grppSettings, void 0, 4), 'utf-8');
     } catch (err) {
         throw err;
     }

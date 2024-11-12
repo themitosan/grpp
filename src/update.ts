@@ -43,8 +43,8 @@ interface batchUpdate_results {
 
 // Batch update results
 const batchUpdateResults_Defaults:Pick <batchUpdate_results, 'errorData' | 'updateData' | 'currentRepo' | 'totalRepos'> = {
-    totalRepos: 2,
-    currentRepo: 1,
+    totalRepos: 1,
+    currentRepo: 0,
     errorData: [],
     updateData: []
 }
@@ -156,7 +156,7 @@ export async function grpp_processBatchFile(id:number){
         
         // Read batch update file, set total repos var on update results and start processing repos
         const batchFile:batchUpdate_list = JSON.parse(module_fs.readFileSync(batchFilePath, 'utf-8'));
-        grpp_updateResults.totalRepos = (batchFile.repoList.length - 1);
+        grpp_updateResults.totalRepos = batchFile.repoList.length;
         for (const repoIndex in batchFile.repoList){
 
             // Process current repo and output current status
@@ -165,7 +165,7 @@ export async function grpp_processBatchFile(id:number){
 
                 // Create / update current process result
                 const resFilePath = `${module_path.parse(batchFilePath).dir}/GRPP_BATCH_RES_${id}.json`;
-                module_fs.writeFileSync(resFilePath, JSON.stringify(grpp_updateResults), 'utf-8');
+                module_fs.writeFileSync(resFilePath, JSON.stringify(grpp_updateResults, void 0, 4), 'utf-8');
 
             });
 
@@ -212,7 +212,7 @@ async function startUpdateAllRepos(){
     // Split update list on given runners and create GRPP batch files
     const chunkList = spliceArrayIntoChunks(updateList, grppSettings.maxReposPerList);
     chunkList.forEach(function(currentList:string[], listIndex){
-        module_fs.writeFileSync(`${tempDir}/GRPP_BATCH_${listIndex}.json`, JSON.stringify({ repoList: currentList }), 'utf-8');
+        module_fs.writeFileSync(`${tempDir}/GRPP_BATCH_${listIndex}.json`, JSON.stringify({ repoList: currentList }, void 0, 4), 'utf-8');
     });
     
     // Set total res files and repos queued vars and start update process
@@ -231,6 +231,7 @@ async function startUpdateAllRepos(){
 
     // Create wait interval, checking if all process exited. If so, reset chdir, process update data and clear interval
     const waitAllProcessExit = setInterval(function(){
+
         if (completedRunners > (chunkList.length - 1)){
             setTimeout(function(){
                 process.chdir(originalCwd);
@@ -323,7 +324,7 @@ function batchUpdateComplete(){
         updateList = [...updateList, ...resFileData.updateData];
 
     }
-    module_fs.rmSync(`${process.cwd()}/.temp`, { recursive: !0 });
+    //module_fs.rmSync(`${process.cwd()}/.temp`, { recursive: !0 });
     
     // Process update lists and create final string
     if (errorList.length > 0) errorString = processUpdateArrays(errorList);
@@ -338,8 +339,8 @@ function batchUpdateComplete(){
     grpp_updateSettings(tempSettings);
     
     // Clear screen, display update results and remove temp dir
-    grpp_displayMainLogo();
-    createLogEntry(`INFO - Process complete!\n${finalString}\n`);
+    //grpp_displayMainLogo();
+    //createLogEntry(`INFO - Process complete!\n${finalString}\n`);
 
     // Check if log dir exists, if not, create it and write log data
     if (module_fs.existsSync(`${process.cwd()}/logs`) === !1) module_fs.mkdirSync(`${process.cwd()}/logs`);
