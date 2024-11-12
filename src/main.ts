@@ -11,7 +11,7 @@
 
 import { grpp_getUserRepos } from "./getUserRepos";
 import { grpp_importBatch, grpp_startImport, grppRepoEntry } from "./import";
-import { grpp_checkBeforeUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from "./update";
+import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from "./update";
 import { createLogEntry, grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus, grpp_syncDatabase, preventMinMax } from "./utils";
 
 /*
@@ -120,16 +120,8 @@ export function grpp_updateSettings(data:any){
     * @param path [string] path to be initialized (Default: current working dir)
 */
 export function grpp_initPath(path:string = process.cwd()){
-
-    // Log and check if settings file exists
-    createLogEntry(`INFO - Creating settings file at \"${path}\"...`);
-    if (module_fs.existsSync(`${path}/grpp_settings.json`) !== !0){
-        module_fs.writeFileSync(`${path}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
-        createLogEntry('INFO - Process complete!\n');
-    } else {
-        console.warn('WARN - Settings file detected on provided location! Skipping...\n');
-    }
-
+    if (module_fs.existsSync(`${path}/logs`) === !1) module_fs.mkdirSync(`${path}/logs`);
+    if (module_fs.existsSync(`${path}/grpp_settings.json`) !== !0) module_fs.writeFileSync(`${path}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
 }
 
 /**
@@ -261,7 +253,7 @@ async function init(){
 
         // Update all repos
         if (currentFlag.indexOf('--updateAll') !== -1){
-            execFn = grpp_checkBeforeUpdateProcess;
+            execFn = grpp_checkBatchUpdateProcess;
             break;
         }
 

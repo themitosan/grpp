@@ -13,6 +13,9 @@ test/
 Build/
 node_modules/
 
+# GRPP Folders
+.temp
+
 # General files
 grpp_settings.json
 grpp_fetch_res.txt
