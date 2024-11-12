@@ -227,6 +227,21 @@ export function spliceArrayIntoChunks(target:any[], chunkSize:number = 2):any[] 
 
 }
 
+/**
+    * Checks if a string can be parsed by JSON.parse
+    * @param data [string] data to be checked
+    * @returns [boolean] if data is a valid JSON or not
+*/
+export function isValidJSON(data:string):boolean {
+    var res = !0;
+    try {
+        JSON.parse(data);
+    } catch (err) {
+        res = !1;
+    }
+    return res;
+}
+
 /*
     GRPP Utils
 */
@@ -280,12 +295,10 @@ export function grpp_getRepoInfo(path:string){
     var reasonList:string[] = [],
         repoIndex:number | null = grpp_getRepoIndex(path);
 
-    // Start checking conditions
+    // Start checking conditions and check if can continue
     if (grppSettings.repoEntries.length < 1) reasonList.push('You must import any repo before using this option.');
     if (path.length < 1) reasonList.push('You must provide repo path!');
     if (repoIndex === null) reasonList.push(`Unable to find repo with provided path!`);
-
-    // Check if can continue
     execReasonListCheck(reasonList, `ERROR - Unable to get repo info!\nReason: ${convertArrayToString(reasonList)}`, function(){
 
         // Get repo data
