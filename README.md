@@ -92,8 +92,9 @@ node grpp.js --setStartPage=4 --getUserRepos=themitosan
 ```
 
 ## External tools used on this project
-- Photopea: https://www.photopea.com
 - Webpack: https://webpack.js.org
+- Photopea: https://www.photopea.com
+- INI Parser: https://www.npmjs.com/package/ini
 
 <sup><i>
 
