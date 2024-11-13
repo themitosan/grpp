@@ -8,9 +8,9 @@
 	"homepage": "https://themitosan.github.io",
 	"description": "This is a simple project written in typescript that aims to import / preserve git repos.",
 	"scripts": {
-		"build": "chmod +x compiler/build.sh && ./compiler/build.sh",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "webpack --config ./compiler/dev-webpack.config.js",
+		"build": "chmod +x compiler/build.sh && ./compiler/build.sh",
 		"buildWebpack": "webpack --config ./compiler/build-webpack.config.js"
 	},
 	"devDependencies": {
