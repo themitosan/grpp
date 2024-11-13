@@ -7,9 +7,10 @@ Created by [JulianaHeartz](https://bsky.app/profile/julianaheartz.bsky.social) <
 
 ## Requirements
 - `git`
+- `npm`
 - Latest `node` version installed
 
-## How to build
+## How to compile (development mode)
 In order to compile, run the following commands:
 
 ```shell
@@ -17,6 +18,22 @@ npm ci
 npm run buildWebpack
 ```
 The final script will be on `Build/` dir.
+
+## How to compile (production mode)
+In order to compile, run the following commands:
+```shell
+npm ci
+npm run build
+```
+
+This will generate a `.tgz` file. In order to install, run the following command
+
+To install it globally, run the following command:
+```shell
+sudo npm i -g grpp-[VERSION].tgz
+```
+
+If everything is fine, you will be able to call `grpp` system-wide.
 
 ## How to use
 
