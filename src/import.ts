@@ -10,13 +10,14 @@
 */
 
 import { grpp_updateRepoData } from './main';
-import { convertArrayToString, createLogEntry, execReasonListCheck, grpp_displayMainLogo, runExternalCommand, runExternalCommand_Defaults } from './utils';
+import { convertArrayToString, createLogEntry, execReasonListCheck, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
 /*
     Require node modules
 */
 
 import * as module_fs from 'fs';
+import { grpp_displayMainLogo } from './utils';
 
 /*
     Interfaces

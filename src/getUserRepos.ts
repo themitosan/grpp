@@ -11,7 +11,8 @@
 
 import { grppSettings } from './main';
 import { grpp_importBatch } from './import';
-import { checkConnection, convertArrayToString, createLogEntry, execReasonListCheck, grpp_displayMainLogo } from './utils';
+import { grpp_displayMainLogo } from './utils';
+import { checkConnection, convertArrayToString, createLogEntry, execReasonListCheck } from './tools';
 
 /*
     Require node modules

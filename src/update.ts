@@ -10,8 +10,9 @@
 */
 
 import { grppRepoEntry } from './import';
+import { grpp_displayMainLogo } from './utils';
 import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
-import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, grpp_displayMainLogo, isValidJSON, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks } from './utils';
+import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks } from './tools';
 
 /*
     Require node modules

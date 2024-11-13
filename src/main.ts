@@ -10,9 +10,11 @@
 */
 
 import { grpp_getUserRepos } from "./getUserRepos";
+import { grpp_startRepairDatabase } from "./repair";
+import { createLogEntry, preventMinMax } from "./tools";
 import { grpp_importBatch, grpp_startImport, grppRepoEntry } from "./import";
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from "./update";
-import { createLogEntry, grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus, grpp_repairDatabase, preventMinMax } from "./utils";
+import { grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus } from './utils';
 
 /*
     Require node modules
@@ -214,9 +216,9 @@ async function init(){
             break;
         }
 
-        // Sync database [WIP]
-        if (currentFlag.indexOf('--repairDatabase') !== -1){
-            execFn = grpp_repairDatabase;
+        // Repair database
+        if (currentFlag.indexOf('--repair') !== -1){
+            execFn = grpp_startRepairDatabase;
             break;
         }
 

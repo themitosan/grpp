@@ -23,5 +23,9 @@
 	"repository": {
 		"type": "git",
 		"url": "http://192.168.15.200:3000/juliana/grpp.git"
+	},
+	"dependencies": {
+		"@types/ini": "^4.1.1",
+		"ini": "^5.0.0"
 	}
 }
