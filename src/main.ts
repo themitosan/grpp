@@ -106,7 +106,6 @@ async function grpp_loadSettings(){
 */
 export async function grpp_saveSettings(){
     try {
-        createLogEntry('INFO - Updating GRPP Settings file...');
         module_fs.writeFileSync(`${process.cwd()}/grpp_settings.json`, JSON.stringify(grppSettings, void 0, 4), 'utf-8');
     } catch (err) {
         throw err;
@@ -140,6 +139,19 @@ export function grpp_initPath(path:string = process.cwd()){
 export function grpp_updateRepoData(path:string, repoData:grppRepoEntry){
     grppSettings.repoEntries[path] = repoData;
     grpp_saveSettings();
+}
+
+/**
+    * Remove repo from database
+    * @param path [string] Repo to be removed from database 
+*/
+export function grpp_removeRepo(path:string){
+    if (grppSettings.repoEntries[path] !== void 0){
+        delete grppSettings.repoEntries[path];
+        grpp_saveSettings();
+    } else {
+        createLogEntry(`WARN - Unable to find ${path} on repo database!`);
+    }
 }
 
 /**
