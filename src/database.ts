@@ -22,7 +22,8 @@ export const grpp_commandList:any = {
     '--status': `Display GRPP status from a initialized dir.`,
     '--silent': `Only print errors on screen.`,
     '--saveSettings': `Use this option to update current settings file.\nExample: \"node grpp.js --setConnectionTestURL=8.8.8.8 --saveSettings\" will set main connection test to google dns and save it to settings file.`,
-    '--repair': `This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.`
+    '--repair': `This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.`,
+    '--exportRemotes': `Export all clone urls from previously imported git repos into a file (grpp_urls.txt)`
 };
 
 // Option list

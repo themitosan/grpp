@@ -15,6 +15,12 @@ import { grpp_commandList, grpp_optionList } from './database';
 import { converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck } from './tools';
 
 /*
+    Require node modules
+*/
+
+import * as module_fs from 'fs';
+
+/*
     Functions
 */
 
@@ -111,6 +117,20 @@ export function grpp_getRepoIndex(path:string):number | null {
 
     // Return res
     return res;
+
+}
+
+/**
+    * Export all remote urls
+*/
+export function grpp_exportRemotes(){
+
+    // Create res var, process all repos and save file
+    var res = '';
+    Object.keys(grppSettings.repoEntries).forEach(function(currentRepo){
+        res = `${res}${grppSettings.repoEntries[currentRepo].repoUrl}\n`;
+    });
+    module_fs.writeFileSync(`${process.cwd()}/grpp_urls.txt`, res.slice(0, (res.length - 1)), 'utf-8');
 
 }
 

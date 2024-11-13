@@ -14,7 +14,9 @@ Build/
 node_modules/
 
 # GRPP Folders
-.temp
+.temp/
+repos/
+logs/
 
 # General files
 res.txt
