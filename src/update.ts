@@ -182,7 +182,7 @@ export async function grpp_processBatchFile(id:number){
 }
 
 /**
-    * Start GRPP update process [WIP]
+    * Start GRPP update process
 */
 async function startUpdateAllRepos(){
 
