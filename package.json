@@ -12,6 +12,7 @@
 		"buildWebpack": "webpack --config ./compiler/build-webpack.config.js"
 	},
 	"devDependencies": {
+		"@types/ini": "^4.1.1",
 		"@types/node": "^22.8.4",
 		"ts-loader": "^9.5.1",
 		"webpack": "^5.95.0",
@@ -25,7 +26,6 @@
 		"url": "http://192.168.15.200:3000/juliana/grpp.git"
 	},
 	"dependencies": {
-		"@types/ini": "^4.1.1",
 		"ini": "^5.0.0"
 	}
 }
