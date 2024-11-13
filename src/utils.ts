@@ -19,6 +19,7 @@ import { grpp_commandList, grpp_optionList } from './database';
     Require node modules
 */
 
+import * as module_fs from 'fs';
 import * as module_dns from 'dns';
 import * as module_childProcess from 'child_process';
 
@@ -343,10 +344,13 @@ export function grpp_getRepoIndex(path:string):number | null {
 }
 
 /**
-    * Sync database [WIP]
+    * Repair database [WIP]
 */
-export async function grpp_syncDatabase(){
-    // WIP
+export async function grpp_repairDatabase(){
+
+    // Read current path dir structure
+    const dirList = module_fs.readdirSync(`${process.cwd()}/repos`);
+
 }
 
 // Export module

@@ -243,6 +243,9 @@ async function startUpdateAllRepos(){
 
 }
 
+/**
+    * Start watching batch res files
+*/
 function startCheckBatchResFiles(){
     for (var currentFile = 0; currentFile < totalResFiles; currentFile++){
         resWatcherList.push(module_fs.watch(`${tempDir}/GRPP_BATCH_RES_${currentFile}.json`, { recursive: !0 }, updateBatchResStatus));
@@ -261,10 +264,9 @@ function updateBatchResStatus(){
         // Get file path and check if it exists / is a valid JSON file
         const filePath = `${tempDir}/GRPP_BATCH_RES_${currentFile}.json`;
         if (module_fs.existsSync(filePath) === !0 && isValidJSON(module_fs.readFileSync(filePath, 'utf-8')) === !0){
-
             const batchResData:batchUpdate_results = JSON.parse(module_fs.readFileSync(filePath, 'utf-8'));
             tempString = `${tempString}==> Process: ${currentFile}\nRes file: ${filePath}\nProgress: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}]\nRepos updated: ${batchResData.updateData.length}\nErrors: ${batchResData.errorData.length}\n\n`;
-       
+
         }
 
     }
@@ -324,7 +326,7 @@ function batchUpdateComplete(){
         updateList = [...updateList, ...resFileData.updateData];
 
     }
-    //module_fs.rmSync(`${process.cwd()}/.temp`, { recursive: !0 });
+    module_fs.rmSync(`${process.cwd()}/.temp`, { recursive: !0 });
     
     // Process update lists and create final string
     if (errorList.length > 0) errorString = processUpdateArrays(errorList);
@@ -339,8 +341,8 @@ function batchUpdateComplete(){
     grpp_updateSettings(tempSettings);
     
     // Clear screen, display update results and remove temp dir
-    //grpp_displayMainLogo();
-    //createLogEntry(`INFO - Process complete!\n${finalString}\n`);
+    grpp_displayMainLogo();
+    createLogEntry(`INFO - Process complete!\n${finalString}\n`);
 
     // Check if log dir exists, if not, create it and write log data
     if (module_fs.existsSync(`${process.cwd()}/logs`) === !1) module_fs.mkdirSync(`${process.cwd()}/logs`);

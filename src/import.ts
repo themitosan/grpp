@@ -59,7 +59,7 @@ export async function grpp_startImport(cloneURL:string){
             repoName = urlData[urlData.length - 1],
             repoOwner = urlData[urlData.length - 2],
             originalChdir = structuredClone(process.cwd()),
-            repoPath = `${process.cwd()}/${urlData[2]}/${repoOwner}/${repoName}`;
+            repoPath = `${process.cwd()}/repos/${urlData[2]}/${repoOwner}/${repoName}`;
 
         // Check conditions
         if (module_fs.existsSync(`${repoPath}/HEAD`) === !0) reasonList.push(`This repo already exists on filesystem!\nPath: ${repoPath}`);
@@ -82,14 +82,15 @@ export async function grpp_startImport(cloneURL:string){
             // Start creating directory structure
             createLogEntry('INFO - Creating directory structure...');
             [
-                `${process.cwd()}/${urlData[2]}`,
-                `${process.cwd()}/${urlData[2]}/${repoOwner}`
+                `${process.cwd()}/repos`,
+                `${process.cwd()}/repos/${urlData[2]}`,
+                `${process.cwd()}/repos/${urlData[2]}/${repoOwner}`
             ].forEach(function(cEntry){
                 if (module_fs.existsSync(cEntry) === !1) module_fs.mkdirSync(cEntry);
             });
 
             // Start clone process
-            await runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, { ...runExternalCommand_Defaults, chdir: `${process.cwd()}/${urlData[2]}/${repoOwner}` })
+            await runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, { ...runExternalCommand_Defaults, chdir: `${process.cwd()}/repos/${urlData[2]}/${repoOwner}` })
             .then(function(){
                 createLogEntry('INFO - Setting git config to fetch all refs from origin...');
                 runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: repoPath });

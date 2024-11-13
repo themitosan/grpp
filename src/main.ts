@@ -12,7 +12,7 @@
 import { grpp_getUserRepos } from "./getUserRepos";
 import { grpp_importBatch, grpp_startImport, grppRepoEntry } from "./import";
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from "./update";
-import { createLogEntry, grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus, grpp_syncDatabase, preventMinMax } from "./utils";
+import { createLogEntry, grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus, grpp_repairDatabase, preventMinMax } from "./utils";
 
 /*
     Require node modules
@@ -57,8 +57,13 @@ export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repo
     Variables
 */
 
-// Temp settings to be appended on main settings file
-const tempSettings:grppSettingsFile | any = {};
+const 
+
+    // Settings max value
+    maxValue = 99999,
+
+    // Temp settings to be appended on main settings file
+    tempSettings:grppSettingsFile | any = {};
 
 // App settings
 export var grppSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
@@ -121,6 +126,7 @@ export function grpp_updateSettings(data:any){
 */
 export function grpp_initPath(path:string = process.cwd()){
     if (module_fs.existsSync(`${path}/logs`) === !1) module_fs.mkdirSync(`${path}/logs`);
+    if (module_fs.existsSync(`${path}/repos`) === !1) module_fs.mkdirSync(`${path}/repos`);
     if (module_fs.existsSync(`${path}/grpp_settings.json`) !== !0) module_fs.writeFileSync(`${path}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
 }
 
@@ -135,7 +141,7 @@ export function grpp_updateRepoData(path:string, repoData:grppRepoEntry){
 }
 
 /**
-    * Main function
+    * GRPP main function
 */
 async function init(){
 
@@ -151,16 +157,16 @@ async function init(){
         const currentFlag = process.argv[i];
 
         // Set max repos a batch file should have
-        if (currentFlag.indexOf('--maxReposPerList=') !== -1) tempSettings.maxReposPerList = preventMinMax(Number(currentFlag.replace('--maxReposPerList=', '')), 1, 1000);
+        if (currentFlag.indexOf('--maxReposPerList=') !== -1) tempSettings.maxReposPerList = preventMinMax(Number(currentFlag.replace('--maxReposPerList=', '')), 1, maxValue);
 
         // Set max fetch pages
-        if (currentFlag.indexOf('--setMaxFetchPages=') !== -1) tempSettings.maxPages = preventMinMax(Number(currentFlag.replace('--setMaxFetchPages=', '')), 1, 1000);
+        if (currentFlag.indexOf('--setMaxFetchPages=') !== -1) tempSettings.maxPages = preventMinMax(Number(currentFlag.replace('--setMaxFetchPages=', '')), 1, maxValue);
 
         // Set web test url
         if (currentFlag.indexOf('--setConnectionTestURL=') !== -1) tempSettings.connectionTestURL = currentFlag.replace('--setConnectionTestURL=', '');
 
         // Set starting fetch page
-        if (currentFlag.indexOf('--setStartPage=') !== -1) tempSettings.fetchStartPage = preventMinMax(Number(currentFlag.replace('--setStartPage=', '')), 0, 9999);
+        if (currentFlag.indexOf('--setStartPage=') !== -1) tempSettings.fetchStartPage = preventMinMax(Number(currentFlag.replace('--setStartPage=', '')), 0, maxValue);
 
         // Set GRPP path
         if (currentFlag.indexOf('--path=') !== -1){
@@ -210,7 +216,7 @@ async function init(){
 
         // Sync database [WIP]
         if (currentFlag.indexOf('--repairDatabase') !== -1){
-            execFn = grpp_syncDatabase;
+            execFn = grpp_repairDatabase;
             break;
         }
 

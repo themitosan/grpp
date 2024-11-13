@@ -17,5 +17,6 @@ node_modules/
 .temp
 
 # General files
+res.txt
 grpp_settings.json
 grpp_fetch_res.txt
