@@ -12,8 +12,6 @@
 */
 
 import { grppSettings } from './main';
-import { grppRepoEntry } from './import';
-import { grpp_commandList, grpp_optionList } from './database';
 
 /*
     Require node modules
@@ -174,7 +172,7 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
                 createLogEntry(`INFO - ${cmd} exited with code ${exitCode}`);
             
             // Create final string var and check if needs to clean output
-            var finalStd = stdData.slice(0, (stdData.length - 1));
+            var finalStd = trimString(stdData);
             if (options.removeBlankLines === !0){
 
                 // Create temp var and process all lines
@@ -182,7 +180,7 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
                 finalStd.split('\n').forEach(function(currentLine){
                     if (currentLine !== '') tempString = `${tempString}${currentLine}\n`;
                 });
-                finalStd = tempString.slice(0, (tempString.length - 1));
+                finalStd = trimString(finalStd);
 
             }
 
@@ -273,6 +271,16 @@ export function getDirTree(dir:string, stopLocation:string = ''):string[] {
 	checkDir(dir);
 	return res;
 
+}
+
+/**
+    * Trim last chars from string
+    * @param str [string] String to be trimmed
+    * @param length [number] Length of trim (Default: 1)
+    * @returns [string] String trimmed 
+*/
+export function trimString(str:string, length:number = 1):string {
+    return str.slice(0, (str.length - length));
 }
 
 // Export module

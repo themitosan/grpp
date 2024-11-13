@@ -12,7 +12,7 @@
 import { grppSettings } from './main';
 import { grppRepoEntry } from './import';
 import { grpp_commandList, grpp_optionList } from './database';
-import { converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck } from './tools';
+import { converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, trimString } from './tools';
 
 /*
     Require node modules
@@ -130,8 +130,8 @@ export function grpp_exportRemotes(){
     Object.keys(grppSettings.repoEntries).forEach(function(currentRepo){
         res = `${res}${grppSettings.repoEntries[currentRepo].repoUrl}\n`;
     });
-    createLogEntry(`INFO - Saving repos url list...`)
-    module_fs.writeFileSync(`${process.cwd()}/grpp_urls.txt`, res.slice(0, (res.length - 1)), 'utf-8');
+    createLogEntry(`INFO - Saving repos url list...`);
+    module_fs.writeFileSync(`${process.cwd()}/grpp_urls.txt`, trimString(res), 'utf-8');
 
 }
 

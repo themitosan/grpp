@@ -12,7 +12,7 @@
 import { grppRepoEntry } from './import';
 import { grpp_displayMainLogo } from './utils';
 import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
-import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks } from './tools';
+import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString } from './tools';
 
 /*
     Require node modules
@@ -285,14 +285,12 @@ function updateBatchResStatus(){
 */
 function processUpdateArrays(updateList:string[]):string {
 
-    // Create res var and process update list
+    // Create res var, process update list
     var res = '';
     updateList.forEach(function(currentEntry){
         res = `${res}${currentEntry}\n\n`;
     });
-
-    // Return res
-    return res.slice(0, (res.length - 2));
+    return trimString(res, 2);
 
 }
 

@@ -12,7 +12,7 @@
 import { grppSettings } from './main';
 import { grpp_importBatch } from './import';
 import { grpp_displayMainLogo } from './utils';
-import { checkConnection, convertArrayToString, createLogEntry, execReasonListCheck } from './tools';
+import { checkConnection, convertArrayToString, createLogEntry, execReasonListCheck, trimString } from './tools';
 
 /*
     Require node modules
@@ -189,7 +189,7 @@ function processRepoChunk(resultArray:any[]){
     resultArray.forEach(function(cRepo){
         repoList = `${repoList}${cRepo.clone_url}\n`;
     });
-    repoList = repoList.slice(0, (repoList.length - 1));
+    repoList = trimString(repoList);
 
     // Clear window and display info
     grpp_displayMainLogo();

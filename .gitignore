@@ -15,10 +15,12 @@ node_modules/
 
 # GRPP Folders
 .temp/
-repos/
 logs/
+repos/
 
 # General files
 res.txt
+skip.txt
 grpp_settings.json
 grpp_fetch_res.txt
+old_grpp_settings.json
