@@ -6,9 +6,7 @@
 Created by [JulianaHeartz](https://bsky.app/profile/julianaheartz.bsky.social) <sup>*(aka. themitosan)*</sup>, this is a simple project written in ts that aims to gelp importing and preserving git repos.
 
 ## Requirements
-- `git`
-- `npm`
-- Latest `node` version installed
+- `git`, `npm` and latest `node` version installed
 
 ## How to compile (development mode)
 In order to compile, run the following commands:
