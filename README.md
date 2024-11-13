@@ -15,7 +15,7 @@ In order to compile, run the following commands:
 npm ci
 npm run buildWebpack
 ```
-The final script will be on `Build/` dir.
+The final script will be on `Build` dir.
 
 ## How to compile (production mode)
 In order to compile, run the following commands:
@@ -40,7 +40,7 @@ The first thing you need to do is initialize a folder, where it will store it's 
 To do this, run the following command:
 
 ```shell
-node grpp.js --init
+grpp --init
 ```
 
 Then you will be able to start importing git repos.
@@ -54,7 +54,7 @@ There is some ways you can perform this operation - by importing them one at tim
 To do that, you can use the `--import=` command with your desired git url:
 
 ```shell
-node grpp.js --import=http://github.com/themitosan/themitosan.git
+grpp --import=http://github.com/themitosan/themitosan.git
 ```
 
 If everything is fine, you will be able to import this git repo to your current location organized by host/user/repo.
@@ -71,7 +71,7 @@ Since the scope of this project is preserve git repos, you will need to clone th
 You can import a list of repos from a text file! In order to do this, you can use the following command:
 
 ```shell
-node grpp.js --importList=YOUR_GIT_REPOS_LIST.txt
+grpp --importList=YOUR_GIT_REPOS_LIST.txt
 ```
 
 Doing that, all repos on `YOUR_GIT_REPOS_LIST.txt` will be imported to your current path.
@@ -86,7 +86,7 @@ Since common git hosting websites _(like github or gitlab)_ API's allows fetchin
 In order to do that, you can use the following command:
 
 ```shell
-node grpp.js --getUserRepos=USERNAME
+grpp --getUserRepos=USERNAME
 ```
 
 You will be prompted asking where GRPP should seek `USERNAME` repos.
@@ -100,10 +100,10 @@ If you want to start fetching data from a specific page or fetch a specific numb
 
 ```shell
 # Fetch 10 repo pages (Default: 5)
-node grpp.js --setMaxFetchPages=10 --getUserRepos=themitosan
+grpp --setMaxFetchPages=10 --getUserRepos=themitosan
 
 # Set start fetch page to 4 (Default: 1)
-node grpp.js --setStartPage=4 --getUserRepos=themitosan
+grpp --setStartPage=4 --getUserRepos=themitosan
 ```
 
 ## External tools used on this project
