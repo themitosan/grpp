@@ -130,6 +130,7 @@ export function grpp_exportRemotes(){
     Object.keys(grppSettings.repoEntries).forEach(function(currentRepo){
         res = `${res}${grppSettings.repoEntries[currentRepo].repoUrl}\n`;
     });
+    createLogEntry(`INFO - Saving repos url list...`)
     module_fs.writeFileSync(`${process.cwd()}/grpp_urls.txt`, res.slice(0, (res.length - 1)), 'utf-8');
 
 }

@@ -14,7 +14,7 @@ import { grpp_startRepairDatabase } from "./repair";
 import { createLogEntry, preventMinMax } from "./tools";
 import { grpp_importBatch, grpp_startImport, grppRepoEntry } from "./import";
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from "./update";
-import { grpp_displayHelp, grpp_displayMainLogo, grpp_getRepoInfo, grpp_printStatus } from './utils';
+import { grpp_displayHelp, grpp_displayMainLogo, grpp_exportRemotes, grpp_getRepoInfo, grpp_printStatus } from './utils';
 
 /*
     Require node modules
@@ -282,6 +282,12 @@ async function init(){
             execFn = async function(){
                 await grpp_processBatchFile(Number(currentFlag.replace('--processBatchFile=', '')));
             }
+            break;
+        }
+
+        // Save repos url list
+        if (currentFlag.indexOf('--exportRemotes') !== -1){
+            execFn = grpp_exportRemotes;
             break;
         }
 
