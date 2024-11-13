@@ -19,8 +19,8 @@ logs/
 repos/
 
 # General files
-res.txt
-skip.txt
+*.txt
+*.tgz
+grpp.js
 grpp_settings.json
-grpp_fetch_res.txt
 old_grpp_settings.json
