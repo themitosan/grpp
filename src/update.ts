@@ -109,11 +109,11 @@ export async function grpp_updateRepo(path:string){
 
         // Check if can continue
         execReasonListCheck(reasonList, `ERROR: Unable to update repo!\nReason: ${convertArrayToString(reasonList)}\n`, async function(){
-        
+
             // Get current repo data and start fetching updates
             const currentRepoData:grppRepoEntry = grppSettings.repoEntries[path];
             await runExternalCommand('git fetch --all', { ...runExternalCommand_Defaults, chdir: path, enableConsoleLog: !1, removeBlankLines: !0 }).then(function(processOutput:runExternalCommand_output){
-            
+
                 // Bump current repo, measure fetch time duration and check if process output any data
                 grpp_updateResults.currentRepo++;
                 if (processOutput.stdData.length === 0){
@@ -139,7 +139,7 @@ export async function grpp_updateRepo(path:string){
                         currentRepoData.updateCounter++;
                         currentRepoData.lastUpdatedOn = new Date().toString();
                         grpp_updateRepoData(path, currentRepoData);
-                
+
                     } else {
                         grpp_updateResults.errorData.push(processOutput.stdData);
                         console.warn(processOutput.stdData);
@@ -164,7 +164,7 @@ export async function grpp_processBatchFile(id:number){
     // Create batch file path const and check if exists
     const batchFilePath = `${process.cwd()}/.temp/GRPP_BATCH_${id}.json`;
     if (module_fs.existsSync(batchFilePath) === !0){
-        
+
         // Read batch update file, set total repos var on update results and start processing repos
         const batchFile:batchUpdate_list = JSON.parse(module_fs.readFileSync(batchFilePath, 'utf-8'));
         grpp_updateResults.totalRepos = batchFile.repoList.length;
@@ -238,7 +238,7 @@ async function startUpdateAllRepos(){
         });
 
     }
-    startCheckBatchResFiles();
+    if (process.argv.indexOf('--silent') === -1) startCheckBatchResFiles();
 
     // Create wait interval, checking if all process exited. If so, reset chdir, process update data and clear interval
     const waitAllProcessExit = setInterval(function(){
@@ -285,11 +285,11 @@ function processBatchResFiles(){
         // Get file path and check if it exists / is a valid JSON file
         const fileData = module_fs.readFileSync(`${tempDir}/GRPP_BATCH_RES_${currentFile}.json`, 'utf-8');
         if (isValidJSON(fileData) === !0){
-            
+
             // Move to current console line correspondent to each process and update line
             const batchResData:batchUpdate_results = JSON.parse(fileData);
             module_readLine.cursorTo(process.stdout, 0, (currentFile + 10));
-            if (process.argv.indexOf('--silent') === -1) process.stdout.write(`==> Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${batchResData.updateData.length}, Errors: ${batchResData.errorData.length}`);
+            process.stdout.write(`==> Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${batchResData.updateData.length}, Errors: ${batchResData.errorData.length}`);
         
         }
 
@@ -303,14 +303,11 @@ function processBatchResFiles(){
     * @returns [string] String with updates / errors
 */
 function processUpdateArrays(updateList:string[]):string {
-
-    // Create res var, process update list
     var res = '';
     updateList.forEach(function(currentEntry){
         res = `${res}${currentEntry}\n\n`;
     });
     return trimString(res, 2);
-
 }
 
 /**

@@ -213,17 +213,12 @@ export function converMsToHHMMSS(ms:number):string {
     * @returns [any[]] array with smaller chunks
 */
 export function spliceArrayIntoChunks(target:any[], chunkSize:number = 2):any[] {
-
-    // Define res var and process array
     const res:any[] = [];
     while (target.length > 0){
         const chunk:any[] = target.splice(0, chunkSize);
         res.push(chunk);
     }
-
-    // Return result
     return res;
-
 }
 
 /**

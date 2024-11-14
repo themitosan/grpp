@@ -10,6 +10,7 @@
 */
 
 import { grpp_updateRepoData } from './main';
+import { grpp_displayMainLogo } from './utils';
 import { convertArrayToString, createLogEntry, execReasonListCheck, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
 /*
@@ -17,7 +18,6 @@ import { convertArrayToString, createLogEntry, execReasonListCheck, runExternalC
 */
 
 import * as module_fs from 'fs';
-import { grpp_displayMainLogo } from './utils';
 
 /*
     Interfaces

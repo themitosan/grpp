@@ -80,8 +80,6 @@ export async function grpp_getUserRepos(userName:string){
             });
         });
 
-    }).catch(function(err){
-        throw `ERROR - Unable to proceed because GRPP failed to connect to internet!\nDetails: ${err}\n`;
     });
 
 }

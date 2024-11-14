@@ -57,7 +57,7 @@ export async function grpp_startRepairDatabase(){
         scanList:string[] = [],
         repoList = Object.keys(grppSettings.repoEntries),
         tempList = getDirTree(`${process.cwd()}/repos`, '.git');
-    
+
     // Filter git folders
     tempList.forEach(function(currentFolder){
         if (currentFolder.toLowerCase().indexOf('.git') !== -1) scanList.push(currentFolder);
