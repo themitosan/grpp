@@ -36,7 +36,7 @@ export function grpp_printStatus(){
 }
 
 /**
-    * Display main logo
+    * Clear screen and display main logo
 */
 export function grpp_displayMainLogo(){
     console.clear();

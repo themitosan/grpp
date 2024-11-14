@@ -28,4 +28,5 @@ echo -e "INFO - Creating bundle file..."
 npm pack
 
 # Display process complete
+echo -e ""
 echo -e "INFO - Process complete!"
