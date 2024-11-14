@@ -218,6 +218,7 @@ async function startUpdateAllRepos(){
     totalReposQueued = structuredClone(updateList.length);
 
     // Reset screen, create log entry and spawn processes
+    process.stdout.write('\x1B[2J\x1B[3J\x1B[H\x1Bc');
     grpp_displayMainLogo();
     createLogEntry(`INFO - Starting GRPP Batch Update process... (Creating ${chunkList.length} processes, with at max. ${grppSettings.maxReposPerList} repos per list)`);
     for (var currentList = 0; currentList < chunkList.length; currentList++){
