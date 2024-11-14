@@ -70,7 +70,7 @@ grpp --import=http://github.com/themitosan/themitosan.git
 
 If everything is fine, you will be able to import this git repo to your current location organized by host/user/repo.
 
-_(On this case, `themitosan.git` will be located on `YOUR_CURRENT_PATH/github.com/themitosan/themitosan.git`)_
+_(On this case, `themitosan.git` will be located on `YOUR_CURRENT_PATH/repos/github.com/themitosan/themitosan.git`)_
 
 > [!IMPORTANT]\
 > All repos always will be imported as bare format!
