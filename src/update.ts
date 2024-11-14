@@ -116,26 +116,35 @@ export async function grpp_updateRepo(path:string){
             
                 // Bump current repo, measure fetch time duration and check if process output any data
                 grpp_updateResults.currentRepo++;
-                if (processOutput.stdData.length === 0) createLogEntry(`INFO - ${currentRepoData.repoName} is up to date!`);
-            
-                // Check if fetch process printed any data without errors (update)
-                if (processOutput.stdData.length !== 0 && processOutput.stdData.indexOf('fatal: ') === -1){
-                
-                    // Print update data, push process output to update data and bump update counter
-                    createLogEntry(`INFO - Update data:\n${processOutput.stdData}`);
-                    grpp_updateResults.updateData.push(processOutput.stdData);
-                
-                    // Update current repo data
-                    currentRepoData.updateCounter++;
-                    currentRepoData.lastUpdatedOn = new Date().toString();
-                    grpp_updateRepoData(path, currentRepoData);
-                
-                }
+                if (processOutput.stdData.length === 0){
+                    createLogEntry(`INFO - ${currentRepoData.repoName} is up to date!`);
+                } else {
 
-                // Check if we got any git error and resolve
-                if (processOutput.stdData.indexOf('fatal: ') !== -1){
-                    grpp_updateResults.errorData.push(processOutput.stdData);
-                    console.warn(processOutput.stdData);
+                    // Declare vars and check if current output had any errors
+                    var errorCounter = 0,
+                        errorSamples = ['fatal: ', 'error :'];
+
+                    errorSamples.forEach(function(currentSample){
+                        if (processOutput.stdData.indexOf(currentSample) !== -1) errorCounter++;
+                    });
+
+                    // Check if fetch process printed any data without errors (update)
+                    if (errorCounter === 0){
+
+                        // Print update data, push process output to update data and bump update counter
+                        createLogEntry(`INFO - Update data:\n${processOutput.stdData}`);
+                        grpp_updateResults.updateData.push(processOutput.stdData);
+
+                        // Update current repo data
+                        currentRepoData.updateCounter++;
+                        currentRepoData.lastUpdatedOn = new Date().toString();
+                        grpp_updateRepoData(path, currentRepoData);
+                
+                    } else {
+                        grpp_updateResults.errorData.push(processOutput.stdData);
+                        console.warn(processOutput.stdData);
+                    }
+
                 }
                 resolve();
             
