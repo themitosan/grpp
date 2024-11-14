@@ -142,7 +142,6 @@ export async function grpp_updateRepo(path:string){
 
                     } else {
                         grpp_updateResults.errorData.push(processOutput.stdData);
-                        console.warn(processOutput.stdData);
                     }
 
                 }
@@ -212,6 +211,7 @@ async function startUpdateAllRepos(){
         const repoData:grppRepoEntry = grppSettings.repoEntries[currentRepo];
         if (repoData.canUpdate === !0){
             updateList.push(currentRepo);
+            totalReposQueued++;
         } else {
             console.warn(`WARN - Skipping ${repoData.repoName} (${currentRepo}) because it was disabled!`);
         }
@@ -224,13 +224,12 @@ async function startUpdateAllRepos(){
         module_fs.writeFileSync(`${tempDir}/GRPP_BATCH_${listIndex}.json`, JSON.stringify({ repoList: currentList }, void 0, 4), 'utf-8');
     });
     totalResFiles = structuredClone(chunkList.length);
-    totalReposQueued = structuredClone(updateList.length);
 
     // Reset screen, create log entry and spawn processes
     process.stdout.write('\x1B[2J\x1B[3J\x1B[H\x1Bc');
     grpp_displayMainLogo();
     createLogEntry(`INFO - Starting GRPP Batch Update process... (Creating ${totalReposQueued} processes, with at max. ${grppSettings.maxReposPerList} repos per list)`);
-    for (var currentList = 0; currentList < totalReposQueued; currentList++){
+    for (var currentList = 0; currentList < totalResFiles; currentList++){
 
         // Spawn process and start watching for batch res files
         runExternalCommand(`node ${process.argv[1]} --silent --path=${originalCwd} --processBatchFile=${currentList}`, { ...runExternalCommand_Defaults }).then(function(){
@@ -346,7 +345,7 @@ function batchUpdateComplete(){
     // Process update lists and create final string
     if (errorList.length > 0) errorString = processUpdateArrays(errorList);
     if (updateList.length > 0) updateString = processUpdateArrays(updateList);
-    finalString = `Current path: ${process.cwd()}\n\n==> General info:\nProcesses: ${totalResFiles}\nUpdate duration: ${converMsToHHMMSS(updateDurationMs)} [${updateDurationMs}ms]\nTotal repos queued: ${totalReposQueued} [From ${Object.keys(grppSettings.repoEntries).length} listed, ${totalReposQueued} were queued]\n\n==> Update data:\n${updateString}\n\n==> Error data:\n${errorString}`;
+    finalString = `Current path: ${process.cwd()}\n\n==> General info:\nProcesses: ${totalResFiles}\nUpdate duration: ${converMsToHHMMSS(updateDurationMs)} [${updateDurationMs}ms]\nTotal repos queued: ${totalReposQueued} [From ${Object.keys(grppSettings.repoEntries).length} on database, ${totalReposQueued} were queued]\n\n==> Update data:\n${updateString}\n\n==> Error data:\n${errorString}`;
 
     // Update GRPP Settings file data
     const tempSettings = grppSettings;
