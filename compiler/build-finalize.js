@@ -1,6 +1,6 @@
 /*
     Git repo preservation project (GRPP)
-    Created by Juliana (@julianaheartz.bsky.social)
+    Created by TheMitoSan (@themitosan.bsky.social)
 
     build-finalize.js
 */
@@ -21,7 +21,7 @@ function start(){
     grppFile = `#!/usr/bin/env node
 /*
     Git repo preservation project (GRPP)
-    Created by Juliana (@julianaheartz.bsky.social)
+    Created by TheMitoSan (@themitosan.bsky.social)
 
     Version: ${packageJson.version}
     Compiled at ${time.toString()}

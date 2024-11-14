@@ -1,6 +1,7 @@
 #
 #   Git Repo Preservation Project (GRPP)
-#   Created by Juliana (@julianaheartz.bsky.social)
+#   Created by TheMitoSan (@themitosan.bsky.social)
+#
 #   build.sh
 #
 
@@ -8,7 +9,7 @@
 clear
 printf "\n   <=============================================================>\n"
 printf "   <=|          Git Repo Preservation Project (GRPP)           |=>\n"
-printf "   <=|     Created by Juliana (@julianaheartz.bsky.social)     |=>\n"
+printf "   <=|     Created by TheMitoSan (@themitosan.bsky.social)     |=>\n"
 printf "   <=============================================================>\n"
 printf "   <=|             A classic quote from an old one:            |=>\n"
 printf "   <=|                   \"Quem guarda, \033[1;32mt\033[1;33me\033[1;34mm\033[0m!\"                   |=>\n"

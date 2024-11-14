@@ -1,6 +1,6 @@
 /*
     Git repo preservation project (GRPP)
-    Created by Juliana (@julianaheartz.bsky.social)
+    Created by TheMitoSan (@themitosan.bsky.social)
 
     utils.ts
 */
@@ -42,7 +42,7 @@ export function grpp_displayMainLogo(){
     console.clear();
     createLogEntry("\n   <=============================================================>");
     createLogEntry("   <=|          Git Repo Preservation Project (GRPP)           |=>");
-    createLogEntry("   <=|     Created by Juliana (@julianaheartz.bsky.social)     |=>");
+    createLogEntry("   <=|     Created by TheMitoSan (@themitosan.bsky.social)     |=>");
     createLogEntry("   <=============================================================>");
     createLogEntry("   <=|             A classic quote from an old one:            |=>");
     createLogEntry("   <=|                   \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"                   |=>");

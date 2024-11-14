@@ -1,6 +1,6 @@
 /*
     Git repo preservation project (GRPP)
-    Created by Juliana (@julianaheartz.bsky.social)
+    Created by TheMitoSan (@themitosan.bsky.social)
 
     tools.ts
 

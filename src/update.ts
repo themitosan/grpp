@@ -1,6 +1,6 @@
 /*
     Git repo preservation project (GRPP)
-    Created by Juliana (@julianaheartz.bsky.social)
+    Created by TheMitoSan (@themitosan.bsky.social)
 
     update.ts
 */
@@ -356,7 +356,7 @@ function batchUpdateComplete(){
     // Check if log dir exists, if not, create it and write log data
     if (module_fs.existsSync(`${process.cwd()}/logs`) === !1) module_fs.mkdirSync(`${process.cwd()}/logs`);
     const exportLogPath = `${process.cwd()}/logs/GRPP_BATCH_${time.toString().replaceAll(':', '_').replaceAll(' ', '_').slice(0, 24)}.txt`;
-    module_fs.writeFileSync(exportLogPath, `Git Repository Preservation Project [GRPP]\nCreated by Juliana (@julianaheartz.bsky.social)\n\nLog created at ${time.toString()}\n\n${finalString}`, 'utf-8');
+    module_fs.writeFileSync(exportLogPath, `Git Repository Preservation Project [GRPP]\nCreated by TheMitoSan (@themitosan.bsky.social)\n\nLog created at ${time.toString()}\n\n${finalString}`, 'utf-8');
     createLogEntry(`INFO - Exporting log data...\nPath: ${exportLogPath}\n`);
     process.exit();
 

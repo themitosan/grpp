@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"main": "App/grpp.js",
 	"bin": "Build/grpp.js",
-	"author": "JulianaHeartz",
+	"author": "TheMitoSan",
 	"license": "GPL-2.0-only",
 	"homepage": "https://themitosan.github.io",
 	"description": "This is a simple project written in typescript that aims to import / preserve git repos.",

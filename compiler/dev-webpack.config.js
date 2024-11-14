@@ -1,6 +1,7 @@
 /*
     Git repo preservation project (GRPP)
-    Created by Juliana (@julianaheartz.bsky.social)
+    Created by TheMitoSan (@themitosan.bsky.social)
+
     dev-webpack.config.js
 
     I'm still MAD that I need to run this shit to make everything work as it should!
