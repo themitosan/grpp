@@ -31,7 +31,18 @@ To install it globally, run the following command:
 sudo npm i -g grpp-[VERSION].tgz
 ```
 
+> [!IMPORTANT]\
+> You MUST run this command as `sudo`, since it will install grpp as a global package.
+
 If everything is fine, you will be able to call `grpp` system-wide.
+
+### How to uninstall
+
+It's simple! Just run the following command:
+
+```shell
+sudo npm remove grpp
+```
 
 ## How to use
 
