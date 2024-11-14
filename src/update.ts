@@ -213,7 +213,7 @@ async function startUpdateAllRepos(){
             updateList.push(currentRepo);
             totalReposQueued++;
         } else {
-            console.warn(`WARN - Skipping ${repoData.repoName} (${currentRepo}) because it was disabled!`);
+            createLogEntry(`WARN - Skipping ${repoData.repoName} (${currentRepo}) because it was disabled!`);
         }
 
     });
@@ -225,19 +225,19 @@ async function startUpdateAllRepos(){
     });
     totalResFiles = structuredClone(chunkList.length);
 
-    // Reset screen, create log entry and spawn processes
+    // Clear console screen, create log entry and spawn processes
     process.stdout.write('\x1B[2J\x1B[3J\x1B[H\x1Bc');
     grpp_displayMainLogo();
     createLogEntry(`INFO - Starting GRPP Batch Update process... (Creating ${totalReposQueued} processes, with at max. ${grppSettings.maxReposPerList} repos per list)`);
     for (var currentList = 0; currentList < totalResFiles; currentList++){
 
         // Spawn process and start watching for batch res files
-        runExternalCommand(`node ${process.argv[1]} --silent --path=${originalCwd} --processBatchFile=${currentList}`, { ...runExternalCommand_Defaults }).then(function(){
+        runExternalCommand(`node ${process.argv[1]} silent path=${originalCwd} processBatchFile=${currentList}`, { ...runExternalCommand_Defaults }).then(function(){
             completedRunners++;
         });
 
     }
-    if (process.argv.indexOf('--silent') === -1) startCheckBatchResFiles();
+    if (process.argv.indexOf('silent') === -1) startCheckBatchResFiles();
 
     // Create wait interval, checking if all process exited. If so, reset chdir, process update data and clear interval
     const waitAllProcessExit = setInterval(function(){

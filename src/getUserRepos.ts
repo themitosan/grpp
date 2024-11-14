@@ -206,7 +206,7 @@ function processRepoChunk(resultArray:any[]){
             case '2':
                 grpp_displayMainLogo();
                 module_fs.writeFileSync(`${process.cwd()}/grpp_fetch_res.txt`, repoList, 'utf-8');
-                createLogEntry(`INFO - Process Complete!\nFile path: ${process.cwd()}/grpp_fetch_res.txt\n\nTo import repos from a file, use the following flag: \"--importList=PATH_TO_FILE\"\n`);
+                createLogEntry(`INFO - Process Complete!\nFile path: ${process.cwd()}/grpp_fetch_res.txt\n\nTo import repos from a file, use the following flag: \"importList=PATH_TO_FILE\"\n`);
                 break;
 
             // Cancel action

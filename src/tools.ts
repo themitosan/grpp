@@ -56,11 +56,11 @@ export const runExternalCommand_Defaults:Pick <runExternalCommandOptions, 'chdir
 */
 
 /**
-    * Create log entry only if --silent flag is not present
+    * Create log entry only if silent flag is not present
     * @param data content to print on screen
 */
 export function createLogEntry(data:any){
-    if (process.argv.indexOf('--silent') === -1) console.info(data);
+    if (process.argv.indexOf('silent') === -1) console.info(data);
 }
 
 /**

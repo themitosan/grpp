@@ -162,7 +162,7 @@ async function init(){
     // Display main logo, create vars and check if needs to display help string
     grpp_displayMainLogo();
     var execFn:Function | null = null;
-    if (process.argv.indexOf('--help') === -1) createLogEntry('==> Use \"--help\" for more details\n');
+    if (process.argv.indexOf('help') === -1) createLogEntry('==> Use \"help\" for more details\n');
 
     /*
         Process settings flags
@@ -171,22 +171,22 @@ async function init(){
         const currentFlag = process.argv[i];
 
         // Set max repos a batch file should have
-        if (currentFlag.indexOf('--maxReposPerList=') !== -1) tempSettings.maxReposPerList = preventMinMax(Number(currentFlag.replace('--maxReposPerList=', '')), 1, maxValue);
+        if (currentFlag.indexOf('maxReposPerList=') !== -1) tempSettings.maxReposPerList = preventMinMax(Number(currentFlag.replace('maxReposPerList=', '')), 1, maxValue);
 
         // Set max fetch pages
-        if (currentFlag.indexOf('--setMaxFetchPages=') !== -1) tempSettings.maxPages = preventMinMax(Number(currentFlag.replace('--setMaxFetchPages=', '')), 1, maxValue);
+        if (currentFlag.indexOf('setMaxFetchPages=') !== -1) tempSettings.maxPages = preventMinMax(Number(currentFlag.replace('setMaxFetchPages=', '')), 1, maxValue);
 
         // Set web test url
-        if (currentFlag.indexOf('--setConnectionTestURL=') !== -1) tempSettings.connectionTestURL = currentFlag.replace('--setConnectionTestURL=', '');
+        if (currentFlag.indexOf('setConnectionTestURL=') !== -1) tempSettings.connectionTestURL = currentFlag.replace('setConnectionTestURL=', '');
 
         // Set starting fetch page
-        if (currentFlag.indexOf('--setStartPage=') !== -1) tempSettings.fetchStartPage = preventMinMax(Number(currentFlag.replace('--setStartPage=', '')), 0, maxValue);
+        if (currentFlag.indexOf('setStartPage=') !== -1) tempSettings.fetchStartPage = preventMinMax(Number(currentFlag.replace('setStartPage=', '')), 0, maxValue);
 
         // Set GRPP path
-        if (currentFlag.indexOf('--path=') !== -1){
+        if (currentFlag.indexOf('path=') !== -1){
 
             // Set new path var and check if it exists. If not, try creating it
-            const newPath = currentFlag.replace('--path=', '');
+            const newPath = currentFlag.replace('path=', '');
             if (module_fs.existsSync(newPath) === !1) module_fs.mkdirSync(newPath);
             process.chdir(newPath);
 
@@ -201,92 +201,92 @@ async function init(){
         const currentFlag = process.argv[i];
 
         // Display help menu
-        if (currentFlag.indexOf('--help') !== -1){
+        if (currentFlag.indexOf('help') !== -1){
             grpp_displayHelp();
             break;
         }
 
         // Print current stats
-        if (currentFlag.indexOf('--status') !== -1){
+        if (currentFlag.indexOf('status') !== -1){
             execFn = grpp_printStatus;
             break;
         }
 
         // Save / update settings
-        if (currentFlag.indexOf('--saveSettings') !== -1){
+        if (currentFlag.indexOf('saveSettings') !== -1){
             execFn = grpp_saveSettings;
             break;
         }
 
         // Initialize folder / path
-        if (currentFlag.indexOf('--init=') !== -1){
-            grpp_initPath(currentFlag.replace('--init=', ''));
+        if (currentFlag.indexOf('init=') !== -1){
+            grpp_initPath(currentFlag.replace('init=', ''));
             break;
         }
-        if (currentFlag.indexOf('--init') !== -1){
+        if (currentFlag.indexOf('init') !== -1){
             grpp_initPath();
             break;
         }
 
         // Repair database
-        if (currentFlag.indexOf('--repair') !== -1){
+        if (currentFlag.indexOf('repair') !== -1){
             execFn = grpp_startRepairDatabase;
             break;
         }
 
         // Get user repos
-        if (currentFlag.indexOf('--getUserRepos=') !== -1){
+        if (currentFlag.indexOf('getUserRepos=') !== -1){
             execFn = function(){
-                grpp_getUserRepos(currentFlag.replace('--getUserRepos=', ''));
+                grpp_getUserRepos(currentFlag.replace('getUserRepos=', ''));
             }
             break;
         }
 
         // Import repo
-        if (currentFlag.indexOf('--import=') !== -1){
+        if (currentFlag.indexOf('import=') !== -1){
             execFn = function(){
-                grpp_startImport(currentFlag.replace('--import=', ''));
+                grpp_startImport(currentFlag.replace('import=', ''));
             }
             break;
         }
 
         // Import repo from list
-        if (currentFlag.indexOf('--importList=') !== -1){
-            grpp_importBatch(module_fs.readFileSync(currentFlag.replace('--importList=', ''), 'utf-8'));
+        if (currentFlag.indexOf('importList=') !== -1){
+            grpp_importBatch(module_fs.readFileSync(currentFlag.replace('importList=', ''), 'utf-8'));
         }
 
         // Get info from a previously imported repo
-        if (currentFlag.indexOf('--getRepoData=') !== -1){
+        if (currentFlag.indexOf('getRepoData=') !== -1){
             execFn = function(){
-                grpp_getRepoInfo(currentFlag.replace('--getRepoData=', ''));
+                grpp_getRepoInfo(currentFlag.replace('getRepoData=', ''));
             }
             break;
         }
 
         // Update an specific repo
-        if (currentFlag.indexOf('--update=') !== -1){
+        if (currentFlag.indexOf('update=') !== -1){
             execFn = function(){
-                grpp_updateRepo(currentFlag.replace('--update=', ''));
+                grpp_updateRepo(currentFlag.replace('update=', ''));
             }
             break;
         }
 
         // Update all repos
-        if (currentFlag.indexOf('--updateAll') !== -1){
+        if (currentFlag.indexOf('updateAll') !== -1){
             execFn = grpp_checkBatchUpdateProcess;
             break;
         }
 
         // Process GRPP batch files
-        if (currentFlag.indexOf('--processBatchFile=') !== -1){
+        if (currentFlag.indexOf('processBatchFile=') !== -1){
             execFn = async function(){
-                await grpp_processBatchFile(Number(currentFlag.replace('--processBatchFile=', '')));
+                await grpp_processBatchFile(Number(currentFlag.replace('processBatchFile=', '')));
             }
             break;
         }
 
         // Save repos url list
-        if (currentFlag.indexOf('--exportRemotes') !== -1){
+        if (currentFlag.indexOf('exportRemotes') !== -1){
             execFn = grpp_exportRemotes;
             break;
         }
