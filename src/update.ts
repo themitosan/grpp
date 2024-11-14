@@ -229,8 +229,8 @@ async function startUpdateAllRepos(){
     // Reset screen, create log entry and spawn processes
     process.stdout.write('\x1B[2J\x1B[3J\x1B[H\x1Bc');
     grpp_displayMainLogo();
-    createLogEntry(`INFO - Starting GRPP Batch Update process... (Creating ${chunkList.length} processes, with at max. ${grppSettings.maxReposPerList} repos per list)`);
-    for (var currentList = 0; currentList < chunkList.length; currentList++){
+    createLogEntry(`INFO - Starting GRPP Batch Update process... (Creating ${totalReposQueued} processes, with at max. ${grppSettings.maxReposPerList} repos per list)`);
+    for (var currentList = 0; currentList < totalReposQueued; currentList++){
 
         // Spawn process and start watching for batch res files
         runExternalCommand(`node ${process.argv[1]} --silent --path=${originalCwd} --processBatchFile=${currentList}`, { ...runExternalCommand_Defaults }).then(function(){
@@ -289,7 +289,7 @@ function processBatchResFiles(){
             // Move to current console line correspondent to each process and update line
             const batchResData:batchUpdate_results = JSON.parse(fileData);
             module_readLine.cursorTo(process.stdout, 0, (currentFile + 10));
-            if (process.argv.indexOf('--silent') === -1) process.stdout.write(`==> Process: ${currentFile} - Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${batchResData.updateData.length} - Errors: ${batchResData.errorData.length}`);
+            if (process.argv.indexOf('--silent') === -1) process.stdout.write(`==> Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${batchResData.updateData.length}, Errors: ${batchResData.errorData.length}`);
         
         }
 
