@@ -172,8 +172,6 @@ export async function grpp_processBatchFile(id:number){
             });
 
         }
-
-        // Create log entry, save results, remove batch file and exit 
         process.exit();
 
     } else {
@@ -276,22 +274,16 @@ function processBatchResFiles(){
 
         // Get file path and check if it exists / is a valid JSON file
         const fileData = module_fs.readFileSync(`${tempDir}/GRPP_BATCH_RES_${currentFile}.json`, 'utf-8');
-        if (isValidJSON(fileData) === !0) updateBatchResStatus(currentFile, JSON.parse(fileData));
+        if (isValidJSON(fileData) === !0){
+            
+            // Move to current console line correspondent to each process and update line
+            const batchResData:batchUpdate_results = JSON.parse(fileData);
+            module_readLine.cursorTo(process.stdout, 0, (currentFile + 10));
+            if (process.argv.indexOf('--silent') === -1) process.stdout.write(`==> Process: ${currentFile} - Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${batchResData.updateData.length} - Errors: ${batchResData.errorData.length}`);
+        
+        }
 
     }
-
-}
-
-/**
-    * Update ongoing update process on screen
-    * @param currentProcess [number] Current batch res file being read
-    * @param batchResData [batchUpdate_results] Current process status
-*/
-function updateBatchResStatus(currentProcess:number, batchResData:batchUpdate_results){
-
-    // Move to current console line correspondent to each process and update line
-    module_readLine.cursorTo(process.stdout, 0, (currentProcess + 10));
-    process.stdout.write(`==> Process: ${currentProcess} - Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${batchResData.updateData.length} - Errors: ${batchResData.errorData.length}`);
 
 }
 

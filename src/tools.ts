@@ -180,7 +180,7 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
                 finalStd.split('\n').forEach(function(currentLine){
                     if (currentLine !== '') tempString = `${tempString}${currentLine}\n`;
                 });
-                finalStd = trimString(finalStd);
+                finalStd = trimString(tempString);
 
             }
 
