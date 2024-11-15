@@ -1,15 +1,16 @@
 {
 	"name": "grpp",
+	"bin": "grpp.js",
 	"version": "1.0.0",
 	"main": "App/grpp.js",
-	"bin": "Build/grpp.js",
 	"author": "TheMitoSan",
 	"license": "GPL-2.0-only",
 	"homepage": "https://themitosan.github.io",
-	"description": "This is a simple project written in typescript that aims to import / preserve git repos.",
+	"description": "This is a simple project written in typescript that helps importing / preserving git repos.",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "webpack --config ./compiler/dev-webpack.config.js",
+		"bi": "npm run build && cd Build && sudo npm i -g grpp.tgz",
 		"build": "chmod +x compiler/build.sh && ./compiler/build.sh",
 		"buildWebpack": "webpack --config ./compiler/build-webpack.config.js"
 	},
@@ -20,6 +21,9 @@
 		"webpack": "^5.95.0",
 		"webpack-cli": "^5.1.4"
 	},
+	"bundledDependencies": [
+		"ini"
+	],
 	"bugs": {
 		"url": "http://192.168.15.200:3000/juliana/grpp/issues"
 	},

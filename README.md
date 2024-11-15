@@ -6,29 +6,38 @@
 Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this is a simple project written in ts that aims to gelp importing and preserving git repos.
 
 ## Requirements
-- `git`, `npm` and latest `node` version installed
+- `git`, `npm` and latest `node` version installed.
+
+## How to install (Easy mode)
+If you just want GRPP up and running, just run the following command:
+
+```shell
+npm i && npm run bi
+```
+
+...This will install all required packages, compile the project and install GRPP system-wide.
 
 ## How to compile (development mode)
 In order to compile, run the following commands:
 
 ```shell
-npm ci
-npm run buildWebpack
+npm i && npm run buildWebpack
 ```
-The final script will be on `Build` dir.
+The compiled script will be on `Build` dir.
 
 ## How to compile (production mode)
-In order to compile, run the following commands:
+First, you will need to install all dependencies and compile the project.
+
+To do this, run the following commands:
+
 ```shell
-npm ci
-npm run build
+npm i && npm run build
 ```
 
-This will generate a `.tgz` file. In order to install, run the following command
+This will generate a `.tgz` file inside `Build` dir. In order to install, run the following command:
 
-To install it globally, run the following command:
 ```shell
-sudo npm i -g grpp-[VERSION].tgz
+sudo npm i -g grpp.tgz
 ```
 
 > [!IMPORTANT]\
@@ -58,7 +67,7 @@ Then you will be able to start importing git repos.
 
 ## How to import git repos
 
-There is some ways you can perform this operation - by importing them one at time, a list or even all repos from a specific user.
+There is some ways you can perform this operation: By importing them one by one, a repo list or even all repos from a specific user.
 
 ### Single repo
 

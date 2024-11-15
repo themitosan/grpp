@@ -29,8 +29,20 @@ function start(){
     A classic quote from an old one: "Quem guarda, tem!"
 */\n${grppFile}`;
 
-    // Write file
+    // Strip non-required keys from package.json
+    [
+        'main',
+        'bugs',
+        'scripts',
+        'repository',
+        'devDependencies'
+    ].forEach(function(currentKey){
+        delete packageJson[currentKey];
+    });
+
+    // Write files
     module_fs.writeFileSync('Build/grpp.js', grppFile, 'utf-8');
+    module_fs.writeFileSync('Build/package.json', JSON.stringify(packageJson), 'utf-8');
 
 }
 

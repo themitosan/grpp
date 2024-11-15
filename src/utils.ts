@@ -40,13 +40,13 @@ export function grpp_printStatus(){
 */
 export function grpp_displayMainLogo(){
     console.clear();
-    createLogEntry("\n   <=============================================================>");
-    createLogEntry("   <=|          Git Repo Preservation Project (GRPP)           |=>");
-    createLogEntry("   <=|     Created by TheMitoSan (@themitosan.bsky.social)     |=>");
-    createLogEntry("   <=============================================================>");
-    createLogEntry("   <=|             A classic quote from an old one:            |=>");
-    createLogEntry("   <=|                   \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"                   |=>");
-    createLogEntry("   <=============================================================>\n");
+    createLogEntry("\n   <=====================================================>");
+    createLogEntry("   <=|       Git Repo Preservation Project (GRPP)      |=>");
+    createLogEntry("   <=| Created by TheMitoSan (@themitosan.bsky.social) |=>");
+    createLogEntry("   <=====================================================>");
+    createLogEntry("   <=|         A classic quote from an old one:        |=>");
+    createLogEntry("   <=|               \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"               |=>");
+    createLogEntry("   <=====================================================>\n");
 }
 
 /**
