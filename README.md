@@ -28,12 +28,16 @@ npm i && npm run buildWebpack
 ```
 The compiled script will be on `Build` dir.
 
-**TIP**: You can also run `npm run dev` and `ts` will watch all changes on your code and will compile script on the go! The compiled script will be on `App` dir instead of `Build`.
+**TIP**: You can also run `npm run dev` and `ts` will watch all changes on your code and will compile script on the go!
+
+The compiled script will be on `App` dir instead of `Build`.
 
 In order to run GRPP, you will need to run like this:
 ```shell
 # buildWebpack
 node Build/grpp.js
+
+##     OR
 
 # Dev mode
 node App/grpp.js
