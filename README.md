@@ -17,7 +17,10 @@ npm i && npm run bi
 
 ...This will install all required packages, compile the project and install GRPP system-wide.
 
-## How to compile (development mode)
+## How to build
+There are two ways of compiling GRPP: In development mode or production mode.
+
+### Development mode
 In order to compile, run the following commands:
 
 ```shell
@@ -25,7 +28,18 @@ npm i && npm run buildWebpack
 ```
 The compiled script will be on `Build` dir.
 
-## How to compile (production mode)
+**TIP**: You can also run `npm run dev` and `ts` will watch all changes on your code and will compile script on the go! The compiled script will be on `App` dir instead of `Build`.
+
+In order to run GRPP, you will need to run like this:
+```shell
+# buildWebpack
+node Build/grpp.js
+
+# Dev mode
+node App/grpp.js
+```
+
+### Production mode
 First, you will need to install all dependencies and compile the project.
 
 To do this, run the following commands:
@@ -45,7 +59,7 @@ sudo npm i -g grpp.tgz
 
 If everything is fine, you will be able to call `grpp` system-wide.
 
-### How to uninstall
+## How to uninstall
 
 It's simple! Just run the following command:
 
