@@ -37,7 +37,7 @@ In order to run GRPP, you will need to run like this:
 # buildWebpack
 node Build/grpp.js
 
-#      OR
+# OR
 
 # Dev mode
 node App/grpp.js
@@ -151,6 +151,6 @@ grpp --setStartPage=4 --getUserRepos=themitosan
 
 <sup><i>
 
-Some parts of this software derivates from TMS Engine.
+Some parts of this software derivates from [TMS Engine](http://192.168.15.200:3000/juliana/tms_engine).
 
 </i></sup>
