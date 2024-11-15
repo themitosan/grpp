@@ -37,7 +37,7 @@ In order to run GRPP, you will need to run like this:
 # buildWebpack
 node Build/grpp.js
 
-##     OR
+#      OR
 
 # Dev mode
 node App/grpp.js
