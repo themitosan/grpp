@@ -56,6 +56,20 @@ export const runExternalCommand_Defaults:Pick <runExternalCommandOptions, 'chdir
 */
 
 /**
+    * Better clear console
+    * Based on lukeed console-clear project
+    * URL: https://github.com/lukeed/console-clear
+    * @param removeHistory [boolean] set true to fully clear console, removing history
+*/
+export function consoleClear(removeHistory:boolean = !1){
+    if (removeHistory === !0){
+        process.stdout.write('\x1B[2J\x1B[3J\x1B[H\x1Bc');
+    } else {
+        console.clear();
+    }
+}
+
+/**
     * Create log entry only if silent flag is not present
     * @param data content to print on screen
 */

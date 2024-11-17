@@ -12,7 +12,7 @@
 import { grppRepoEntry } from './import';
 import { grpp_displayMainLogo } from './utils';
 import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
-import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString } from './tools';
+import { checkConnection, consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString } from './tools';
 
 /*
     Require node modules
@@ -226,7 +226,6 @@ async function startUpdateAllRepos(){
     totalResFiles = structuredClone(chunkList.length);
 
     // Clear console screen, create log entry and spawn processes
-    process.stdout.write('\x1B[2J\x1B[3J\x1B[H\x1Bc');
     grpp_displayMainLogo();
     createLogEntry(`INFO - Starting GRPP Batch Update process... (Creating ${totalReposQueued} processes, with at max. ${grppSettings.maxReposPerList} repos per list)`);
     for (var currentList = 0; currentList < totalResFiles; currentList++){
@@ -355,7 +354,7 @@ function batchUpdateComplete(){
     grpp_updateSettings(tempSettings);
     
     // Clear screen, display update results and remove temp dir
-    grpp_displayMainLogo();
+    grpp_displayMainLogo(!0);
     createLogEntry(`INFO - Process complete!\n${finalString}\n`);
 
     // Check if log dir exists, if not, create it and write log data

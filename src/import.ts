@@ -126,7 +126,7 @@ export async function grpp_importBatch(urlList:string){
     const urlArray = urlList.split('\n');
     for (const url of urlArray){
         if (url.length > 0){
-            createLogEntry(`INFO - [${(urlArray.indexOf(url) + 1)} of ${urlArray.length}] Processing URL: ${url}`);
+            createLogEntry(`INFO - [${(urlArray.indexOf(url) + 1)} of ${urlArray.length}] Clonning URL: ${url}`);
             await grpp_startImport(url);
         }
     }

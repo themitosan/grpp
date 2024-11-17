@@ -12,7 +12,7 @@
 import { grppSettings } from './main';
 import { grppRepoEntry } from './import';
 import { grpp_commandList, grpp_optionList } from './database';
-import { converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, trimString } from './tools';
+import { consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, trimString } from './tools';
 
 /*
     Require node modules
@@ -37,9 +37,10 @@ export function grpp_printStatus(){
 
 /**
     * Clear screen and display main logo
+    * @param clearHistory [boolean] Set true to clear console history
 */
-export function grpp_displayMainLogo(){
-    console.clear();
+export function grpp_displayMainLogo(clearHistory:boolean = !1){
+    consoleClear(clearHistory);
     createLogEntry("\n   <=====================================================>");
     createLogEntry("   <=|       Git Repo Preservation Project (GRPP)      |=>");
     createLogEntry("   <=| Created by TheMitoSan (@themitosan.bsky.social) |=>");
