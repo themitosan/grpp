@@ -40,10 +40,8 @@ export async function grpp_getUserRepos(userName:string){
             canFetch:boolean = !0,
             reasonList:string[] = [];
 
-        // Check if username was provided
+        // Check if username was provided and check if can prompt user
         if (userName.length < 1) reasonList.push('You must provide a username!');
-
-        // Check if can prompt user
         execReasonListCheck(reasonList, `ERROR - Unable to seek repos from user!\nReason: ${convertArrayToString(reasonList)}`, function(){
         
             // Prompt user, close nodeReadLine and switch user input

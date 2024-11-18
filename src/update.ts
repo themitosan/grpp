@@ -228,7 +228,7 @@ async function startUpdateAllRepos(){
 
     // Clear console screen, create log entry and spawn processes
     grpp_displayMainLogo();
-    createLogEntry(`INFO - Starting GRPP Batch Update process... (Creating ${totalReposQueued} processes, with at max. ${grppSettings.maxReposPerList} repos per list)`);
+    createLogEntry(`INFO - Starting GRPP Batch Update process... (Creating ${totalResFiles} processes, with at max. ${grppSettings.maxReposPerList} repos per list)`);
     for (var currentList = 0; currentList < totalResFiles; currentList++){
 
         // Spawn process and start watching for batch res files

@@ -155,6 +155,20 @@ export function grpp_removeRepo(path:string){
 }
 
 /**
+    * Check if current arg is valid
+    * @param arg [string] Arg to be checked
+*/
+function checkFlagIsValid(arg:string):string {
+
+    var res = '',
+        handleDatabase = ['-', '/'];
+
+    if (handleDatabase.indexOf(arg.slice(0, 1)) !== -1) res = arg.slice(1, arg.length);
+    return res;
+
+}
+
+/**
     * GRPP main function
 */
 async function init(){
@@ -162,13 +176,13 @@ async function init(){
     // Display main logo, create vars and check if needs to display help string
     grpp_displayMainLogo();
     var execFn:Function | null = null;
-    if (process.argv.indexOf('help') === -1) createLogEntry('==> Use \"help\" for more details\n');
+    if (process.argv.indexOf('help') === -1) createLogEntry('==> Use \"-help\" for more details\n');
 
     /*
         Process settings flags
     */
     for (var i = 0; i < process.argv.length; i++){
-        const currentFlag = process.argv[i];
+        const currentFlag = checkFlagIsValid(process.argv[i]);
 
         // Set max repos a batch file should have
         if (currentFlag.indexOf('maxReposPerList=') !== -1) tempSettings.maxReposPerList = preventMinMax(Number(currentFlag.replace('maxReposPerList=', '')), 1, maxValue);
@@ -198,7 +212,7 @@ async function init(){
         Process functions flags
     */
     for (var i = 0; i < process.argv.length; i++){
-        const currentFlag = process.argv[i];
+        const currentFlag = checkFlagIsValid(process.argv[i]);
 
         // Display help menu
         if (currentFlag.indexOf('help') !== -1){
@@ -235,9 +249,9 @@ async function init(){
         }
 
         // Get user repos
-        if (currentFlag.indexOf('getUserRepos=') !== -1){
+        if (currentFlag.indexOf('getReposFrom=') !== -1){
             execFn = function(){
-                grpp_getUserRepos(currentFlag.replace('getUserRepos=', ''));
+                grpp_getUserRepos(currentFlag.replace('getReposFrom=', ''));
             }
             break;
         }
@@ -252,7 +266,9 @@ async function init(){
 
         // Import repo from list
         if (currentFlag.indexOf('importList=') !== -1){
-            grpp_importBatch(module_fs.readFileSync(currentFlag.replace('importList=', ''), 'utf-8'));
+            execFn = function(){
+                grpp_importBatch(module_fs.readFileSync(currentFlag.replace('importList=', ''), 'utf-8'));
+            }
         }
 
         // Get info from a previously imported repo
