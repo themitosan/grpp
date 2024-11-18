@@ -12,7 +12,7 @@
 import { grppRepoEntry } from './import';
 import { consoleTextStyle } from './database';
 import { grpp_displayMainLogo } from './utils';
-import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
+import { enableSilentMode, grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
 import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString } from './tools';
 
 /*
@@ -237,7 +237,7 @@ async function startUpdateAllRepos(){
         });
 
     }
-    if (process.argv.indexOf('silent') === -1) startCheckBatchResFiles();
+    if (enableSilentMode === !1) startCheckBatchResFiles();
 
     // Create wait interval, checking if all process exited. If so, reset chdir, process update data and clear interval
     const waitAllProcessExit = setInterval(function(){

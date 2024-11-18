@@ -11,8 +11,8 @@
     Import TS modules
 */
 
-import { grppSettings } from './main';
 import { consoleTextStyle } from './database';
+import { enableSilentMode, grppSettings } from './main';
 
 /*
     Require node modules
@@ -76,7 +76,7 @@ export function consoleClear(removeHistory:boolean = !1){
     * @param color [string] Text display mode
 */
 export function createLogEntry(data:any, color:string = 'reset'){
-    if (process.argv.indexOf('silent') === -1) console.log(`${consoleTextStyle[color as keyof typeof consoleTextStyle]}${data}`);
+    if (enableSilentMode === !1) console.log(`${consoleTextStyle[color as keyof typeof consoleTextStyle]}${data}`);
 }
 
 /**

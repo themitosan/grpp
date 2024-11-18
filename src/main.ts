@@ -67,8 +67,13 @@ const
     // Temp settings to be appended on main settings file
     tempSettings:grppSettingsFile | any = {};
 
-// App settings
-export var grppSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
+export var 
+
+    // Is silent mode active
+    enableSilentMode = !1,
+
+    // App settings
+    grppSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
 
 /*
     Functions
@@ -183,6 +188,9 @@ async function init(){
     */
     for (var i = 0; i < process.argv.length; i++){
         const currentFlag = checkFlagIsValid(process.argv[i]);
+
+        // Check if needs to enable silent mode
+        if (currentFlag.indexOf('silent') !== -1) enableSilentMode = !0;
 
         // Set max repos a batch file should have
         if (currentFlag.indexOf('maxReposPerList=') !== -1) tempSettings.maxReposPerList = preventMinMax(Number(currentFlag.replace('maxReposPerList=', '')), 1, maxValue);
