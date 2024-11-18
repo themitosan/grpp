@@ -351,14 +351,15 @@ function batchUpdateComplete(){
     }
     module_fs.rmSync(`${process.cwd()}/.temp`, { recursive: !0 });
     
-    // Process error / update lists
+    // Process error / update lists and set updateDetails var
     if (errorList.length > 0) errorString = processUpdateArrays(errorList);
     if (updateList.length > 0) updateString = processUpdateArrays(updateList);
+    updateDetails = `==> Updates:\n${updateString}\n\n==> Errors:\n${errorList}`;
 
     // Set result page data
     baseLog = `GRPP location: ${process.cwd()}
 
-==> General info:
+==> Results:
 
 ──┬ Processes: ${totalResFiles}
   ├ Update duration: ${converMsToHHMMSS(updateDurationMs)} [${updateDurationMs}ms]
@@ -366,7 +367,6 @@ function batchUpdateComplete(){
   ├ Repos updated on this run: ${consoleTextStyle.fgGreen}${updateList.length}${consoleTextStyle.reset}
   └ Error counter: ${consoleTextStyle.fgRed}${errorList.length}${consoleTextStyle.reset}`
 
-    updateDetails = `==> Updates:\n${updateString}\n\n==> Errors:\n${errorList}`;
 
     // Update GRPP Settings file data
     const tempSettings = grppSettings;
@@ -384,6 +384,7 @@ function batchUpdateComplete(){
     const exportLogPath = `${process.cwd()}/logs/GRPP_BATCH_${time.toString().replaceAll(':', '_').replaceAll(' ', '_').slice(0, 24)}.txt`;
     module_fs.writeFileSync(exportLogPath, `Git Repository Preservation Project [GRPP]\nCreated by TheMitoSan (@themitosan.bsky.social)\n\nLog created at ${time.toString()}\n\n${baseLog}\n\n${updateDetails}`, 'utf-8');
     createLogEntry(`You can see more details on gereated log file: ${exportLogPath}\n`);
+
     process.exit();
 
 }
