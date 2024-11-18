@@ -123,7 +123,7 @@ export async function grpp_updateRepo(path:string){
 
                     // Declare vars and check if current output had any errors
                     var errorCounter = 0,
-                        errorSamples = ['fatal: ', 'error: '];
+                        errorSamples = ['fatal: ', 'error: ', 'warning: '];
 
                     errorSamples.forEach(function(currentSample){
                         if (processOutput.stdData.indexOf(currentSample) !== -1) errorCounter++;
