@@ -168,6 +168,7 @@ function checkFlagIsValid(arg:string):string {
     var res = '',
         handleDatabase = ['-', '/'];
 
+    if (arg.slice(0, 2) === '--') res = arg.slice(2, arg.length);
     if (handleDatabase.indexOf(arg.slice(0, 1)) !== -1) res = arg.slice(1, arg.length);
     return res;
 
@@ -177,11 +178,6 @@ function checkFlagIsValid(arg:string):string {
     * GRPP main function
 */
 async function init(){
-
-    // Display main logo, create vars and check if needs to display help string
-    grpp_displayMainLogo();
-    var execFn:Function | null = null;
-    if (process.argv.indexOf('help') === -1) createLogEntry('==> Use \"-help\" for more details\n');
 
     /*
         Process settings flags
@@ -215,6 +211,11 @@ async function init(){
         }
 
     }
+
+    // Display main logo, create vars and check if needs to display help string
+    grpp_displayMainLogo();
+    var execFn:Function | null = null;
+    if (process.argv.indexOf('help') === -1) createLogEntry('==> Use \"-help\" for more details\n');
 
     /*
         Process functions flags

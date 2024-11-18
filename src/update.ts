@@ -13,7 +13,7 @@ import { grppRepoEntry } from './import';
 import { consoleTextStyle } from './database';
 import { grpp_displayMainLogo } from './utils';
 import { enableSilentMode, grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
-import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString } from './tools';
+import { checkConnection, consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString } from './tools';
 
 /*
     Require node modules
@@ -227,12 +227,13 @@ async function startUpdateAllRepos(){
     totalResFiles = structuredClone(chunkList.length);
 
     // Clear console screen, create log entry and spawn processes
+    consoleClear(!0);
     grpp_displayMainLogo();
     createLogEntry(`INFO - Starting GRPP Batch Update process... (Creating ${totalResFiles} processes, with at max. ${grppSettings.maxReposPerList} repos per list)`);
     for (var currentList = 0; currentList < totalResFiles; currentList++){
 
         // Spawn process and start watching for batch res files
-        runExternalCommand(`node ${process.argv[1]} silent path=${originalCwd} processBatchFile=${currentList}`, { ...runExternalCommand_Defaults }).then(function(){
+        runExternalCommand(`grpp -silent -path=${originalCwd} -processBatchFile=${currentList}`, { ...runExternalCommand_Defaults }).then(function(){
             completedRunners++;
         });
 
@@ -286,8 +287,12 @@ function processBatchResFiles(){
         if (isValidJSON(fileData) === !0){
 
             // Declare ASCII entry char and change it if current file is the last one
-            var entryChar = '  ├';
-            if (currentFile === (totalResFiles - 1)) entryChar = '  └';
+            var entryChar = '  ├',
+                enableLineBreak = '';
+            if (currentFile === (totalResFiles - 1)){
+                entryChar = '  └';
+                enableLineBreak = '\n';
+            }
 
             // Read current res file and updated elapsed time
             const batchResData:batchUpdate_results = JSON.parse(fileData);
@@ -296,7 +301,7 @@ function processBatchResFiles(){
 
             // Move to current console line correspondent to each process and update line
             module_readLine.cursorTo(process.stdout, 0, (currentFile + 12));
-            process.stdout.write(`${entryChar} Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${consoleTextStyle.fgGreen}${batchResData.updateData.length}${consoleTextStyle.reset}, Errors: ${consoleTextStyle.fgRed}${batchResData.errorData.length}`);
+            process.stdout.write(`${entryChar} Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${consoleTextStyle.fgGreen}${batchResData.updateData.length}${consoleTextStyle.reset}, Errors: ${consoleTextStyle.fgRed}${batchResData.errorData.length}${consoleTextStyle.reset}${enableLineBreak}`);
         
         }
 
