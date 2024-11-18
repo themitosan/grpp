@@ -168,8 +168,11 @@ function checkFlagIsValid(arg:string):string {
     var res = '',
         handleDatabase = ['-', '/'];
 
-    if (arg.slice(0, 2) === '--') res = arg.slice(2, arg.length);
-    if (handleDatabase.indexOf(arg.slice(0, 1)) !== -1) res = arg.slice(1, arg.length);
+    if (arg.slice(0, 2) === '--'){
+        res = arg.slice(2, arg.length);
+    } else {
+        if (handleDatabase.indexOf(arg.slice(0, 1)) !== -1) res = arg.slice(1, arg.length);
+    }
     return res;
 
 }
