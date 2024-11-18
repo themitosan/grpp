@@ -15,7 +15,39 @@ import * as module_os from 'os';
     Variables
 */
 
-// Command list
+/*
+    Console text style database
+    Source code: https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
+*/
+export const consoleTextStyle = {
+    'reset': "\x1b[0m",
+    'bright': "\x1b[1m",
+    'dim': "\x1b[2m",
+    'underline': "\x1b[4m",
+    'blink': "\x1b[5m",
+    'reverse': "\x1b[7m",
+    'hidden': "\x1b[8m",
+    'fgBlack': "\x1b[30m",
+    'fgRed': "\x1b[31m",
+    'fgGreen': "\x1b[32m",
+    'fgYellow': "\x1b[33m",
+    'fgBlue': "\x1b[34m",
+    'fgMagenta': "\x1b[35m",
+    'fgCyan': "\x1b[36m",
+    'fgWhite': "\x1b[37m",
+    'fgGray': "\x1b[90m",
+    'bgBlack': "\x1b[40m",
+    'bgRed': "\x1b[41m",
+    'bgGreen': "\x1b[42m",
+    'bgYellow': "\x1b[43m",
+    'bgBlue': "\x1b[44m",
+    'bgMagenta': "\x1b[45m",
+    'bgCyan': "\x1b[46m",
+    'bgWhite': "\x1b[47m",
+    'bgGray': "\x1b[100m"
+};
+
+// GRPP function list
 export const grpp_commandList:any = {
     'help': `Display this menu. (Hello ${module_os.userInfo().username}! <3)`,
     'updateAll': `Update all imported repos`,
@@ -26,7 +58,7 @@ export const grpp_commandList:any = {
     'exportRemotes': `Export all clone urls from previously imported git repos into a file (grpp_urls.txt)`
 };
 
-// Option list
+// GRPP option list
 export const grpp_optionList:any = {
     'init=[PATH]': `Set a location where GRPP will initialize and backup your repos.\nYou can also just use \"init\" to initialize where you currently are!`,
     'import=[GIT_URL]': `Imports a git repository to database.`,

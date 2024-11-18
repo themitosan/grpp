@@ -12,6 +12,7 @@
 */
 
 import { grppSettings } from './main';
+import { consoleTextStyle } from './database';
 
 /*
     Require node modules
@@ -72,9 +73,10 @@ export function consoleClear(removeHistory:boolean = !1){
 /**
     * Create log entry only if silent flag is not present
     * @param data content to print on screen
+    * @param color [string] Text display mode
 */
-export function createLogEntry(data:any){
-    if (process.argv.indexOf('silent') === -1) console.info(data);
+export function createLogEntry(data:any, color:string = 'reset'){
+    if (process.argv.indexOf('silent') === -1) console.log(`${consoleTextStyle[color as keyof typeof consoleTextStyle]}${data}`);
 }
 
 /**

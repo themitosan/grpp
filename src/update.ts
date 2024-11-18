@@ -10,9 +10,10 @@
 */
 
 import { grppRepoEntry } from './import';
+import { consoleTextStyle } from './database';
 import { grpp_displayMainLogo } from './utils';
 import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
-import { checkConnection, consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString } from './tools';
+import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString } from './tools';
 
 /*
     Require node modules
@@ -199,7 +200,7 @@ async function startUpdateAllRepos(){
         updateList:string[] = [];
 
     // Set current time to measure update time, set tempDir var and check if it exists. If so, remove it and create a new one
-    startUpdateTime = performance.now();
+    startUpdateTime = structuredClone(performance.now());
     tempDir = structuredClone(`${process.cwd()}/.temp`);
     if (module_fs.existsSync(tempDir) === !0) module_fs.rmSync(tempDir, { recursive: !0 });
     module_fs.mkdirSync(tempDir);
@@ -284,10 +285,18 @@ function processBatchResFiles(){
         const fileData = module_fs.readFileSync(`${tempDir}/GRPP_BATCH_RES_${currentFile}.json`, 'utf-8');
         if (isValidJSON(fileData) === !0){
 
-            // Move to current console line correspondent to each process and update line
+            // Declare ASCII entry char and change it if current file is the last one
+            var entryChar = '  ├';
+            if (currentFile === (totalResFiles - 1)) entryChar = '  └';
+
+            // Read current res file and updated elapsed time
             const batchResData:batchUpdate_results = JSON.parse(fileData);
-            module_readLine.cursorTo(process.stdout, 0, (currentFile + 10));
-            process.stdout.write(`==> Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${batchResData.updateData.length}, Errors: ${batchResData.errorData.length}`);
+            module_readLine.cursorTo(process.stdout, 0, 11);
+            process.stdout.write(`${consoleTextStyle.reset}──┬ Elapsed time: ${converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime))}`);
+
+            // Move to current console line correspondent to each process and update line
+            module_readLine.cursorTo(process.stdout, 0, (currentFile + 12));
+            process.stdout.write(`${entryChar} Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${consoleTextStyle.fgGreen}${batchResData.updateData.length}${consoleTextStyle.reset}, Errors: ${consoleTextStyle.fgRed}${batchResData.errorData.length}`);
         
         }
 
@@ -314,8 +323,9 @@ function processUpdateArrays(updateList:string[]):string {
 function batchUpdateComplete(){
 
     // Create vars
-    var finalString = '',
+    var baseLog = '',
         time = new Date(),
+        updateDetails = '',
         errorList:string[] = [],
         updateList:string[] = [],
         errorString = '...there was no errors on this run.',
@@ -341,10 +351,22 @@ function batchUpdateComplete(){
     }
     module_fs.rmSync(`${process.cwd()}/.temp`, { recursive: !0 });
     
-    // Process update lists and create final string
+    // Process error / update lists
     if (errorList.length > 0) errorString = processUpdateArrays(errorList);
     if (updateList.length > 0) updateString = processUpdateArrays(updateList);
-    finalString = `Current path: ${process.cwd()}\n\n==> General info:\nProcesses: ${totalResFiles}\nUpdate duration: ${converMsToHHMMSS(updateDurationMs)} [${updateDurationMs}ms]\nTotal repos queued: ${totalReposQueued} [From ${Object.keys(grppSettings.repoEntries).length} on database, ${totalReposQueued} were queued]\n\n==> Update data:\n${updateString}\n\n==> Error data:\n${errorString}`;
+
+    // Set result page data
+    baseLog = `GRPP location: ${process.cwd()}
+
+==> General info:
+
+──┬ Processes: ${totalResFiles}
+  ├ Update duration: ${converMsToHHMMSS(updateDurationMs)} [${updateDurationMs}ms]
+  ├ Total repos queued: ${totalReposQueued} [From ${Object.keys(grppSettings.repoEntries).length} on database, ${consoleTextStyle.underline}${totalReposQueued}${consoleTextStyle.reset} were queued]
+  ├ Repos updated on this run: ${consoleTextStyle.fgGreen}${updateList.length}${consoleTextStyle.reset}
+  └ Error counter: ${consoleTextStyle.fgRed}${errorList.length}${consoleTextStyle.reset}`
+
+    updateDetails = `==> Updates:\n${updateString}\n\n==> Errors:\n${errorList}`;
 
     // Update GRPP Settings file data
     const tempSettings = grppSettings;
@@ -355,13 +377,13 @@ function batchUpdateComplete(){
     
     // Clear screen, display update results and remove temp dir
     grpp_displayMainLogo(!0);
-    createLogEntry(`INFO - Process complete!\n${finalString}\n`);
+    createLogEntry(`INFO - Process complete!\n${baseLog}\n`);
 
     // Check if log dir exists, if not, create it and write log data
     if (module_fs.existsSync(`${process.cwd()}/logs`) === !1) module_fs.mkdirSync(`${process.cwd()}/logs`);
     const exportLogPath = `${process.cwd()}/logs/GRPP_BATCH_${time.toString().replaceAll(':', '_').replaceAll(' ', '_').slice(0, 24)}.txt`;
-    module_fs.writeFileSync(exportLogPath, `Git Repository Preservation Project [GRPP]\nCreated by TheMitoSan (@themitosan.bsky.social)\n\nLog created at ${time.toString()}\n\n${finalString}`, 'utf-8');
-    createLogEntry(`INFO - Exporting log data...\nPath: ${exportLogPath}\n`);
+    module_fs.writeFileSync(exportLogPath, `Git Repository Preservation Project [GRPP]\nCreated by TheMitoSan (@themitosan.bsky.social)\n\nLog created at ${time.toString()}\n\n${baseLog}\n\n${updateDetails}`, 'utf-8');
+    createLogEntry(`You can see more details on gereated log file: ${exportLogPath}\n`);
     process.exit();
 
 }
