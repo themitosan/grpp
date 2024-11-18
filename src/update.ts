@@ -259,12 +259,13 @@ async function startUpdateAllRepos(){
 function startCheckBatchResFiles(){
     const checkInterval = setInterval(function(){
 
-        // Create available file counter and check if all res files exists. If so, start watching all
+        // Create available file counter and check if all res files exists. If so, Clear screen, display main logo and start watching all
         var availableFiles = 0;
         for (var currentFile = 0; currentFile < totalResFiles; currentFile++){
             if (module_fs.existsSync(`${tempDir}/GRPP_BATCH_RES_${currentFile}.json`) === !0) availableFiles++;
         }
         if (availableFiles >= totalResFiles){
+            grpp_displayMainLogo(!0);
             for (var currentFile = 0; currentFile < totalResFiles; currentFile++){
                 resWatcherList.push(module_fs.watch(`${tempDir}/GRPP_BATCH_RES_${currentFile}.json`, { recursive: !0 }, processBatchResFiles));
             }
@@ -296,11 +297,11 @@ function processBatchResFiles(){
 
             // Read current res file and updated elapsed time
             const batchResData:batchUpdate_results = JSON.parse(fileData);
-            module_readLine.cursorTo(process.stdout, 0, 11);
+            module_readLine.cursorTo(process.stdout, 0, 9);
             process.stdout.write(`${consoleTextStyle.reset}──┬ Elapsed time: ${converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime))}`);
 
             // Move to current console line correspondent to each process and update line
-            module_readLine.cursorTo(process.stdout, 0, (currentFile + 12));
+            module_readLine.cursorTo(process.stdout, 0, (currentFile + 10));
             process.stdout.write(`${entryChar} Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${consoleTextStyle.fgGreen}${batchResData.updateData.length}${consoleTextStyle.reset}, Errors: ${consoleTextStyle.fgRed}${batchResData.errorData.length}${consoleTextStyle.reset}${enableLineBreak}`);
         
         }
