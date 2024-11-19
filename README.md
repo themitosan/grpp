@@ -81,7 +81,7 @@ To do this, run the following command:
 grpp --init
 ```
 
-Then you will be able to start importing git repos.
+After initializing, you will be able to start importing git repos.
 
 ## How to import git repos
 
@@ -98,11 +98,6 @@ grpp --import=http://github.com/themitosan/themitosan.git
 If everything is fine, you will be able to import this git repo to your current location organized by host/user/repo.
 
 _(On this case, `themitosan.git` will be located on `YOUR_CURRENT_PATH/repos/github.com/themitosan/themitosan.git`)_
-
-> [!IMPORTANT]\
-> All repos always will be imported as bare format!
-
-Since the scope of this project is preserve git repos, you will need to clone them on another place in order to interact with it's files.
 
 ### Multiple repos
 
