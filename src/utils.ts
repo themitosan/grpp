@@ -57,11 +57,11 @@ export function grpp_displayMainLogo(clearHistory:boolean = !1){
 export function grpp_displayHelp(){
     createLogEntry(`Hi ${module_os.userInfo().username} - we hope you are having a good one!\nAll options displayed below can be triggered by using \"-\", \"--\" or even "/" (without quotes).\n\n==> Function list:\n`);
     Object.keys(grpp_commandList).forEach(function(currentFlag:any){
-        createLogEntry(`${currentFlag}\n${grpp_commandList[currentFlag]}\n`);
+        createLogEntry(`--${currentFlag}\n${grpp_commandList[currentFlag]}\n`);
     });
     createLogEntry('==> Options list:\n');
     Object.keys(grpp_optionList).forEach(function(currentFlag:any){
-        createLogEntry(`${currentFlag}\n${grpp_optionList[currentFlag]}\n`);
+        createLogEntry(`--${currentFlag}\n${grpp_optionList[currentFlag]}\n`);
     });
 }
 
