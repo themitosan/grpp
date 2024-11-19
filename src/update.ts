@@ -40,6 +40,12 @@ interface batchUpdate_results {
     updateData:string[]
 }
 
+// Console res
+interface consoleDimensions {
+    x:number,
+    y:number
+}
+
 /*
     Defaults
 */
@@ -71,7 +77,10 @@ var
     startUpdateTime = 0,
 
     // Total repos queued to update
-    totalReposQueued = 0;
+    totalReposQueued = 0,
+
+    // Console dimensions
+    consoleDimensions:consoleDimensions =  { x: 0, y: 0 };
 
 // Update results
 const grpp_updateResults:batchUpdate_results = { ...batchUpdateResults_Defaults };
@@ -280,6 +289,13 @@ function startCheckBatchResFiles(){
 */
 function processBatchResFiles(){
 
+    // Check if console dimensions have changed
+    if (process.stdout.columns !== consoleDimensions.x || process.stdout.rows !== consoleDimensions.y){
+        consoleDimensions.x = process.stdout.columns;
+        consoleDimensions.y = process.stdout.rows;
+        grpp_displayMainLogo(!0);
+    }
+
     // Process all files and check if they are valid JSON files
     for (var currentFile = 0; currentFile < totalResFiles; currentFile++){
 
@@ -385,9 +401,9 @@ async function batchUpdateComplete(){
     // Check if log dir exists, if not, create it and write log data
     if (module_fs.existsSync(`${process.cwd()}/logs`) === !1) module_fs.mkdirSync(`${process.cwd()}/logs`);
     const exportLogPath = `${process.cwd()}/logs/GRPP_BATCH_${time.toString().replaceAll(':', '_').replaceAll(' ', '_').slice(0, 24)}.txt`;
+    module_fs.writeFileSync(exportLogPath, `Git Repository Preservation Project [GRPP]\nCreated by TheMitoSan (@themitosan.bsky.social)\n\nLog created at ${time.toString()}\n\n${baseLog}\n\n${updateDetails}`, 'utf-8');
 
     // Ask if user wants to open exported log
-    module_fs.writeFileSync(exportLogPath, `Git Repository Preservation Project [GRPP]\nCreated by TheMitoSan (@themitosan.bsky.social)\n\nLog created at ${time.toString()}\n\n${baseLog}\n\n${updateDetails}`, 'utf-8');
     readLine.question(`You can see more details on gereated log file: ${exportLogPath}\nDo you want to open it? [Y/n] `, async function(answer){
 
         // Close readline and check if user wants to check update data
