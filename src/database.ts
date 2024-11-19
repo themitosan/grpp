@@ -6,10 +6,6 @@
 */
 
 /*
-    Variables
-*/
-
-/*
     Console text style database
     Source code: https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
 */
@@ -47,14 +43,14 @@ export const grpp_commandList:any = {
     'updateAll': `Update all imported repos`,
     'status': `Display GRPP status from a initialized dir.`,
     'silent': `Only print errors on screen.`,
-    'saveSettings': `Use this option to update current settings file.\nExample: \"grpp setConnectionTestURL=8.8.8.8 saveSettings\" will set main connection test to google dns and save it to settings file.`,
+    'saveSettings': `Use this option to update current settings file.\nExample: \"grpp --setConnectionTestURL=1.1.1.1 --saveSettings\" will set main connection test to cloudflare dns and save it to settings file.`,
     'repair': `This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.`,
     'exportRemotes': `Export all clone urls from previously imported git repos into a file (grpp_urls.txt)`
 };
 
 // GRPP option list
 export const grpp_optionList:any = {
-    'init=[PATH]': `Set a location where GRPP will initialize and backup your repos.\nYou can also just use \"init\" to initialize where you currently are!`,
+    'init=[PATH]': `Set a location where GRPP will initialize and backup your repos.\nYou can also just use \"--init\" to initialize where you currently are!`,
     'import=[GIT_URL]': `Imports a git repository to database.`,
     'importList=[PATH]': `Import a list of git repositories from a text file.`,
     'path=[PATH]': `Set GRPP current working directory.`,
@@ -65,7 +61,7 @@ export const grpp_optionList:any = {
     'setStartPage=[NUMBER]': `Set which page GRPP should start fetching user repos from git hosting website.`,
     'setMaxFetchPages=[NUMBER]': `Set maximum of pages GRPP will fetch from remote on get user repos process.`,
     'setConnectionTestURL=[URL]': `Set URL which GRPP will use to test internet connection.`,
-    'processBatchFile=[NUMBER]': `Loads and updates all repos from a file created by "updateAll" process.`,
+    'processBatchFile=[NUMBER]': `Loads and updates all repos from a file created by "--updateAll" option.`,
     'setEditor=[EDITOR]': 'Set which text editor GRPP should use to open text files. (Default: nano)'
 };
 
