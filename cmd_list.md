@@ -1,6 +1,6 @@
 # GRPP Command List
 
-INFO: All commands can be called by using `-`, `--` or even `/`.
+**INFO**: All commands can be called by using `-`, `--` or even `/`.
 
 ## Function list
 
