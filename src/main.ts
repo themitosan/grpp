@@ -242,7 +242,7 @@ async function init(){
     // Display main logo, create vars and check if needs to display help string
     grpp_displayMainLogo();
     var execFn:Function | null = null;
-    if (process.argv.indexOf('help') === -1) createLogEntry('==> Use \"-help\" for more details\n');
+    createLogEntry('==> Use \"--help\" for more details\n');
 
     /*
         Process functions flags
@@ -252,6 +252,7 @@ async function init(){
 
         // Display help menu
         if (currentFlag.indexOf('help') !== -1){
+            grpp_displayMainLogo(!0);
             grpp_displayHelp();
             break;
         }

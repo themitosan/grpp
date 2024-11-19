@@ -19,6 +19,7 @@ import { consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, e
 */
 
 import * as module_fs from 'fs';
+import * as module_os from 'os';
 
 /*
     Functions
@@ -54,7 +55,7 @@ export function grpp_displayMainLogo(clearHistory:boolean = !1){
     * Display help menu
 */
 export function grpp_displayHelp(){
-    createLogEntry('==> Function list:\n');
+    createLogEntry(`Hi ${module_os.userInfo().username} - we hope you are having a good one!\nAll options displayed below can be triggered by using \"-\", \"--\" or even "/" (without quotes).\n\n==> Function list:\n`);
     Object.keys(grpp_commandList).forEach(function(currentFlag:any){
         createLogEntry(`${currentFlag}\n${grpp_commandList[currentFlag]}\n`);
     });

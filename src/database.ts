@@ -6,12 +6,6 @@
 */
 
 /*
-    Require node modules
-*/
-
-import * as module_os from 'os';
-
-/*
     Variables
 */
 
@@ -49,7 +43,7 @@ export const consoleTextStyle = {
 
 // GRPP function list
 export const grpp_commandList:any = {
-    'help': `Display this menu. (Hello ${module_os.userInfo().username}! <3)`,
+    'help': `Display this menu.`,
     'updateAll': `Update all imported repos`,
     'status': `Display GRPP status from a initialized dir.`,
     'silent': `Only print errors on screen.`,
