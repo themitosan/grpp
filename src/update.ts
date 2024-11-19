@@ -13,7 +13,7 @@ import { grppRepoEntry } from './import';
 import { consoleTextStyle } from './database';
 import { grpp_displayMainLogo } from './utils';
 import { enableSilentMode, grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
-import { checkConnection, consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString } from './tools';
+import { checkConnection, consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString } from './tools';
 
 /*
     Require node modules
@@ -326,7 +326,7 @@ function processUpdateArrays(updateList:string[]):string {
 /**
     * Batch update complete
 */
-function batchUpdateComplete(){
+async function batchUpdateComplete(){
 
     // Create vars
     var baseLog = '',
@@ -337,8 +337,9 @@ function batchUpdateComplete(){
         errorString = '...there was no errors on this run.',
         updateString = '...there was no updates on this run.',
         updateDurationMs = parsePositive(startUpdateTime - performance.now());
-
-    // Stop watchers
+        
+    // Create node readline interface and stop watchers
+    const readLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
     resWatcherList.forEach(function(currentWatcher){
         currentWatcher.close();
     });
@@ -360,19 +361,15 @@ function batchUpdateComplete(){
     // Process error / update lists and set updateDetails var
     if (errorList.length > 0) errorString = processUpdateArrays(errorList);
     if (updateList.length > 0) updateString = processUpdateArrays(updateList);
-    updateDetails = `==> Updates:\n${updateString}\n\n==> Errors:\n${errorList}`;
+    updateDetails = `==> Updates:\n${updateString}\n\n==> Errors:\n${errorString}`;
 
     // Set result page data
-    baseLog = `GRPP location: ${process.cwd()}
-
-==> Results:
-
+    baseLog = `GRPP location: ${process.cwd()}\n\n==> Results:\n
 ──┬ Processes: ${totalResFiles}
   ├ Update duration: ${converMsToHHMMSS(updateDurationMs)} [${updateDurationMs}ms]
-  ├ Total repos queued: ${totalReposQueued} [From ${Object.keys(grppSettings.repoEntries).length} on database, ${consoleTextStyle.underline}${totalReposQueued}${consoleTextStyle.reset} were queued]
-  ├ Repos updated on this run: ${consoleTextStyle.fgGreen}${updateList.length}${consoleTextStyle.reset}
-  └ Error counter: ${consoleTextStyle.fgRed}${errorList.length}${consoleTextStyle.reset}`
-
+  ├ Total repos queued: ${totalReposQueued} [From ${Object.keys(grppSettings.repoEntries).length} on database, ${totalReposQueued} were queued]
+  ├ Repos updated on this run: ${updateList.length}
+  └ Error counter: ${errorList.length}`;
 
     // Update GRPP Settings file data
     const tempSettings = grppSettings;
@@ -388,10 +385,20 @@ function batchUpdateComplete(){
     // Check if log dir exists, if not, create it and write log data
     if (module_fs.existsSync(`${process.cwd()}/logs`) === !1) module_fs.mkdirSync(`${process.cwd()}/logs`);
     const exportLogPath = `${process.cwd()}/logs/GRPP_BATCH_${time.toString().replaceAll(':', '_').replaceAll(' ', '_').slice(0, 24)}.txt`;
-    module_fs.writeFileSync(exportLogPath, `Git Repository Preservation Project [GRPP]\nCreated by TheMitoSan (@themitosan.bsky.social)\n\nLog created at ${time.toString()}\n\n${baseLog}\n\n${updateDetails}`, 'utf-8');
-    createLogEntry(`You can see more details on gereated log file: ${exportLogPath}\n`);
 
-    process.exit();
+    // Ask if user wants to open exported log
+    module_fs.writeFileSync(exportLogPath, `Git Repository Preservation Project [GRPP]\nCreated by TheMitoSan (@themitosan.bsky.social)\n\nLog created at ${time.toString()}\n\n${baseLog}\n\n${updateDetails}`, 'utf-8');
+    readLine.question(`You can see more details on gereated log file: ${exportLogPath}\nDo you want to open it? [Y/n] `, async function(answer){
+
+        // Close readline and check if user wants to check update data
+        readLine.close();
+        if (answer.toLowerCase() === 'y'){
+            await openOnTextEditor(grppSettings.userEditor, exportLogPath).then(process.exit);
+        } else {
+            process.exit();
+        }
+
+    });
 
 }
 

@@ -33,6 +33,7 @@ export interface grppSettingsFile {
     maxPages:number,
     repoEntries:any,
     runCounter:number,
+    userEditor:string,
     updateRuntime:number,
     fetchStartPage:number,
     maxReposPerList:number,
@@ -44,13 +45,14 @@ export interface grppSettingsFile {
 */
 
 // Default settings file
-export const grppSettingsFile_Defaults:Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage'> = {
+export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage' | 'userEditor'> = {
     maxPages: 5,
     runCounter: 0,
     repoEntries: {},
     lastRun: 'Never',
     updateRuntime: 0,
     fetchStartPage: 1,
+    userEditor: 'nano',
     maxReposPerList: 50,
     connectionTestURL: '1.1.1.1'
 }
@@ -73,7 +75,7 @@ export var
     enableSilentMode = !1,
 
     // App settings
-    grppSettings:grppSettingsFile = { ...grppSettingsFile_Defaults };
+    grppSettings:grppSettingsFile | any = { ...grppSettingsFile_Defaults };
 
 /*
     Functions
@@ -91,8 +93,27 @@ async function grpp_loadSettings(){
 
             // Try loading settings
             try {
+
+                // Create request save var, load settings and check if needs to update settings file
+                var requestSave = !1;
                 grppSettings = { ...JSON.parse(module_fs.readFileSync(filePath, 'utf-8')), ...tempSettings };
+                Object.keys(grppSettings).forEach(function(currentKey){
+                    if (grppSettingsFile_Defaults[currentKey] === void 0){
+                        delete grppSettings[currentKey];
+                        requestSave = !0;
+                    }
+                });
+                Object.keys(grppSettingsFile_Defaults).forEach(function(currentKey:any){
+                    if (grppSettings[currentKey] === void 0){
+                        grppSettings[currentKey] = grppSettingsFile_Defaults[currentKey];
+                        requestSave = !0;
+                    }
+                });
+
+                // Check if needs to update settings file and resolve
+                if (requestSave !== !1) grpp_saveSettings();
                 resolve();
+
             } catch (err) {
                 reject(err);
             }
@@ -202,6 +223,9 @@ async function init(){
 
         // Set starting fetch page
         if (currentFlag.indexOf('setStartPage=') !== -1) tempSettings.fetchStartPage = preventMinMax(Number(currentFlag.replace('setStartPage=', '')), 0, maxValue);
+
+        // Set text editor
+        if (currentFlag.indexOf('setEditor') !== -1) tempSettings.userEditor = currentFlag.replace('setEditor=', '');
 
         // Set GRPP path
         if (currentFlag.indexOf('path=') !== -1){

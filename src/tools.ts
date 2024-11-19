@@ -294,5 +294,25 @@ export function trimString(str:string, length:number = 1):string {
     return str.slice(0, (str.length - length));
 }
 
+/**
+    * Open file on text editor
+    * @param editor [string] Set which editor to open with
+    * @param path [string] File to be opened on editor 
+*/
+export async function openOnTextEditor(editor:string, path:string):Promise<any> {
+    return new Promise<void>(function(resolve){
+        if (module_fs.existsSync(path) === !0){
+
+            // Spawn editor and set data / close events
+            const editorProcess = module_childProcess.spawn(editor, [path], { detached: !0, stdio: 'inherit' });
+            editorProcess.on('data', function(data){
+                process.stdout.pipe(data);
+            });
+            editorProcess.on('exit', resolve);
+
+        }
+    });
+}
+
 // Export module
 export * from './tools';
