@@ -73,6 +73,10 @@ sudo npm remove grpp
 
 ## How to use
 
+To know everything GRPP can do, we recommend checking out [the command list](cmd_list.md).
+
+But - Just get started, the following content should do the trick.
+
 The first thing you need to do is initialize a folder, where it will store it's settings file and all repos.
 
 To do this, run the following command:
