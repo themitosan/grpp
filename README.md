@@ -161,10 +161,10 @@ If you want to start fetching data from a specific page or fetch a specific numb
 
 ```shell
 # Fetch 10 repo pages (Default: 5)
-grpp --setMaxFetchPages=10 --getUserRepos=themitosan
+grpp --setMaxFetchPages=10 --getReposFrom=themitosan
 
 # Set start fetch page to 4 (Default: 1)
-grpp --setStartPage=4 --getUserRepos=themitosan
+grpp --setStartPage=4 --getReposFrom=themitosan
 ```
 
 <a id="how-to-update"></a>
