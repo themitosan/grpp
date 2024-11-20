@@ -147,7 +147,7 @@ Since common git hosting websites _(like GitHub or GitLab)_ API's allows fetchin
 In order to do that, you can use the following command:
 
 ```shell
-grpp --getUserRepos=USERNAME
+grpp --getReposFrom=USERNAME
 ```
 
 You will be prompted asking where GRPP should seek `USERNAME` repos.
