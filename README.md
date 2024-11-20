@@ -48,9 +48,7 @@ npm i && npm run buildWebpack
 ```
 The compiled script will be on `Build` dir.
 
-**TIP**: You can also run `npm run dev` and `ts` will watch all changes on your code and will compile script on the go!
-
-The compiled script will be on `App` dir instead of `Build`.
+**TIP**: You can also run `npm run dev` and `ts` will watch all changes on your code and will compile script on the go! In this case, the compiled script will be on `App` dir instead.
 
 In order to run GRPP, you will need to run like this:
 ```shell
@@ -97,7 +95,7 @@ sudo npm remove grpp
 ## How to use
 
 > [!IMPORTANT]\
-> To know everything GRPP can do, we recommend checking out [the command list](cmd_list.md).
+> To know everything GRPP can do, we recommend checking out the [command list](cmd_list.md).
 
 The first thing you need to do is initialize a folder, where it will store it's settings file and all repos.
 
@@ -112,7 +110,7 @@ After initializing, you will be able to start importing git repos.
 <a id="how-to-import-git-repos"></a>
 ### How to import git repos
 
-There is some ways you can perform this operation: By importing them one by one, a repo list or even all repos from a specific user.
+There is some ways you can do this: By importing them one by one, a repo list or even all repos from a specific user.
 
 <a id="import-single-repo"></a>
 #### Single repo
@@ -139,7 +137,7 @@ grpp --importList=YOUR_GIT_REPOS_LIST.txt
 Doing that, all repos on `YOUR_GIT_REPOS_LIST.txt` will be imported to your current path.
 
 > [!IMPORTANT]\
-> Make sure to leave one `git` url per line!
+> Make sure there is only one `git` url per line!
 
 <a id="get-user-repos"></a>
 ### Getting all repos from a specifc user
@@ -172,7 +170,7 @@ grpp --setStartPage=4 --getUserRepos=themitosan
 <a id="how-to-update"></a>
 ### How to update repos
 
-Ther is two ways of doing this: by updating a specifc repo or by updating all at same time.
+There is two ways of doing this: by updating a specifc repo or by updating all at same time.
 
 <a id="update-single-repo"></a>
 #### Update a single repo
@@ -212,8 +210,8 @@ After processing all repos, GRPP will show the update results and save a copy on
 - [Photopea](https://www.photopea.com)
 - [INI Parser](https://www.npmjs.com/package/ini)
 
-<sup><i>
+<sup>
 
-Some parts of this software derivates from TMS Engine.
+_Some parts of this software derivates from TMS Engine._
 
-</i></sup>
+</sup>
