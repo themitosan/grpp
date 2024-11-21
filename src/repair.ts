@@ -19,6 +19,7 @@ import { convertArrayToString, createLogEntry, execReasonListCheck, getDirTree, 
 
 import * as module_fs from 'fs';
 import * as module_path from 'path';
+import * as module_readline from 'readline';
 
 /*
     Interfaces
@@ -36,8 +37,8 @@ interface pushError {
 
 var
 
-    // Repair sucess counter
-    successCounter = 0,
+    // Import sucess counter
+    importSuccessCounter = 0,
 
     // Repair error list
     errorList:pushError[] = [];
@@ -80,20 +81,23 @@ export async function grpp_startRepairDatabase(){
             // Create log entry and start processing repo list
             createLogEntry(`WARN - Repo counter mismatch! [${repoList.length} on database vs. ${scanList.length} found on current scan]\nStarting repair process...\n\n(Depending of how many repos are available, this may take a while!)\n`);
             for (const currentRepo in scanList){
-                if (repoList.indexOf(scanList[currentRepo]) === -1) await grpp_repairRepo(scanList[currentRepo]);
+                if (repoList.indexOf(scanList[currentRepo]) === -1) await grpp_repairAddMissingRepo(scanList[currentRepo]);
+            }
+
+            // Check if repo file exists
+            for (const currentRepo in repoList){
+                if (module_fs.existsSync(currentRepo) !== !0) await grpp_removeRepoKey(currentRepo);
             }
 
             // Log process complete and log display error details if had any
-            createLogEntry(`\nINFO - Repair process fixed ${successCounter} repos, with ${errorList.length} errors.\n`);
+            createLogEntry(`\nINFO - Repair process imported ${importSuccessCounter} repos, with ${errorList.length} errors.\n`);
             if (errorList.length !== 0){
-                createLogEntry(`==> Error list:`);
+                createLogEntry(`==> Import errors:`);
                 errorList.forEach(function(currentError:pushError){
                     createLogEntry(`Repo: ${currentError.repo}\nDetails: ${currentError.err}\n`);
                 });
             }
 
-        } else {
-            createLogEntry(`INFO - There is no errors on repo database.`);
         }
 
         /*
@@ -116,7 +120,7 @@ export async function grpp_startRepairDatabase(){
                 if (currentRepoData[currentKey as keyof typeof currentRepoData] === void 0){
 
                     // Create log entry, add missing key to current repo and update it's data
-                    createLogEntry(`INFO - Adding missing key for ${currentRepo}: \"${currentKey}\"`);
+                    createLogEntry(`INFO - Adding missing key \"${currentKey}\" to ${currentRepo}`);
                     currentRepoData[currentKey as keyof typeof currentRepoData] = repoEntry_Defaults[currentKey as keyof typeof repoEntry_Defaults];
                     grpp_updateRepoData(currentRepo, currentRepoData);
 
@@ -143,10 +147,33 @@ export async function grpp_startRepairDatabase(){
 }
 
 /**
-    * Repair current repo
+    * Remove repo key from database
+    * @param path [string] repo path
+    * @returns [Promise] Resolve when input is provided
+*/
+async function grpp_removeRepoKey(path:string){
+    return new Promise<void>(function(resolve){
+
+        // Declare vars
+        const
+            repoData:grppRepoEntry = grppSettings.repoEntries[path],
+            readline = module_readline.createInterface({ input: process.stdin, output: process.stdout });
+
+        // Check if user wants to remove repo key
+        readline.question(`WARN - It seems that ${repoData.repoName} (${repoData.repoOwner}) directory does not exists!\nPath: ${path}\n\nDo you want to remove this entry from database? [Y/n] `, function(answer){
+            readline.close();
+            if (answer.toLowerCase() === 'y') grpp_removeRepo(path);
+            resolve();
+        });
+
+    });
+}
+
+/**
+    * Add missing repo
     * @param path [string] Repo path to be imported
 */
-async function grpp_repairRepo(path:string){
+async function grpp_repairAddMissingRepo(path:string){
     return new Promise<void>(async function(resolve){
 
         // Declare config file path and check if current repo isn't bare
@@ -186,7 +213,7 @@ async function grpp_repairRepo(path:string){
             })
             .then(function(){
                 grpp_updateRepoData(path, repoData);
-                successCounter++;
+                importSuccessCounter++;
                 resolve();
             });
 

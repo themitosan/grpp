@@ -321,6 +321,7 @@ function processBatchResFiles(){
             // Declare ASCII entry char and change it if current file is the last one
             var entryChar = '  ├',
                 enableLineBreak = '';
+
             if (currentFile === (totalResFiles - 1)){
                 entryChar = '  └';
                 enableLineBreak = '\n';
