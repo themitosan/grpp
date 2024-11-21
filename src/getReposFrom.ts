@@ -2,7 +2,7 @@
     Git repo preservation project (GRPP)
     Created by TheMitoSan (@themitosan.bsky.social)
 
-    getUserRepos.ts
+    getReposFrom.ts
 */
 
 /*
@@ -26,10 +26,10 @@ import * as module_readLine from 'readline';
 */
 
 /**
-    * Get user repos
+    * Get repos from user
     * @param userName [string] user name
 */
-export async function grpp_getUserRepos(userName:string){
+export async function grpp_getReposFrom(userName:string){
 
     // Check if we have internet connection
     await checkConnection().then(function(){
@@ -226,4 +226,4 @@ function processRepoChunk(resultArray:any[]){
 }
 
 // Export module
-export * from './getUserRepos';
+export * from './getReposFrom';

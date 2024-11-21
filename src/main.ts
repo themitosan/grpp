@@ -9,7 +9,7 @@
     Import TS modules
 */
 
-import { grpp_getUserRepos } from './getUserRepos';
+import { grpp_getReposFrom } from './getReposFrom';
 import { grpp_startRepairDatabase } from './repair';
 import { createLogEntry, preventMinMax } from './tools';
 import { grpp_importBatch, grpp_startImport, grppRepoEntry } from './import';
@@ -285,10 +285,10 @@ async function init(){
             break;
         }
 
-        // Get user repos
+        // Get repos from user
         if (currentFlag.indexOf('getReposFrom=') !== -1){
             execFn = function(){
-                grpp_getUserRepos(currentFlag.replace('getReposFrom=', ''));
+                grpp_getReposFrom(currentFlag.replace('getReposFrom=', ''));
             }
             break;
         }
