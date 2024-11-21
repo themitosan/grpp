@@ -46,38 +46,38 @@ export async function grpp_getReposFrom(userName:string){
 
         // Check if can continue
         execReasonListCheck(reasonList, `ERROR - Unable to seek repos from user!\nReason: ${convertArrayToString(reasonList)}`, function(){
-        
+
             // Prompt user, close nodeReadLine and switch user input
             nodeReadLine.question(`Please, insert where GRPP should seek repos:\n\n   1) GitHub (default)\n   2) GitLab\n   3) Gitea based server\n\nYour choice: `, function(usrAnswer){
                 nodeReadLine.close();
                 switch (usrAnswer){
-                
+
                     // GitHub
                     case '1':
                         urlBase = `https://api.github.com/users/${userName}/repos?per_page=100&page=`;
                         break;
-                
+
                     // GitLab
                     case '2':
                         urlBase = `https://gitlab.com/api/v4/users/${userName}/projects?per_page=100&page=`;
                         break;
-                
+
                     // Gitea based server
                     case '3':
                         canFetch = !1;
                         promptGiteaUrl(userName);
                         break;
-                
+
                     // Default (GitHub)
                     default:
                         urlBase = `https://api.github.com/users/${userName}/repos?per_page=100&page=`;
                         break;
-                
+
                 }
-            
+
                 // Start fetch process and close readLine
                 if (canFetch === !0) startUserFetch(urlBase);
-            
+
             });
         });
 

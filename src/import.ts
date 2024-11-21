@@ -102,12 +102,9 @@ export async function grpp_startImport(cloneURL:string){
                 runExternalCommand(`git config --global --add safe.directory ${repoPath}`, { ...runExternalCommand_Defaults, chdir: originalChdir });
             })
             .then(function(){
-
-                // Import to repo database and finish process
                 grpp_updateRepoData(repoPath, currentRepo);
                 createLogEntry(`\nINFO - Process complete!\nRepo path: ${repoPath}\n`);
                 resolve();
-
             });
 
         }, resolve);
