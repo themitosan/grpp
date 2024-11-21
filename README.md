@@ -60,7 +60,7 @@ This will install all required packages, compile the project and install GRPP sy
 In order to compile, run the following commands:
 
 ```shell
-npm i && npm run buildWebpack
+npm i && npm run webpack
 ```
 The compiled script will be on `Build` dir.
 
@@ -68,7 +68,7 @@ The compiled script will be on `Build` dir.
 
 In order to run GRPP, you will need to run like this:
 ```shell
-# buildWebpack
+# webpack
 node Build/grpp.js
 
 # OR
