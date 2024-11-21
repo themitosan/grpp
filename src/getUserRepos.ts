@@ -40,8 +40,11 @@ export async function grpp_getUserRepos(userName:string){
             canFetch:boolean = !0,
             reasonList:string[] = [];
 
-        // Check if username was provided and check if can prompt user
+        // Check if username was provided and if GRPP update is running
         if (userName.length < 1) reasonList.push('You must provide a username!');
+        if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`You can\'t execute this action while GRPP Update Process is running!`);
+
+        // Check if can continue
         execReasonListCheck(reasonList, `ERROR - Unable to seek repos from user!\nReason: ${convertArrayToString(reasonList)}`, function(){
         
             // Prompt user, close nodeReadLine and switch user input
@@ -88,7 +91,7 @@ export async function grpp_getUserRepos(userName:string){
 function promptGiteaUrl(userName:string){
 
     // Create vars and prompt base url
-    var urlBase:string = '';
+    var urlBase = '';
     const nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
     nodeReadLine.question('\nPlease, insert base domain where gitea server is hosted (Example: \"192.168.1.150:3000\")\nYour answer: ', function(giteaUrl){
 

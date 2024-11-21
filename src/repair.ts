@@ -11,7 +11,7 @@
 
 import { grppRepoEntry } from './import';
 import { grpp_removeRepo, grpp_updateRepoData, grppSettings } from './main';
-import { createLogEntry, getDirTree, parseINI, runExternalCommand, runExternalCommand_Defaults } from './tools';
+import { convertArrayToString, createLogEntry, execReasonListCheck, getDirTree, parseINI, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
 /*
     Require node modules
@@ -51,38 +51,47 @@ var
 */
 export async function grpp_startRepairDatabase(){
 
-    // Read current path dir structure
-    const
-        scanList:string[] = [],
-        repoList = Object.keys(grppSettings.repoEntries),
-        tempList = getDirTree(`${process.cwd()}/repos`, '.git');
+    // Declare vars and check if GRPP update is running
+    var reasonList:string[] = [];
+    if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`You can\'t execute this action while GRPP Update Process is running!`);
 
-    // Filter git folders
-    tempList.forEach(function(currentFolder){
-        if (currentFolder.toLowerCase().indexOf('.git') !== -1) scanList.push(currentFolder);
+    // Check if can start repair process
+    execReasonListCheck(reasonList, `WARN: Unable to perform GRPP repair!\nReason: ${convertArrayToString(reasonList)}`, async function(){
+
+        // Read current path dir structure
+        const
+            scanList:string[] = [],
+            repoList = Object.keys(grppSettings.repoEntries),
+            tempList = getDirTree(`${process.cwd()}/repos`, '.git');
+
+        // Filter git folders
+        tempList.forEach(function(currentFolder){
+            if (currentFolder.toLowerCase().indexOf('.git') !== -1) scanList.push(currentFolder);
+        });
+
+        // Check if all available repos are listed on settings file
+        if (scanList.length !== repoList.length){
+
+            // Create log entry and start processing repo list
+            createLogEntry(`WARN - Repo counter mismatch! [${repoList.length} on database vs. ${scanList.length} found on current scan]\nStarting repair process...\n\n(Depending of how many repos are available, this may take a while!)\n`);
+            for (const currentRepo in scanList){
+                if (repoList.indexOf(scanList[currentRepo]) === -1) await grpp_repairRepo(scanList[currentRepo]);
+            }
+
+            // Log process complete and log display error details if had any
+            createLogEntry(`\nINFO - Repair process fixed ${successCounter} repos, with ${errorList.length} errors.\n`);
+            if (errorList.length !== 0){
+                createLogEntry(`==> Error list:`);
+                errorList.forEach(function(currentError:pushError){
+                    createLogEntry(`Repo: ${currentError.repo}\nDetails: ${currentError.err}\n`);
+                });
+            }
+
+        } else {
+            createLogEntry(`INFO - There is no errors on repo database.\n`);
+        }
+
     });
-
-    // Check if all available repos are listed on settings file
-    if (scanList.length !== repoList.length){
-
-        // Create log entry and start processing repo list
-        createLogEntry(`WARN - Repo counter mismatch! [${repoList.length} on database vs. ${scanList.length} found on current scan]\nStarting repair process...\n\n(Depending of how many repos are available, this may take a while!)\n`);
-        for (const currentRepo in scanList){
-            if (repoList.indexOf(scanList[currentRepo]) === -1) await grpp_repairRepo(scanList[currentRepo]);
-        }
-
-        // Log process complete and log display error details if had any
-        createLogEntry(`\nINFO - Repair process fixed ${successCounter} repos, with ${errorList.length} errors.\n`);
-        if (errorList.length !== 0){
-            createLogEntry(`==> Error list:`);
-            errorList.forEach(function(currentError:pushError){
-                createLogEntry(`Repo: ${currentError.repo}\nDetails: ${currentError.err}\n`);
-            });
-        }
-
-    } else {
-        createLogEntry(`INFO - There is no errors on repo database.\n`);
-    }
 
 }
 

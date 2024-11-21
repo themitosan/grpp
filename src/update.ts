@@ -97,9 +97,12 @@ export async function grpp_checkBatchUpdateProcess(){
     // Check if we have some internet connection
     await checkConnection().then(function(){
 
-        // Declare vars, check if there is repos to be updated and check if can continue
+        // Declare vars, check if there is repos to be updated or if GRPP update process is running
         var reasonList:string[] = [];
         if (grppSettings.repoEntries.length === 0) reasonList.push('You must import any repo before starting GRPP Update process!');
+        if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`It seems that GRPP Update Process is running! Make sure to wait current update process ends before trying again.`);
+
+        // Check if can start update process
         execReasonListCheck(reasonList, `ERROR - Unable to start update process!\nReason: ${convertArrayToString(reasonList)}`, startUpdateAllRepos);
 
     });
