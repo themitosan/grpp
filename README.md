@@ -7,8 +7,8 @@ Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this i
 
 ## Table of contents
 - [Requirements](#requirements)
-- [How to install (easy mode)](#how-to-install)
 - [How to build](#how-to-build)
+    - [Easy mode](#how-to-build-easy)
     - [Development mode](#build-dev-mode)
     - [Production mode](#build-production-mode)
 - [How to uninstall](#how-to-uninstall)
@@ -26,8 +26,12 @@ Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this i
 ## Requirements
 - `git`, `npm` and latest `node` version installed.
 
-<a id="how-to-install"></a>
-## How to install (Easy mode)
+<a id="how-to-build"></a>
+## How to build
+There are three ways of compiling GRPP: Easy mode, development mode or production mode.
+
+<a id="how-to-build-easy"></a>
+### Easy mode
 If you just want GRPP up and running, just run the following command:
 
 ```shell
@@ -35,10 +39,6 @@ npm i && npm run bi
 ```
 
 This will install all required packages, compile the project and install GRPP system-wide.
-
-<a id="how-to-build"></a>
-## How to build
-There are two ways of compiling GRPP: In development mode or production mode.
 
 <a id="build-dev-mode"></a>
 ### Development mode
