@@ -34,7 +34,7 @@ If you just want GRPP up and running, just run the following command:
 npm i && npm run bi
 ```
 
-...This will install all required packages, compile the project and install GRPP system-wide.
+This will install all required packages, compile the project and install GRPP system-wide.
 
 <a id="how-to-build"></a>
 ## How to build
@@ -224,6 +224,6 @@ Some code snippets from internet were used on this project. You can see all of t
 
 <sup>
 
-_Some parts of this software derivates from TMS Engine._
+_Some parts of this software derivates from TMS Engine source code._
 
 </sup>
