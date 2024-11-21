@@ -213,16 +213,16 @@ async function init(){
         if (currentFlag.indexOf('silent') !== -1) enableSilentMode = !0;
 
         // Set max repos a batch file should have
-        if (currentFlag.indexOf('maxReposPerList=') !== -1) tempSettings.maxReposPerList = preventMinMax(Number(currentFlag.replace('maxReposPerList=', '')), 1, maxValue);
+        if (currentFlag.indexOf('maxReposPerList=') !== -1) tempSettings.maxReposPerList = preventMinMax(Math.floor(Number(currentFlag.replace('maxReposPerList=', ''))), 1, maxValue);
 
         // Set max fetch pages
-        if (currentFlag.indexOf('setMaxFetchPages=') !== -1) tempSettings.maxPages = preventMinMax(Number(currentFlag.replace('setMaxFetchPages=', '')), 1, maxValue);
+        if (currentFlag.indexOf('setMaxFetchPages=') !== -1) tempSettings.maxPages = preventMinMax(Math.floor(Number(currentFlag.replace('setMaxFetchPages=', ''))), 1, maxValue);
 
         // Set web test url
         if (currentFlag.indexOf('setConnectionTestURL=') !== -1) tempSettings.connectionTestURL = currentFlag.replace('setConnectionTestURL=', '');
 
         // Set starting fetch page
-        if (currentFlag.indexOf('setStartPage=') !== -1) tempSettings.fetchStartPage = preventMinMax(Number(currentFlag.replace('setStartPage=', '')), 0, maxValue);
+        if (currentFlag.indexOf('setStartPage=') !== -1) tempSettings.fetchStartPage = preventMinMax(Math.floor(Number(currentFlag.replace('setStartPage=', ''))), 0, maxValue);
 
         // Set text editor
         if (currentFlag.indexOf('setEditor') !== -1) tempSettings.userEditor = currentFlag.replace('setEditor=', '');
