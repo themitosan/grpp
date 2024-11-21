@@ -63,8 +63,8 @@ export async function grpp_startImport(cloneURL:string){
             repoPath = `${process.cwd()}/repos/${urlData[2]}/${repoOwner}/${repoName}`;
 
         // Check conditions
-        if (module_fs.existsSync(`${repoPath}/HEAD`) === !0) reasonList.push(`This repo already exists on filesystem!\nPath: ${repoPath}`);
         if (cloneURL.length === 0) reasonList.push('You must provide a git url to import!');
+        if (module_fs.existsSync(`${repoPath}/HEAD`) === !0) reasonList.push(`This repo already exists on filesystem!\nPath: ${repoPath}`);
         if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`You can\'t import any repo while GRPP Update Process is running!`);
 
         // Check if can continue

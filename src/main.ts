@@ -9,11 +9,11 @@
     Import TS modules
 */
 
-import { grpp_getUserRepos } from "./getUserRepos";
-import { grpp_startRepairDatabase } from "./repair";
-import { createLogEntry, parseINI, preventMinMax } from "./tools";
-import { grpp_importBatch, grpp_startImport, grppRepoEntry } from "./import";
-import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from "./update";
+import { grpp_getUserRepos } from './getUserRepos';
+import { grpp_startRepairDatabase } from './repair';
+import { createLogEntry, preventMinMax } from './tools';
+import { grpp_importBatch, grpp_startImport, grppRepoEntry } from './import';
+import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from './update';
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_exportRemotes, grpp_getRepoInfo, grpp_printStatus } from './utils';
 
 /*

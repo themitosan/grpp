@@ -19,7 +19,7 @@ import { checkConnection, convertArrayToString, createLogEntry, execReasonListCh
 */
 
 import * as module_fs from 'fs';
-import * as module_readLine from 'node:readline';
+import * as module_readLine from 'readline';
 
 /*
     Functions
@@ -96,9 +96,9 @@ function promptGiteaUrl(userName:string){
     nodeReadLine.question('\nPlease, insert base domain where gitea server is hosted (Example: \"192.168.1.150:3000\")\nYour answer: ', function(giteaUrl){
 
         // Set url, start user fetch and close readline
+        nodeReadLine.close();
         urlBase = `http://${giteaUrl}/api/v1/users/${userName}/repos?per_page=100&page=`;
         startUserFetch(urlBase);
-        nodeReadLine.close();
 
     });
     

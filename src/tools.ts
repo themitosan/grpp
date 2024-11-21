@@ -111,6 +111,7 @@ export function parseINI(data:string):any {
                 section = match![1];
             }
 
+            // Check if current line have content
             if (currentLine.length === 0 && section){
                 console.info(section);
                 section = null;
@@ -216,7 +217,7 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
     return new Promise<runExternalCommand_output>(function(resolve){
 
         // Change current working directory and declare some vars
-        var stdData:string = '';
+        var stdData = '';
         process.chdir(options.chdir);
         const
             originalCwd = structuredClone(process.cwd()),
