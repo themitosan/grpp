@@ -209,7 +209,8 @@ async function startUpdateAllRepos(){
     // Declare vars
     const originalCwd = structuredClone(process.cwd());
     var completedRunners = 0,
-        updateList:string[] = [];
+        updateList:string[] = [],
+        priorityRepos:string[] = [];
 
     // Set current time to measure update time, set tempDir var and check if it exists. If so, remove it and create a new one
     startUpdateTime = structuredClone(performance.now());
@@ -230,6 +231,17 @@ async function startUpdateAllRepos(){
         }
 
     });
+
+    // Set repos with priority list before others
+    updateList.forEach(function(currentRepo){
+        if (grppSettings.repoEntries[currentRepo].isPriority === !0) priorityRepos.push(currentRepo);
+    });
+    if (priorityRepos.length !== 0){
+        priorityRepos.forEach(function(currentRepo){
+            updateList.splice(updateList.indexOf(currentRepo), 1);
+        });
+        updateList = [ ...priorityRepos, ...updateList ];
+    }
 
     // Split update list on given runners, create GRPP batch files and set total res files / queued repos vars
     const chunkList = spliceArrayIntoChunks(updateList, grppSettings.maxReposPerList);
