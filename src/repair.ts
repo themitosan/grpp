@@ -9,7 +9,7 @@
     Import TS modules
 */
 
-import { grppRepoEntry } from './import';
+import { grppRepoEntry, repoEntry_Defaults } from './import';
 import { grpp_removeRepo, grpp_updateRepoData, grppSettings } from './main';
 import { convertArrayToString, createLogEntry, execReasonListCheck, getDirTree, parseINI, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
@@ -58,6 +58,10 @@ export async function grpp_startRepairDatabase(){
     // Check if can start repair process
     execReasonListCheck(reasonList, `WARN: Unable to perform GRPP repair!\nReason: ${convertArrayToString(reasonList)}`, async function(){
 
+        /*
+            Check for missing repo entries on grpp_settings.json
+        */
+
         // Read current path dir structure
         const
             scanList:string[] = [],
@@ -65,6 +69,7 @@ export async function grpp_startRepairDatabase(){
             tempList = getDirTree(`${process.cwd()}/repos`, '.git');
 
         // Filter git folders
+        createLogEntry(`INFO - Checking database files...`);
         tempList.forEach(function(currentFolder){
             if (currentFolder.toLowerCase().indexOf('.git') !== -1) scanList.push(currentFolder);
         });
@@ -88,8 +93,50 @@ export async function grpp_startRepairDatabase(){
             }
 
         } else {
-            createLogEntry(`INFO - There is no errors on repo database.\n`);
+            createLogEntry(`INFO - There is no errors on repo database.`);
         }
+
+        /*
+            Scan for missing entry keys on database entries
+        */
+
+        // Declare vars 
+        var addedMissingKeys = 0,
+            fixedRepos:string[] = [];
+        
+        // Create log entry and start processing repos
+        createLogEntry(`\nINFO - Checking missing keys on repos entries...`);
+        Object.keys(grppSettings.repoEntries).forEach(function(currentRepo){
+
+            // Get current repo data and check all keys
+            const currentRepoData:grppRepoEntry | any = grppSettings.repoEntries[currentRepo];
+            Object.keys(repoEntry_Defaults).forEach(function(currentKey:any){
+
+                // Check if current key doesn't exists on current repo
+                if (currentRepoData[currentKey as keyof typeof currentRepoData] === void 0){
+
+                    // Create log entry, add missing key to current repo and update it's data
+                    createLogEntry(`INFO - Adding missing key for ${currentRepo}: \"${currentKey}\"`);
+                    currentRepoData[currentKey as keyof typeof currentRepoData] = repoEntry_Defaults[currentKey as keyof typeof repoEntry_Defaults];
+                    grpp_updateRepoData(currentRepo, currentRepoData);
+
+                    // Bump added missing keys counter and check if current repo was already fixed. If not, push to fixed list
+                    if (fixedRepos.indexOf(currentRepo) === -1) fixedRepos.push(currentRepo);
+                    addedMissingKeys++;
+
+                }
+
+            });
+
+        });
+
+        // Create log entry if any repo was fixed.
+        if (fixedRepos.length !== 0) createLogEntry(`INFO - GRPP added ${addedMissingKeys} missing keys on ${fixedRepos.length} repos.`);
+
+        /*
+            Process complete
+        */
+        createLogEntry(`\nINFO - Repair complete!\n`);
 
     });
 
@@ -125,13 +172,14 @@ async function grpp_repairRepo(path:string){
                     repoName,
                     repoOwner,
                     canUpdate: !0,
+                    isPriority: !1,
                     updateCounter: 0,
                     lastUpdatedOn: `Never`,
                     importDate: new Date().toString()
                 };
 
             // Create log entry and start import process
-            createLogEntry(`INFO - Importing missing repo: ${repoName}`);
+            createLogEntry(`INFO - Importing missing repo: ${repoName} [${path}]`);
             await runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: path })
             .then(function(){
                 runExternalCommand(`git config --global --add safe.directory ${path}`, { ...runExternalCommand_Defaults, chdir: originalChdir });
