@@ -9,10 +9,10 @@
 	"description": "This is a simple project written in typescript that helps importing / preserving git repos.",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "webpack --config ./compiler/dev-webpack.config.js",
-		"bi": "npm run build && cd Build && sudo npm i -g grpp.tgz",
+		"dev": "clear && webpack --config ./compiler/dev-webpack.config.js",
+		"bi": "clear && npm run build && cd Build && sudo npm i -g grpp.tgz",
 		"build": "chmod +x compiler/build.sh && ./compiler/build.sh",
-		"buildWebpack": "webpack --config ./compiler/build-webpack.config.js"
+		"buildWebpack": "clear && webpack --config ./compiler/build-webpack.config.js"
 	},
 	"devDependencies": {
 		"@types/ini": "^4.1.1",
@@ -30,8 +30,5 @@
 	"repository": {
 		"type": "git",
 		"url": "http://192.168.15.200:3000/juliana/grpp.git"
-	},
-	"dependencies": {
-		"ini": "^5.0.0"
 	}
 }

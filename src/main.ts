@@ -11,7 +11,7 @@
 
 import { grpp_getUserRepos } from "./getUserRepos";
 import { grpp_startRepairDatabase } from "./repair";
-import { createLogEntry, preventMinMax } from "./tools";
+import { createLogEntry, parseINI, preventMinMax } from "./tools";
 import { grpp_importBatch, grpp_startImport, grppRepoEntry } from "./import";
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from "./update";
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_exportRemotes, grpp_getRepoInfo, grpp_printStatus } from './utils';
@@ -334,7 +334,7 @@ async function init(){
         if (currentFlag.indexOf('processBatchFile=') !== -1){
             execFn = async function(){
                 await grpp_processBatchFile(Number(currentFlag.replace('processBatchFile=', '')));
-            }
+            }   
             break;
         }
 

@@ -11,14 +11,13 @@
 
 import { grppRepoEntry } from './import';
 import { grpp_removeRepo, grpp_updateRepoData, grppSettings } from './main';
-import { createLogEntry, getDirTree, runExternalCommand, runExternalCommand_Defaults } from './tools';
+import { createLogEntry, getDirTree, parseINI, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
 /*
     Require node modules
 */
 
 import * as module_fs from 'fs';
-import * as module_ini from 'ini';
 import * as module_path from 'path';
 
 /*
@@ -106,7 +105,7 @@ async function grpp_repairRepo(path:string){
 
             // Create vars
             const
-                gitConfig = module_ini.parse(module_fs.readFileSync(configPath, 'utf-8')),
+                gitConfig = parseINI(module_fs.readFileSync(configPath, 'utf-8')),
                 originalChdir = structuredClone(process.cwd()),
                 repoUrl = gitConfig['remote "origin"'].url,
                 urlData = repoUrl.split('/'),

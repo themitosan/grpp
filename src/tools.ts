@@ -58,8 +58,7 @@ export const runExternalCommand_Defaults:Pick <runExternalCommandOptions, 'chdir
 
 /**
     * Better clear console
-    * Based on lukeed console-clear project
-    * URL: https://github.com/lukeed/console-clear
+    * Based on lukeed console-clear plugin: https://github.com/lukeed/console-clear
     * @param removeHistory [boolean] set true to fully clear console, removing history
 */
 export function consoleClear(removeHistory:boolean = !1){
@@ -68,6 +67,61 @@ export function consoleClear(removeHistory:boolean = !1){
     } else {
         console.clear();
     }
+}
+
+/**
+    * Parse INI files
+    * Original snippet: https://gist.github.com/anonymous/dad852cde5df545ed81f1bc334ea6f72
+    * @param data [string] INI data to be parsed
+    * @returns [any] INI data in JSON format
+*/
+export function parseINI(data:string):any {
+
+    // Declare vars and regex patterns
+    var value:any = {},
+        section:any = null;
+
+    const regex = structuredClone({
+        comment: /^\s*;.*$/,
+        param: /^\s*([^=]+?)\s*=\s*(.*?)\s*$/,
+        section: /^\s*\[\s*([^\]]*)\s*\]\s*$/
+    });
+
+    // Process ini lines
+    data.split(/[\r\n]+/).forEach(function(currentLine){
+
+        // Declare match var and check if current line isn't a comment
+        var match:RegExpMatchArray | null;
+        if (regex.comment.test(currentLine) !== !0){
+
+            // Check if current line is a parameter
+            if (regex.param.test(currentLine) === !0){
+                match = currentLine.match(regex.param);
+                if (section){
+                    value[section][match![1]] = match![2];
+                } else {
+                    value[match![1]] = match![2];
+                }
+            }
+
+            // Check if current line is a section
+            if (regex.section.test(currentLine) === !0){
+                match = currentLine.match(regex.section);
+                value[match![1]] = {};
+                section = match![1];
+            }
+
+            if (currentLine.length === 0 && section){
+                console.info(section);
+                section = null;
+            }
+
+        }
+
+    });
+
+    return value;
+
 }
 
 /**
@@ -140,9 +194,9 @@ export function execReasonListCheck(reasonList:string[], warnMsg:string, action:
 }
 
 /**
-    * Check web connection
+    * Check internet connection
     * This function was written based on hurricane response on: https://stackoverflow.com/questions/54887025/get-ip-address-by-domain-with-dns-lookup-node-js
-    * @returns Promise with result
+    * @returns Promise result with address
 */
 export async function checkConnection(){
     return new Promise(function(resolve, reject){

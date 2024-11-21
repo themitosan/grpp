@@ -21,6 +21,7 @@ Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this i
         - [Update a single repo](#update-single-repo)
         - [Update all repos](#update-all-repos)
 - [External tools used on this project](#external-tools)
+- [External code snippets used on this project](#external-code-snippets)
 
 ## Requirements
 - `git`, `npm` and latest `node` version installed.
@@ -208,7 +209,18 @@ After processing all repos, GRPP will show the update results and save a copy on
 ## External tools used on this project
 - [Webpack](https://webpack.js.org)
 - [Photopea](https://www.photopea.com)
-- [INI Parser](https://www.npmjs.com/package/ini)
+
+<a id="external-code-snippets"></a>
+## External code snippets
+
+Some code snippets from internet were used on this project. You can see all of them listed below:
+
+- [Console text color sheet](https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color)
+- [Original INI Parser](https://gist.github.com/anonymous/dad852cde5df545ed81f1bc334ea6f72)
+- [Original DNS internet check](https://stackoverflow.com/questions/54887025/get-ip-address-by-domain-with-dns-lookup-node-js)
+- [Original snippet to format time in hhmmss](https://stackoverflow.com/questions/6312993/javascript-seconds-to-time-string-with-format-hhmmss)
+- [Original snippet to convert array in smaller chunks](https://stackabuse.com/how-to-split-an-array-into-even-chunks-in-javascript)
+- [Original snippet that clears console + history](https://github.com/lukeed/console-clear/blob/master/index.js)
 
 <sup>
 
