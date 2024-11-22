@@ -86,7 +86,7 @@ export async function grpp_startRepairDatabase(){
 
             // Check if repo file exists
             for (const currentRepo in repoList){
-                if (module_fs.existsSync(currentRepo) !== !0) await grpp_removeRepoKey(currentRepo);
+                if (module_fs.existsSync(currentRepo) !== !0) await grpp_removeRepoEntry(currentRepo);
             }
 
             // Log process complete and log display error details if had any
@@ -106,10 +106,11 @@ export async function grpp_startRepairDatabase(){
 
         // Declare vars 
         var addedMissingKeys = 0,
+            removeDeprecatedKeys = 0,
             fixedRepos:string[] = [];
-        
+
         // Create log entry and start processing repos
-        createLogEntry(`\nINFO - Checking missing keys on repos entries...`);
+        createLogEntry(`INFO - Checking missing keys on repos entries...`);
         Object.keys(grppSettings.repoEntries).forEach(function(currentRepo){
 
             // Get current repo data and check all keys
@@ -132,15 +133,31 @@ export async function grpp_startRepairDatabase(){
 
             });
 
+            // Check if all data on current repo are valid
+            Object.keys(currentRepoData).forEach(function(currentKey:any){
+
+                if (repoEntry_Defaults[currentKey as keyof typeof repoEntry_Defaults] === void 0){
+
+                    createLogEntry(`INFO - Removing deprecated key from ${currentRepoData.repoName}: ${currentKey}`);
+                    delete currentRepoData[currentKey];
+                    grpp_updateRepoData(currentRepo, currentRepoData);
+
+                    if (fixedRepos.indexOf(currentRepo) === -1) fixedRepos.push(currentRepo);
+                    removeDeprecatedKeys++;
+
+                }
+
+            });
+
         });
 
         // Create log entry if any repo was fixed.
-        if (fixedRepos.length !== 0) createLogEntry(`INFO - GRPP added ${addedMissingKeys} missing keys on ${fixedRepos.length} repos.`);
+        if (fixedRepos.length !== 0) createLogEntry(`INFO - GRPP added ${addedMissingKeys} missing keys and removed ${removeDeprecatedKeys} deprecated keys on ${fixedRepos.length} repos.`);
 
         /*
             Process complete
         */
-        createLogEntry(`\nINFO - Repair complete!\n`);
+        createLogEntry(`INFO - Repair complete!\n`);
 
     });
 
@@ -151,7 +168,7 @@ export async function grpp_startRepairDatabase(){
     * @param path [string] repo path
     * @returns [Promise] Resolve when input is provided
 */
-async function grpp_removeRepoKey(path:string){
+async function grpp_removeRepoEntry(path:string){
     return new Promise<void>(function(resolve){
 
         // Declare vars
@@ -160,7 +177,7 @@ async function grpp_removeRepoKey(path:string){
             readline = module_readline.createInterface({ input: process.stdin, output: process.stdout });
 
         // Check if user wants to remove repo key
-        readline.question(`WARN - It seems that ${repoData.repoName} (${repoData.repoOwner}) directory does not exists!\nPath: ${path}\n\nDo you want to remove this entry from database? [Y/n] `, function(answer){
+        readline.question(`WARN - It seems that ${repoData.repoName} (${repoData.repoOwner}) directory does not exists!\nPath: ${path}\nRemote URL: ${repoData.repoUrl}\n\nDo you want to remove this entry from database? [Y/n] `, function(answer){
             readline.close();
             if (answer.toLowerCase() === 'y') grpp_removeRepo(path);
             resolve();

@@ -241,7 +241,7 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
             // Check if had exit code and create log entry if it was higher than 1
             if (exitCode !== null && exitCode > 1)
                 createLogEntry(`INFO - ${cmd} exited with code ${exitCode}`);
-            
+
             // Create final string var and check if needs to clean output
             var finalStd = trimString(stdData);
             if (options.removeBlankLines === !0){
@@ -354,12 +354,12 @@ export function trimString(str:string, length:number = 1):string {
     * @param editor [string] Set which editor to open with
     * @param path [string] File to be opened on editor 
 */
-export async function openOnTextEditor(editor:string, path:string):Promise<any> {
+export async function openOnTextEditor(path:string):Promise<any> {
     return new Promise<void>(function(resolve){
         if (module_fs.existsSync(path) === !0){
 
             // Spawn editor and set data / close events
-            const editorProcess = module_childProcess.spawn(editor, [path], { detached: !0, stdio: 'inherit' });
+            const editorProcess = module_childProcess.spawn(grppSettings.userEditor, [path], { detached: !0, stdio: 'inherit' });
             editorProcess.on('data', function(data){
                 process.stdout.pipe(data);
             });

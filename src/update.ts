@@ -369,7 +369,7 @@ async function batchUpdateComplete(){
         errorString = '...there was no errors on this run.',
         updateString = '...there was no updates on this run.',
         updateDurationMs = parsePositive(startUpdateTime - performance.now());
-        
+
     // Create node readline interface and stop watchers
     const readLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
     resWatcherList.forEach(function(currentWatcher){
@@ -389,19 +389,12 @@ async function batchUpdateComplete(){
 
     }
     module_fs.rmSync(`${process.cwd()}/.temp`, { recursive: !0 });
-    
-    // Process error / update lists and set updateDetails var
+
+    // Process error / update lists, set updateDetails and baseLog vars
     if (errorList.length > 0) errorString = processUpdateArrays(errorList);
     if (updateList.length > 0) updateString = processUpdateArrays(updateList);
     updateDetails = `==> Updates:\n${updateString}\n\n==> Errors:\n${errorString}`;
-
-    // Set result page data
-    baseLog = `GRPP location: ${process.cwd()}\n\n==> Results:\n
-──┬ Processes: ${totalResFiles}
-  ├ Update duration: ${converMsToHHMMSS(updateDurationMs)} [${updateDurationMs}ms]
-  ├ Total repos queued: ${totalReposQueued} [From ${Object.keys(grppSettings.repoEntries).length} on database, ${totalReposQueued} were queued]
-  ├ Repos updated on this run: ${updateList.length}
-  └ Error counter: ${errorList.length}`;
+    baseLog = `GRPP location: ${process.cwd()}\n\n==> Results:\n──┬ Processes: ${totalResFiles}\n  ├ Update duration: ${converMsToHHMMSS(updateDurationMs)} [${updateDurationMs}ms]\n  ├ Total repos queued: ${totalReposQueued} [From ${Object.keys(grppSettings.repoEntries).length} on database, ${totalReposQueued} were queued]\n  ├ Repos updated on this run: ${updateList.length}\n  └ Error counter: ${errorList.length}`;
 
     // Update GRPP Settings file data
     const tempSettings = grppSettings;
@@ -425,7 +418,7 @@ async function batchUpdateComplete(){
         // Close readline and check if user wants to check update data
         readLine.close();
         if (answer.toLowerCase() === 'y'){
-            await openOnTextEditor(grppSettings.userEditor, exportLogPath).then(process.exit);
+            await openOnTextEditor(exportLogPath).then(process.exit);
         } else {
             process.exit();
         }
