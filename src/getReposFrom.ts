@@ -35,10 +35,12 @@ export async function grpp_getReposFrom(userName:string){
     await checkConnection().then(function(){
 
         // Create vars
-        const nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
+        const
+            reasonList:string[] = [],
+            nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
+
         var urlBase:string = '',
-            canFetch:boolean = !0,
-            reasonList:string[] = [];
+            canFetch:boolean = !0;
 
         // Check if username was provided and if GRPP update is running
         if (userName.length < 1) reasonList.push('You must provide a username!');

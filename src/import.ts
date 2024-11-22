@@ -70,9 +70,9 @@ export async function grpp_startImport(cloneURL:string){
     return new Promise<void>(function(resolve){
 
         // Create vars before checking if can continue
-        var reasonList:string[] = [];
         const
             date = new Date(),
+            reasonList:string[] = [],
             urlData = cloneURL.split('/'),
             repoName = urlData[urlData.length - 1],
             repoOwner = urlData[urlData.length - 2],

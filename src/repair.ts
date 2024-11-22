@@ -53,7 +53,7 @@ var
 export async function grpp_startRepairDatabase(){
 
     // Declare vars and check if GRPP update is running
-    var reasonList:string[] = [];
+    const reasonList:string[] = [];
     if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`You can\'t execute this action while GRPP Update Process is running!`);
 
     // Check if can start repair process

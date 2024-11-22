@@ -98,7 +98,7 @@ export async function grpp_checkBatchUpdateProcess(){
     await checkConnection().then(function(){
 
         // Declare vars, check if there is repos to be updated or if GRPP update process is running
-        var reasonList:string[] = [];
+        const reasonList:string[] = [];
         if (grppSettings.repoEntries.length === 0) reasonList.push('You must import any repo before starting GRPP Update process!');
         if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`It seems that GRPP Update Process is running! Make sure to wait current update process ends before trying again.`);
 
@@ -117,7 +117,7 @@ export async function grpp_updateRepo(path:string){
     return new Promise<void>(function(resolve){
 
         // Declare vars and check if repo exists on database
-        var reasonList:string[] = [];
+        const reasonList:string[] = [];
         if (grppSettings.repoEntries[path] === void 0) reasonList.push(`Unable to find the following path on database: ${path}`);
 
         // Check if can continue

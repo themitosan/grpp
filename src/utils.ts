@@ -71,9 +71,9 @@ export function grpp_displayHelp(){
 */
 export function grpp_getRepoInfo(path:string){
 
-    // Declare vars
-    var reasonList:string[] = [],
-        repoIndex:number | null = grpp_getRepoIndex(path);
+    // Declare vars and consts
+    const reasonList:string[] = [];
+    var repoIndex:number | null = grpp_getRepoIndex(path);
 
     // Start checking conditions and check if can continue
     if (grppSettings.repoEntries.length < 1) reasonList.push('You must import any repo before using this option.');
