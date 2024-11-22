@@ -75,10 +75,12 @@ export function grpp_getRepoInfo(path:string){
     const reasonList:string[] = [];
     var repoIndex:number | null = grpp_getRepoIndex(path);
 
-    // Start checking conditions and check if can continue
-    if (grppSettings.repoEntries.length < 1) reasonList.push('You must import any repo before using this option.');
     if (path.length < 1) reasonList.push('You must provide repo path!');
     if (repoIndex === null) reasonList.push(`Unable to find repo with provided path!`);
+    if (grppSettings.repoEntries.length < 1) reasonList.push('You must import any repo before using this option.');
+    if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`You can\'t execute this action while GRPP Update Process is running!`);
+
+    // Check if can continue
     execReasonListCheck(reasonList, `ERROR - Unable to get repo info!\nReason: ${convertArrayToString(reasonList)}`, function(){
 
         // Get repo data
