@@ -29,11 +29,12 @@ import * as module_os from 'os';
     * Print GRPP status
 */
 export function grpp_printStatus(){
-    createLogEntry(`==> GRPP Status:\n    Current path: ${process.cwd()}\n`);
-    createLogEntry(`──┬ Total times GRPP Update executed: ${grppSettings.runCounter}`);
-    createLogEntry(`  ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]`);
-    createLogEntry(`  ├ Last time GRPP Update was executed: ${grppSettings.lastRun}`);
-    createLogEntry(`  └ Total repos preserved: ${Object.keys(grppSettings.repoEntries).length}\n`);
+    createLogEntry(`==> GRPP Status:
+    Current path: ${process.cwd()}
+──┬ Total times GRPP Update executed: ${grppSettings.runCounter}
+  ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]
+  ├ Last time GRPP Update was executed: ${grppSettings.lastRun}
+  └ Total repos preserved: ${Object.keys(grppSettings.repoEntries).length}\n`);
 }
 
 /**
@@ -42,20 +43,21 @@ export function grpp_printStatus(){
 */
 export function grpp_displayMainLogo(clearHistory:boolean = !1){
     consoleClear(clearHistory);
-    createLogEntry("\n   <=====================================================>");
-    createLogEntry("   <=|       Git Repo Preservation Project (GRPP)      |=>");
-    createLogEntry("   <=| Created by TheMitoSan (@themitosan.bsky.social) |=>");
-    createLogEntry("   <=|=================================================|=>");
-    createLogEntry("   <=|         A classic quote from an old one:        |=>");
-    createLogEntry("   <=|               \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"               |=>");
-    createLogEntry("   <=====================================================>\n");
+    createLogEntry(`
+   <=====================================================>
+   <=|       Git Repo Preservation Project (GRPP)      |=>");
+   <=| Created by TheMitoSan (@themitosan.bsky.social) |=>");
+   <=|=================================================|=>");
+   <=|         A classic quote from an old one:        |=>");
+   <=|               \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"               |=>");
+   <=====================================================>\n`);
 }
 
 /**
     * Display help menu
 */
 export function grpp_displayHelp(){
-    createLogEntry(`Hi ${module_os.userInfo().username} - we hope you are having a good one!\nAll options displayed below can be triggered by using \"-\", \"--\" or even "/" (without quotes).\n\n==> Function list:\n`);
+    createLogEntry(`Hi ${module_os.userInfo().username} - hopes for a great day!\nAll options displayed below can be triggered by using \"-\", \"--\" or even \"/\" (without quotes).\n\n==> Function list:\n`);
     Object.keys(grpp_commandList).forEach(function(currentFlag:any){
         createLogEntry(`--${currentFlag}\n${grpp_commandList[currentFlag]}\n`);
     });
@@ -75,12 +77,13 @@ export function grpp_getRepoInfo(path:string){
     const reasonList:string[] = [];
     var repoIndex:number | null = grpp_getRepoIndex(path);
 
+    // Test conditions to not get repo data
     if (path.length < 1) reasonList.push('You must provide repo path!');
     if (repoIndex === null) reasonList.push(`Unable to find repo with provided path!`);
     if (grppSettings.repoEntries.length < 1) reasonList.push('You must import any repo before using this option.');
     if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`You can\'t execute this action while GRPP Update Process is running!`);
 
-    // Check if can continue
+    // Check if can get repo data
     execReasonListCheck(reasonList, `ERROR - Unable to get repo info!\nReason: ${convertArrayToString(reasonList)}`, function(){
 
         // Get repo data
