@@ -5,6 +5,11 @@
 
 Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this is a simple project written in ts that aims to gelp importing and preserving git repos.
 
+> [!IMPORTANT]\
+> GRPP is a tool that <ins>only focus on git repos itself.</ins>
+>
+> If you want to preserve GitHub repos including issues, releases and more - check out [jan9103's](https://github.com/Jan9103) [github-repo-backuper](https://github.com/Jan9103/github-repo-backuper).
+
 ## Table of contents
 - [Requirements](#requirements)
 - [How to build](#how-to-build)
