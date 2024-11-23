@@ -33,7 +33,7 @@ export function grpp_printStatus(){
     Current path: ${process.cwd()}\n
 ──┬ Total times GRPP Update executed: ${grppSettings.runCounter}
   ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]
-  ├ Last time GRPP Update was executed: ${grppSettings.lastRun}
+  ├ Last GRPP Update run: ${grppSettings.lastRun}
   └ Total repos preserved: ${Object.keys(grppSettings.repoEntries).length}\n`);
 }
 
@@ -116,6 +116,7 @@ export function grpp_getRepoIndex(path:string):number | null {
                 res = currentRepo;
                 break;
             }
+
         }
 
     } else {
