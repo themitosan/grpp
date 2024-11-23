@@ -130,7 +130,7 @@ export async function grpp_updateRepo(path:string){
                 // Bump current repo, measure fetch time duration and check if process output any data
                 grpp_updateResults.currentRepo++;
                 if (processOutput.stdData.length === 0){
-                    createLogEntry(`INFO - ${currentRepoData.repoName} is up to date!`);
+                    createLogEntry(`INFO - ${currentRepoData.name} is up to date!`);
                 } else {
 
                     // Declare vars and check if current output had any errors
@@ -227,7 +227,7 @@ async function startUpdateAllRepos(){
             updateList.push(currentRepo);
             totalReposQueued++;
         } else {
-            createLogEntry(`WARN - Skipping ${repoData.repoName} (${currentRepo}) because it was disabled!`);
+            createLogEntry(`WARN - Skipping ${repoData.name} (${currentRepo}) because it was disabled!`);
         }
 
     });

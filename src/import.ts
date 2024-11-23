@@ -25,9 +25,9 @@ import * as module_fs from 'fs';
 
 // GRPP Repo Entry
 export interface grppRepoEntry {
-    repoUrl:string,
-    repoName:string,
-    repoOwner:string,
+    url:string,
+    name:string,
+    owner:string,
     canUpdate:boolean,
     importDate:string,
     isPriority:boolean,
@@ -47,13 +47,13 @@ var currentRepo:grppRepoEntry;
 */
 
 // Repo entry default
-export const repoEntry_Defaults:Pick <grppRepoEntry, 'canUpdate' | 'importDate' | 'lastUpdatedOn' | 'updateCounter' | 'repoName' | 'repoOwner' | 'repoUrl' | 'isPriority'> = {
+export const repoEntry_Defaults:Pick <grppRepoEntry, 'canUpdate' | 'importDate' | 'lastUpdatedOn' | 'updateCounter' | 'name' | 'owner' | 'url' | 'isPriority'> = {
     canUpdate: !0,
     isPriority: !1,
     updateCounter: 0,
-    repoUrl: 'UNKNOWN',
-    repoName: 'UNKNOWN',
-    repoOwner: 'UNKNOWN',
+    url: 'UNKNOWN',
+    name: 'UNKNOWN',
+    owner: 'UNKNOWN',
     lastUpdatedOn: 'Never',
     importDate: new Date().toString()
 }
@@ -74,10 +74,10 @@ export async function grpp_startImport(cloneURL:string){
             date = new Date(),
             reasonList:string[] = [],
             urlData = cloneURL.split('/'),
-            repoName = urlData[urlData.length - 1],
-            repoOwner = urlData[urlData.length - 2],
+            name = urlData[urlData.length - 1],
+            owner = urlData[urlData.length - 2],
             originalChdir = structuredClone(process.cwd()),
-            repoPath = `${process.cwd()}/repos/${urlData[2]}/${repoOwner}/${repoName}`;
+            repoPath = `${process.cwd()}/repos/${urlData[2]}/${owner}/${name}`;
 
         // Check conditions
         if (cloneURL.length === 0) reasonList.push('You must provide a git url to import!');
@@ -89,12 +89,12 @@ export async function grpp_startImport(cloneURL:string){
 
             // Set current repo var
             currentRepo = {
-                repoName,
-                repoOwner,
+                name,
+                owner,
+                url: cloneURL,
                 canUpdate: !0,
                 isPriority: !1,
                 updateCounter: 0,
-                repoUrl: cloneURL,
                 lastUpdatedOn: 'Never',
                 importDate: date.toString()
             };
@@ -104,19 +104,19 @@ export async function grpp_startImport(cloneURL:string){
             [
                 `${process.cwd()}/repos`,
                 `${process.cwd()}/repos/${urlData[2]}`,
-                `${process.cwd()}/repos/${urlData[2]}/${repoOwner}`
+                `${process.cwd()}/repos/${urlData[2]}/${owner}`
             ].forEach(function(cEntry){
                 if (module_fs.existsSync(cEntry) === !1) module_fs.mkdirSync(cEntry);
             });
 
             // Start clone process
-            await runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, { ...runExternalCommand_Defaults, chdir: `${process.cwd()}/repos/${urlData[2]}/${repoOwner}` })
+            await runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, { ...runExternalCommand_Defaults, chdir: `${process.cwd()}/repos/${urlData[2]}/${owner}` })
             .then(function(){
                 createLogEntry('INFO - Setting git config to fetch all refs from origin...');
                 runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: repoPath });
             })
             .then(function(){
-                createLogEntry(`INFO - Setting repo dir ${repoName} as safe...`);
+                createLogEntry(`INFO - Setting repo dir ${name} as safe...`);
                 runExternalCommand(`git config --global --add safe.directory ${repoPath}`, { ...runExternalCommand_Defaults, chdir: originalChdir });
             })
             .then(function(){

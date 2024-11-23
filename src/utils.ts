@@ -30,7 +30,7 @@ import * as module_os from 'os';
 */
 export function grpp_printStatus(){
     createLogEntry(`==> GRPP Status:
-    Current path: ${process.cwd()}
+    Current path: ${process.cwd()}\n
 ──┬ Total times GRPP Update executed: ${grppSettings.runCounter}
   ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]
   ├ Last time GRPP Update was executed: ${grppSettings.lastRun}
@@ -44,13 +44,13 @@ export function grpp_printStatus(){
 export function grpp_displayMainLogo(clearHistory:boolean = !1){
     consoleClear(clearHistory);
     createLogEntry(`
-   <=====================================================>
-   <=|       Git Repo Preservation Project (GRPP)      |=>");
-   <=| Created by TheMitoSan (@themitosan.bsky.social) |=>");
-   <=|=================================================|=>");
-   <=|         A classic quote from an old one:        |=>");
-   <=|               \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"               |=>");
-   <=====================================================>\n`);
+    <=====================================================>
+    <=|       Git Repo Preservation Project (GRPP)      |=>
+    <=| Created by TheMitoSan (@themitosan.bsky.social) |=>
+    <=|=================================================|=>
+    <=|         A classic quote from an old one:        |=>
+    <=|               \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"               |=>
+    <=====================================================>\n`);
 }
 
 /**

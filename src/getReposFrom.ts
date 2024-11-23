@@ -12,7 +12,7 @@
 import { grppSettings } from './main';
 import { grpp_importBatch } from './import';
 import { grpp_displayMainLogo } from './utils';
-import { checkConnection, convertArrayToString, createLogEntry, execReasonListCheck, trimString } from './tools';
+import { checkConnection, convertArrayToString, createLogEntry, execReasonListCheck, openOnTextEditor, trimString } from './tools';
 
 /*
     Require node modules
@@ -37,21 +37,19 @@ export async function grpp_getReposFrom(userName:string){
         // Create vars
         const
             reasonList:string[] = [],
-            nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
+            readline = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
 
         var urlBase:string = '',
             canFetch:boolean = !0;
 
-        // Check if username was provided and if GRPP update is running
+        // Check if username was provided, if GRPP update is running and check if can continue
         if (userName.length < 1) reasonList.push('You must provide a username!');
         if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`You can\'t execute this action while GRPP Update Process is running!`);
-
-        // Check if can continue
         execReasonListCheck(reasonList, `ERROR - Unable to seek repos from user!\nReason: ${convertArrayToString(reasonList)}`, function(){
 
-            // Prompt user, close nodeReadLine and switch user input
-            nodeReadLine.question(`Please, insert where GRPP should seek repos:\n\n   1) GitHub (default)\n   2) GitLab\n   3) Gitea based server\n\nYour choice: `, function(usrAnswer){
-                nodeReadLine.close();
+            // Prompt user, close readline and switch user input
+            readline.question(`Please, insert where GRPP should seek repos:\n\n    1) GitHub (default)\n    2) GitLab\n    3) Gitea based server\n\nYour choice: `, function(usrAnswer){
+                readline.close();
                 switch (usrAnswer){
 
                     // GitHub
@@ -94,11 +92,11 @@ function promptGiteaUrl(userName:string){
 
     // Create vars and prompt base url
     var urlBase = '';
-    const nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
-    nodeReadLine.question('\nPlease, insert base domain where gitea server is hosted (Example: \"192.168.1.150:3000\")\nYour answer: ', function(giteaUrl){
+    const readline = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
+    readline.question('\nPlease, insert base domain where gitea server is hosted (Example: \"192.168.1.150:3000\")\nYour answer: ', function(giteaUrl){
 
         // Set url, start user fetch and close readline
-        nodeReadLine.close();
+        readline.close();
         urlBase = `http://${giteaUrl}/api/v1/users/${userName}/repos?per_page=100&page=`;
         startUserFetch(urlBase);
 
@@ -114,7 +112,7 @@ function startUserFetch(urlBase:string){
 
     // Declare vars
     var repoChunk:any[] = [],
-        currentPage = grppSettings.fetchStartPage;
+        currentPage = structuredClone(grppSettings.fetchStartPage);
 
     /*
         Declare functions
@@ -124,7 +122,7 @@ function startUserFetch(urlBase:string){
     const processFetchRes = function(fetchResult:any){
 
         // Create error string and check if there is repos available
-        var errorList:string[] = [];
+        const errorList:string[] = [];
         if (fetchResult.length === 0 && repoChunk.length === 0) errorList.push('No repos available for this user.');
 
         // Check if had 404 error and if can continue
@@ -185,19 +183,20 @@ function startUserFetch(urlBase:string){
 function processRepoChunk(resultArray:any[]){
 
     // Declare vars, process repo list and trim last bit
-    var repoList:string = '';
-    const nodeReadLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
+    var repoList = '';
+    const readline = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
     resultArray.forEach(function(cRepo){
         repoList = `${repoList}${cRepo.clone_url}\n`;
     });
     repoList = trimString(repoList);
 
     // Clear window and display info
-    grpp_displayMainLogo();
-    nodeReadLine.question(`INFO - GRPP managed to find ${resultArray.length} repos. Here is the full list:\n\n${repoList}\n\nHere is what you can do:\n\n   1) Import all repos (default)\n   2) Save repo list on a file to import later\n   3) Cancel\n\nYour choice: `, function(userAction){
+    grpp_displayMainLogo(!0);
+    const fetchResPath = `${process.cwd()}/grpp_fetch_res.txt`;
+    readline.question(`INFO - GRPP managed to find ${resultArray.length} repos. Here is the full list:\n\n${repoList}\n\nHere is what you can do:\n\n    1) Import all repos (default)\n    2) Edit current list on text editor (${grppSettings.userEditor})\n    3) Save repo list on a file to import later\n    4) Cancel\n\nYour choice: `, function(userAction){
 
-        // Close nodeReadLine and switch user action
-        nodeReadLine.close();
+        // Close readline and switch user action
+        readline.close();
         switch (userAction){
 
             // Import all files
@@ -205,15 +204,20 @@ function processRepoChunk(resultArray:any[]){
                 grpp_importBatch(repoList);
                 break;
 
-            // Save file to import later
+            // Edit list before importing
             case '2':
-                grpp_displayMainLogo();
-                module_fs.writeFileSync(`${process.cwd()}/grpp_fetch_res.txt`, repoList, 'utf-8');
+                grpp_editRepoListBeforeImport(repoList);
+                break;
+
+            // Save file to import later
+            case '3':
+                grpp_displayMainLogo(!0);
+                module_fs.writeFileSync(fetchResPath, repoList, 'utf-8');
                 createLogEntry(`INFO - Process Complete!\nFile path: ${process.cwd()}/grpp_fetch_res.txt\n\nTo import repos from a file, use the following flag: \"importList=PATH_TO_FILE\"\n`);
                 break;
 
             // Cancel action
-            case '3':
+            case '4':
                 process.exit();
 
             // Default
@@ -225,6 +229,19 @@ function processRepoChunk(resultArray:any[]){
 
     });
 
+}
+
+/**
+    * Edit repo list before importing
+    * @param repoList [string] repo list that will be edited before importing
+*/
+async function grpp_editRepoListBeforeImport(repoList:string){
+    const fetchResPath = `${process.cwd()}/grpp_fetch_res.txt`;
+    module_fs.writeFileSync(fetchResPath, repoList, 'utf-8');
+    await openOnTextEditor(fetchResPath).then(function(){
+        grpp_importBatch(module_fs.readFileSync(fetchResPath, 'utf-8'));
+        module_fs.unlinkSync(fetchResPath);
+    });
 }
 
 // Export module

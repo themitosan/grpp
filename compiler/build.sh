@@ -7,13 +7,13 @@
 
 # Clear screen and display logo
 clear
-printf "\n   <=====================================================>\n"
-printf "   <=|       Git Repo Preservation Project (GRPP)      |=>\n"
-printf "   <=| Created by TheMitoSan (@themitosan.bsky.social) |=>\n"
-printf "   <=|=================================================|=>\n"
-printf "   <=|         A classic quote from an old one:        |=>\n"
-printf "   <=|               \"Quem guarda, \033[1;32mt\033[1;33me\033[1;34mm\033[0m!\"               |=>\n"
-printf "   <=====================================================>\n\n"
+printf "\n    <=====================================================>\n"
+printf "    <=|       Git Repo Preservation Project (GRPP)      |=>\n"
+printf "    <=| Created by TheMitoSan (@themitosan.bsky.social) |=>\n"
+printf "    <=|=================================================|=>\n"
+printf "    <=|         A classic quote from an old one:        |=>\n"
+printf "    <=|               \"Quem guarda, \033[1;32mt\033[1;33me\033[1;34mm\033[0m!\"               |=>\n"
+printf "    <=====================================================>\n\n"
 
 # Check if needs to remove previous Build dir
 if [ -d "Build" ]; then
