@@ -366,7 +366,8 @@ async function batchUpdateComplete(){
         errorList:string[] = [],
         updateList:string[] = [],
         errorString = '...there was no errors on this run.',
-        updateString = '...there was no updates on this run.';
+        updateString = '...there was no updates on this run.',
+        skippedReposString = '...there was no skipped repos on this run.';
 
     // Create consts
     const
@@ -395,10 +396,13 @@ async function batchUpdateComplete(){
     }
     module_fs.rmSync(`${process.cwd()}/.temp`, { recursive: !0 });
 
-    // Process error / update lists, set updateDetails and baseLog vars
+    // Process errors, update and skipped repos lists
     if (errorList.length > 0) errorString = processUpdateArrays(errorList);
     if (updateList.length > 0) updateString = processUpdateArrays(updateList);
-    updateDetails = `==> Updates:\n${updateString}\n\n==> Errors:\n${errorString}\n\n==> Skipped Repos:\n${convertArrayToString(skippedRepos)}\n`;
+    if (skippedRepos.length > 0) skippedReposString = convertArrayToString(skippedRepos);
+
+    // Set string vars
+    updateDetails = `==> Updates:\n${updateString}\n\n==> Errors:\n${errorString}\n\n==> Skipped Repos:\n${skippedReposString}\n`;
     baseLog = `GRPP location: ${process.cwd()}\n
 ==> Results:
 ──┬ Processes: ${totalResFiles}
