@@ -142,12 +142,9 @@ export async function grpp_saveSettings(){
     * Update GRPP settings
     * @param data [grppSettingsFile] settings to be updated
 */
-export async function grpp_updateSettings(data:grppSettingsFile){
-    return new Promise<void>(function(resolve){
-        grppSettings = { ...grppSettings, ...data };
-        grpp_saveSettings();
-        resolve();
-    });
+export function grpp_updateSettings(data:any){
+    grppSettings = { ...grppSettings, ...data };
+    grpp_saveSettings();
 }
 
 /**
@@ -163,14 +160,11 @@ export function grpp_initPath(path:string = process.cwd()){
 /**
     * Import repo to list
     * @param path [string] local repo path
-    * @param data [grppRepoEntry] new repo to be imported / updated
+    * @param repoData [grppRepoEntry] new repo to be imported / updated
 */
-export async function grpp_updateRepoData(path:string, data:grppRepoEntry){
-    return new Promise<void>(function(resolve){
-        grppSettings.repoEntries[path] = data;
-        grpp_saveSettings();
-        resolve();
-    });
+export function grpp_updateRepoData(path:string, repoData:grppRepoEntry){
+    grppSettings.repoEntries[path] = repoData;
+    grpp_saveSettings();
 }
 
 /**
@@ -200,7 +194,6 @@ function checkFlagIsValid(arg:string):string {
     } else {
         if (handleDatabase.indexOf(arg.slice(0, 1)) !== -1) res = arg.slice(1, arg.length);
     }
-
     return res;
 
 }
