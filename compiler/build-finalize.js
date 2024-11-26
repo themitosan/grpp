@@ -12,7 +12,6 @@ function start(){
 
     // Declare consts
     const
-        time = new Date(),
         module_fs = require('fs'),
         packageJson = require('../package.json');
 
@@ -24,7 +23,7 @@ function start(){
     Created by TheMitoSan (@themitosan.bsky.social)
 
     Version: ${packageJson.version}
-    Compiled at ${time.toString()}
+    Compiled at ${new Date().toString()}
 
     A classic quote from an old one: "Quem guarda, tem!"
 */\n${grppFile}`;
@@ -34,8 +33,7 @@ function start(){
         'main',
         'bugs',
         'scripts',
-        'repository',
-        'devDependencies'
+        'devDependencies',
     ].forEach(function(currentKey){
         delete packageJson[currentKey];
     });
