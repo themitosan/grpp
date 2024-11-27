@@ -80,6 +80,7 @@ export async function grpp_getReposFrom(userName:string){
                 if (canFetch === !0) startUserFetch(urlBase);
 
             });
+
         });
 
     });
@@ -92,14 +93,12 @@ export async function grpp_getReposFrom(userName:string){
 function promptGiteaUrl(userName:string){
 
     // Create vars and prompt base url
-    var urlBase = '';
     const readline = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
     readline.question('\nPlease, insert base domain where gitea server is hosted (Example: \"192.168.1.150:3000\")\nYour answer: ', function(giteaUrl){
 
-        // Set url, start user fetch and close readline
+        // Close readline and start fetch process
         readline.close();
-        urlBase = `http://${giteaUrl}/api/v1/users/${userName}/repos?per_page=100&page=`;
-        startUserFetch(urlBase);
+        startUserFetch(`http://${giteaUrl}/api/v1/users/${userName}/repos?per_page=100&page=`);
 
     });
     
@@ -107,7 +106,7 @@ function promptGiteaUrl(userName:string){
 
 /**
     * Process fetch user repos
-    * @param urlBase [string] url to fetch user data
+    * @param urlBase [string] url to fetch user repos
 */
 async function startUserFetch(urlBase:string){
 
@@ -132,12 +131,8 @@ async function startUserFetch(urlBase:string){
         // Check if can continue
         if (errorList.length === 0){
 
-            // Check if have results. If so, push to repo chunk
-            if (fetchResult.length !== 0){
-                fetchResult.forEach(function(cRepo:any){
-                    repoChunk.push(cRepo);
-                });
-            }
+            // If fetch have repos, push all to repo chunk
+            if (fetchResult.length !== 0) repoChunk = [ ...repoChunk, ...fetchResult ];
 
             // Check if needs to continue fetch process
             if (fetchResult.length === 0 && repoChunk.length !== 0 || currentPage > (grppSettings.maxPages - 1)){
@@ -191,9 +186,13 @@ async function startUserFetch(urlBase:string){
 */
 function processRepoChunk(resultArray:any[]){
 
-    // Declare vars, process repo list and trim last bit
+    // Declare vars and consts
     var repoList = '';
-    const readline = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
+    const
+        fetchResPath = `${process.cwd()}/grpp_fetch_res.txt`,
+        readline = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
+
+    // Create import list and trim last line break
     resultArray.forEach(function(cRepo){
         repoList = `${repoList}${cRepo.clone_url}\n`;
     });
@@ -201,7 +200,6 @@ function processRepoChunk(resultArray:any[]){
 
     // Clear window and display info
     grpp_displayMainLogo(!0);
-    const fetchResPath = `${process.cwd()}/grpp_fetch_res.txt`;
     readline.question(`INFO - GRPP managed to find ${resultArray.length} repos. Here is the full list:\n\n${repoList}\n\nHere is what you can do:\n\n    1) Import all repos (default)\n    2) Edit current list on text editor (${grppSettings.userEditor})\n    3) Save repo list on a file to import later\n    4) Cancel\n\nYour choice: `, function(userAction){
 
         // Close readline and switch user action
@@ -222,7 +220,7 @@ function processRepoChunk(resultArray:any[]){
             case '3':
                 grpp_displayMainLogo(!0);
                 module_fs.writeFileSync(fetchResPath, repoList, 'utf-8');
-                createLogEntry(`INFO - Process Complete!\nFile path: ${process.cwd()}/grpp_fetch_res.txt\n\nTo import repos from a file, use the following flag: \"importList=PATH_TO_FILE\"\n`);
+                createLogEntry(`INFO - Process Complete!\nFile path: ${process.cwd()}/grpp_fetch_res.txt\n\nTo import repos from a file, use the following flag: \"--importList=PATH_TO_FILE\"\n`);
                 break;
 
             // Cancel action
@@ -245,12 +243,17 @@ function processRepoChunk(resultArray:any[]){
     * @param repoList [string] repo list that will be edited before importing
 */
 async function grpp_editRepoListBeforeImport(repoList:string){
+
+    // Create file path const and write repo list
     const fetchResPath = `${process.cwd()}/grpp_fetch_res.txt`;
     module_fs.writeFileSync(fetchResPath, repoList, 'utf-8');
+
+    // Open repo list on text editor, call batch import after exiting and remove repo list file
     await openOnTextEditor(fetchResPath).then(function(){
         grpp_importBatch(module_fs.readFileSync(fetchResPath, 'utf-8'));
         module_fs.unlinkSync(fetchResPath);
     });
+
 }
 
 // Export module
