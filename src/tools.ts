@@ -193,7 +193,7 @@ export function execReasonListCheck(reasonList:string[], errorMsg:string, action
     if (reasonList.length === 0){
 		action();
 	} else {
-        console.error(errorMsg);
+        createLogEntry(errorMsg, 'error');
         onError();
 	}
 }
