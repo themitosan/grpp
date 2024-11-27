@@ -34,7 +34,7 @@ export async function grpp_getReposFrom(userName:string){
     // Check if we have internet connection
     await checkConnection().then(function(){
 
-        // Create vars
+        // Create consts and vars
         const
             reasonList:string[] = [],
             readline = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
@@ -48,7 +48,8 @@ export async function grpp_getReposFrom(userName:string){
         execReasonListCheck(reasonList, `ERROR - Unable to seek repos from user!\nReason: ${convertArrayToString(reasonList)}`, function(){
 
             // Prompt user, close readline and switch user input
-            readline.question(`Please, insert where GRPP should seek repos:\n\n    1) GitHub (default)\n    2) GitLab\n    3) Gitea based server\n\nYour choice: `, function(usrAnswer){
+            readline.question(`Please, specify where \"${userName}\" repos are hosted:\n\n    1) GitHub (default)\n    2) GitLab\n    3) Gitea based server\n\nYour choice: `, function(usrAnswer){
+
                 readline.close();
                 switch (usrAnswer){
 
@@ -108,7 +109,7 @@ function promptGiteaUrl(userName:string){
     * Process fetch user repos
     * @param urlBase [string] url to fetch user data
 */
-function startUserFetch(urlBase:string){
+async function startUserFetch(urlBase:string){
 
     // Declare vars
     var repoChunk:any[] = [],
@@ -119,14 +120,16 @@ function startUserFetch(urlBase:string){
     */
 
     // Process fetch result
-    const processFetchRes = function(fetchResult:any){
+    const processFetchRes = async function(fetchResult:any){
 
-        // Create error string and check if there is repos available
+        // Create consts
         const errorList:string[] = [];
-        if (fetchResult.length === 0 && repoChunk.length === 0) errorList.push('No repos available for this user.');
 
-        // Check if had 404 error and if can continue
+        // Check fetch res
+        if (fetchResult.length === 0 && repoChunk.length === 0) errorList.push('No repos available for this user.');
         if (fetchResult['status'] !== void 0 && fetchResult['status'].toString() === "404") errorList.push(fetchResult.status);
+        
+        // Check if can continue
         if (errorList.length === 0){
 
             // Check if have results. If so, push to repo chunk
@@ -141,7 +144,7 @@ function startUserFetch(urlBase:string){
                 processRepoChunk(repoChunk);
             } else {
                 currentPage++;
-                fetchData();
+                await fetchData();
             }
 
         }
@@ -149,30 +152,36 @@ function startUserFetch(urlBase:string){
     };
 
     // Fetch data from remote
-    const fetchData = function(){
+    const fetchData = async function(){
 
         // Create fetch url, log and fetch data
         const fetchUrl = `${urlBase}${currentPage}`;
         createLogEntry(`INFO - Fetching url: ${fetchUrl}`);
-        fetch(fetchUrl).then(function(fetchRes){
 
-            // If fetch result is ok, process output. If not, get error data and display it
-            if (fetchRes.ok === !0){
-                fetchRes.json().then(function(fetchData){
-                    processFetchRes(fetchData);
-                });
+        try {
+
+            // Fetch repo data and check if response is okay
+            const response = await fetch(fetchUrl);
+            if (response.ok === !0){
+                const fetchJson = await response.json();
+                await processFetchRes(fetchJson);
             } else {
-                fetchRes.text().then(function(err:any){
-                    throw err;
-                });
+                throw await response.json();
             }
-        });
+
+        } catch (err:any) {
+
+            grpp_displayMainLogo(!0);
+            createLogEntry(`ERROR - Unable to fetch repo data!\nReason: ${err.message} [Status: ${err.status}]`);
+            process.exit();
+
+        }
 
     };
 
     // Start process
     createLogEntry(`INFO - Starting fetch process...`);
-    fetchData();
+    await fetchData();
 
 }
 
