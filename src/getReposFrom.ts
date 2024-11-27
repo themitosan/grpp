@@ -48,7 +48,7 @@ export async function grpp_getReposFrom(userName:string){
         execReasonListCheck(reasonList, `ERROR - Unable to seek repos from user!\nReason: ${convertArrayToString(reasonList)}`, function(){
 
             // Prompt user, close readline and switch user input
-            readline.question(`Please, specify where \"${userName}\" repos are hosted:\n\n    1) GitHub (default)\n    2) GitLab\n    3) Gitea based server\n\nYour choice: `, function(usrAnswer){
+            readline.question(`Please specify where \"${userName}\" repos are hosted:\n\n    1) GitHub (default)\n    2) GitLab\n    3) Gitea based server\n\nYour choice: `, function(usrAnswer){
 
                 readline.close();
                 switch (usrAnswer){
