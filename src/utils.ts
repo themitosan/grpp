@@ -32,8 +32,8 @@ export function grpp_printStatus(){
     createLogEntry(`==> GRPP Status:
     Current path: ${process.cwd()}\n
 ──┬ Total times GRPP Update executed: ${grppSettings.runCounter}
-  ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]
   ├ Last GRPP Update run: ${grppSettings.lastRun}
+  ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]
   └ Total repos preserved: ${Object.keys(grppSettings.repoEntries).length}\n`);
 }
 

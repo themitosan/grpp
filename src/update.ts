@@ -318,10 +318,12 @@ function processBatchResFiles(){
         const fileData = module_fs.readFileSync(`${tempDir}/GRPP_BATCH_RES_${currentFile}.json`, 'utf-8');
         if (isValidJSON(fileData) === !0){
 
-            // Declare ASCII entry char and change it if current file is the last one
+            // Declare ASCII vars
             var entryChar = '  ├',
+                checkboxChar = '[ ]',
                 enableLineBreak = '';
 
+            // Change vars if current file is the last one
             if (currentFile === (totalResFiles - 1)){
                 entryChar = '  └';
                 enableLineBreak = '\n';
@@ -332,9 +334,12 @@ function processBatchResFiles(){
             module_readLine.cursorTo(process.stdout, 0, 9);
             process.stdout.write(`${consoleTextStyle.reset}──┬ Elapsed time: ${converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime))}`);
 
+            // Check if process finished. If so, update checkbox char
+            if (batchResData.currentRepo > (batchResData.totalRepos - 1)) checkboxChar = '[✓]';
+
             // Move to current console line correspondent to each process and update line
             module_readLine.cursorTo(process.stdout, 0, (currentFile + 10));
-            process.stdout.write(`${entryChar} Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${consoleTextStyle.fgGreen}${batchResData.updateList.length}${consoleTextStyle.reset}, Errors: ${consoleTextStyle.fgRed}${batchResData.errorList.length}${consoleTextStyle.reset}${enableLineBreak}`);
+            process.stdout.write(`${entryChar} ${checkboxChar} Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${consoleTextStyle.fgGreen}${batchResData.updateList.length}${consoleTextStyle.reset}, Errors: ${consoleTextStyle.fgRed}${batchResData.errorList.length}${consoleTextStyle.reset}${enableLineBreak}`);
         
         }
 

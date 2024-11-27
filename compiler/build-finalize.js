@@ -15,9 +15,8 @@ function start(){
         module_fs = require('fs'),
         packageJson = require('../package.json');
 
-    // Read file and create main comment
-    var grppFile = module_fs.readFileSync('Build/grpp.js', 'utf-8');
-    grppFile = `#!/usr/bin/env node
+    // Create final script
+    const grppScript = `#!/usr/bin/env node
 /*
     Git repo preservation project (GRPP)
     Created by TheMitoSan (@themitosan.bsky.social)
@@ -25,8 +24,8 @@ function start(){
     Version: ${packageJson.version}
     Compiled at ${new Date().toString()}
 
-    A classic quote from an old one: "Quem guarda, tem!"
-*/\n${grppFile}`;
+    A classic quote from an old one: \"Quem guarda, tem!\"
+*/\n${module_fs.readFileSync('Build/grpp.js', 'utf-8')}`;
 
     // Strip non-required keys from package.json
     [
@@ -39,7 +38,7 @@ function start(){
     });
 
     // Write files
-    module_fs.writeFileSync('Build/grpp.js', grppFile, 'utf-8');
+    module_fs.writeFileSync('Build/grpp.js', grppScript, 'utf-8');
     module_fs.writeFileSync('Build/package.json', JSON.stringify(packageJson), 'utf-8');
 
 }
