@@ -3,7 +3,7 @@
     <br>Git Repo Preservation Project (GRPP)
 </h1>
 
-Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this is a simple project written in ts that aims to gelp importing and preserving git repos.
+Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this is a tool written in ts that aims to gelp importing and preserving git repos.
 
 > [!IMPORTANT]\
 > GRPP is a tool that <ins>only focus on git repos itself.</ins>
