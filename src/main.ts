@@ -194,6 +194,7 @@ function checkFlagIsValid(arg:string):string {
     } else {
         if (handleDatabase.indexOf(arg.slice(0, 1)) !== -1) res = arg.slice(1, arg.length);
     }
+
     return res;
 
 }
@@ -242,7 +243,7 @@ async function init(){
     // Display main logo, create vars and check if needs to display help string
     grpp_displayMainLogo();
     var execFn:Function | null = null;
-    createLogEntry('==> Use \"--help\" for more details\n');
+    createLogEntry('==> Use \"--help\" for more details.\n');
 
     /*
         Process functions flags

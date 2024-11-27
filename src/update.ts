@@ -408,8 +408,10 @@ async function batchUpdateComplete(){
 
     // Set string vars
     updateDetails = `==> Updates:\n${updateString}\n\n==> Errors:\n${errorString}\n\n==> Skipped Repos:\n${skippedReposString}\n`;
-    baseLog = `GRPP location: ${process.cwd()}\n
+    baseLog = `GRPP location: ${process.cwd()}
+
 ==> Results:
+
 ──┬ Processes: ${totalResFiles}
   ├ Update duration: ${converMsToHHMMSS(updateDurationMs)} [${updateDurationMs}ms]
   ├ Total repos queued: ${totalReposQueued} [From ${Object.keys(grppSettings.repoEntries).length} on database, ${totalReposQueued} were queued]
