@@ -29,12 +29,23 @@ import * as module_os from 'os';
     * Print GRPP status
 */
 export function grpp_printStatus(){
+
+    // Get total number of disabled repos
+    var disabledRepos = 0;
+    const repoList = Object.keys(grppSettings.repoEntries);
+    repoList.forEach(function(repoPath){
+        if (grppSettings.repoEntries[repoPath].canUpdate === !1) disabledRepos++;
+    });
+
+    // Display status
     createLogEntry(`==> GRPP Status:
     Current path: ${process.cwd()}\n
-──┬ Total times GRPP Update executed: ${grppSettings.runCounter}
-  ├ Last GRPP Update run: ${grppSettings.lastRun}
-  ├ Total GRPP Update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]
-  └ Total repos preserved: ${Object.keys(grppSettings.repoEntries).length}\n`);
+──┬ GRPP update run conter: ${grppSettings.runCounter}
+  ├ Last GRPP update run: ${grppSettings.lastRun}
+  ├ GRPP update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]
+  ├ Repos preserved: ${repoList.length}
+  └ Disabled repos: ${disabledRepos} [${(repoList.length - disabledRepos)} will be queued on batch update]\n`);
+
 }
 
 /**
