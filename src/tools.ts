@@ -7,11 +7,13 @@
     Some functions from this file were ported from TMS Engine
 */
 
+// Remove console restrictions
+declare var console:any;
+
 /*
     Import TS modules
 */
 
-import { consoleTextStyle } from './database';
 import { enableSilentMode, grppSettings } from './main';
 
 /*
@@ -73,19 +75,19 @@ export function consoleClear(removeHistory:boolean = !1){
     * Parse INI files
     * Original snippet: https://gist.github.com/anonymous/dad852cde5df545ed81f1bc334ea6f72
     * @param data [string] INI data to be parsed
-    * @returns [any] INI data in JSON format
+    * @returns [any] Data in JSON format
 */
 export function parseINI(data:string):any {
 
-    // Declare vars and regex patterns
-    var value:any = {},
-        section:any = null;
-
-    const regex = structuredClone({
-        comment: /^\s*;.*$/,
-        param: /^\s*([^=]+?)\s*=\s*(.*?)\s*$/,
-        section: /^\s*\[\s*([^\]]*)\s*\]\s*$/
-    });
+    // Declare vars and consts
+    var section:any = null;
+    const
+        jsonData:any = {},
+        regex = structuredClone({
+            comment: /^\s*;.*$/,
+            param: /^\s*([^=]+?)\s*=\s*(.*?)\s*$/,
+            section: /^\s*\[\s*([^\]]*)\s*\]\s*$/
+        });
 
     // Process ini lines
     data.split(/[\r\n]+/).forEach(function(currentLine){
@@ -96,24 +98,25 @@ export function parseINI(data:string):any {
 
             // Check if current line is a parameter
             if (regex.param.test(currentLine) === !0){
+
                 match = currentLine.match(regex.param);
                 if (section){
-                    value[section][match![1]] = match![2];
+                    jsonData[section][match![1]] = match![2];
                 } else {
-                    value[match![1]] = match![2];
+                    jsonData[match![1]] = match![2];
                 }
+
             }
 
             // Check if current line is a section
             if (regex.section.test(currentLine) === !0){
                 match = currentLine.match(regex.section);
-                value[match![1]] = {};
+                jsonData[match![1]] = {};
                 section = match![1];
             }
 
             // Check if current line have content
             if (currentLine.length === 0 && section){
-                console.info(section);
                 section = null;
             }
 
@@ -121,17 +124,18 @@ export function parseINI(data:string):any {
 
     });
 
-    return value;
+    // Return json
+    return jsonData;
 
 }
 
 /**
     * Create log entry only if silent flag is not present
-    * @param data content to print on screen
-    * @param color [string] Text display mode
+    * @param data Content to print on screen
+    * @param mode Console call mode (Default: info)
 */
-export function createLogEntry(data:any, color:string = 'reset'){
-    if (enableSilentMode === !1) console.log(`${consoleTextStyle[color as keyof typeof consoleTextStyle]}${data}`);
+export function createLogEntry(data:any, mode:string = 'info'){
+    if (enableSilentMode === !1) console[mode](data);
 }
 
 /**
@@ -315,23 +319,24 @@ export function isValidJSON(data:string):boolean {
 */
 export function getDirTree(dir:string, stopLocation:string = ''):string[] {
 
-	// Create res var and checkDir function
-	var res:string[] = [];
-	const checkDir = function(path:string){
+	// Create consts
+	const
+        res:string[] = [],
+	    checkDir = function(path:string){
 
-		// Scan current dir and check for subfolders
-		module_fs.readdirSync(path, { withFileTypes: !0 }).filter(function(cEntry){
-			if (cEntry.isDirectory() === !0){
+		    // Scan current dir and check for subfolders
+		    module_fs.readdirSync(path, { withFileTypes: !0 }).filter(function(cEntry){
+		    	if (cEntry.isDirectory() === !0){
 
-                // Create current dir var, push current dir to res and check if can continue
-                const currentDir = `${cEntry.parentPath}/${cEntry.name}`;
-				res.push(currentDir);
-                if (currentDir.indexOf(stopLocation) === -1) checkDir(currentDir);
+                    // Create current dir var, push current dir to res and check if can continue
+                    const currentDir = `${cEntry.parentPath}/${cEntry.name}`;
+		    		res.push(currentDir);
+                    if (currentDir.indexOf(stopLocation) === -1) checkDir(currentDir);
 
-            }
-		});
+                }
+		    });
 
-	}
+	    };
 
 	// Start dir scan and return result
 	checkDir(dir);
