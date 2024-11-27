@@ -185,15 +185,15 @@ export function convertArrayToString(str:string[], rep:string = '\n'):string {
 /**
 	* Execute reasonList check
 	* @param reasonList [string[]] String list with reasons to not continue
-	* @param warnMsg [string] Base warn message informing that was unable to proceed
+	* @param errorMsg [string] Base error message informing that was unable to proceed
 	* @param action [Function] Function to be executed if reasonList is empty
     * @param onError [Function] Function to be executed if reasonList isn't empty (Default: process.exit)
 */
-export function execReasonListCheck(reasonList:string[], warnMsg:string, action:Function, onError:Function = process.exit){
+export function execReasonListCheck(reasonList:string[], errorMsg:string, action:Function, onError:Function = process.exit){
     if (reasonList.length === 0){
 		action();
 	} else {
-        console.error(warnMsg);
+        console.error(errorMsg);
         onError();
 	}
 }

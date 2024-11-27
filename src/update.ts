@@ -12,7 +12,7 @@
 import { grppRepoEntry } from './import';
 import { consoleTextStyle } from './database';
 import { grpp_displayMainLogo } from './utils';
-import { enableSilentMode, grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
+import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
 import { checkConnection, consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString } from './tools';
 
 /*
@@ -199,7 +199,7 @@ export async function grpp_processBatchFile(id:number){
         process.exit();
 
     } else {
-        console.error(`ERROR - Unable to locate batch file with id ${id}!\nPath: ${batchFilePath}`);
+        createLogEntry(`ERROR - Unable to locate batch file with id ${id}!\nPath: ${batchFilePath}`, 'error');
     }
 
 }

@@ -79,7 +79,7 @@ export async function grpp_startRepairDatabase(){
         if (scanList.length !== repoList.length){
 
             // Create log entry and start processing repo list
-            createLogEntry(`WARN - Repo counter mismatch! [${repoList.length} on database vs. ${scanList.length} found on current scan]\nStarting repair process...\n\n(Depending of how many repos are available, this may take a while!)\n`);
+            createLogEntry(`WARN - Repo counter mismatch! [${repoList.length} on database vs. ${scanList.length} found on current scan]\nStarting repair process...\n\n(Depending of how many repos are available, this may take a while!)\n`, 'warn');
             for (const currentRepo in scanList){
                 if (repoList.indexOf(scanList[currentRepo]) === -1) await grpp_repairAddMissingRepo(scanList[currentRepo]);
             }
@@ -193,7 +193,7 @@ async function grpp_repairAddMissingRepo(path:string){
         var configPath = `${path}/config`;
         if (module_fs.existsSync(`${path}/.git/config`) === !0){
             configPath = `${path}/.git/config`;
-            createLogEntry(`WARN - It seems that ${module_path.parse(path).name}.git is not on bare format!`);
+            createLogEntry(`WARN - It seems that ${module_path.parse(path).name}.git is not on bare format!`, 'warn');
         }
 
         // Check if config file exists
@@ -248,7 +248,7 @@ async function grpp_repairAddMissingRepo(path:string){
     * @param err [string] Error details
 */
 function pushError(repo:string, err:string){
-    createLogEntry(`WARN - ${err}`);
+    createLogEntry(`WARN - ${err}`, 'warn');
     errorList.push({ repo, err });
 }
 

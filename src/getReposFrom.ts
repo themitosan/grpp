@@ -167,7 +167,7 @@ async function startUserFetch(urlBase:string){
         } catch (err:any) {
 
             grpp_displayMainLogo(!0);
-            createLogEntry(`ERROR - Unable to fetch repo data!\nReason: ${err.message} [Status: ${err.status}]`);
+            createLogEntry(`ERROR - Unable to fetch repo data!\nReason: ${err.message} [Status: ${err.status}]`, 'error');
             process.exit();
 
         }

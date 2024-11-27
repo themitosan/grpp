@@ -119,7 +119,7 @@ async function grpp_loadSettings(){
             }
 
         } else {
-            console.warn(`WARN - Unable to load settings because this location isn\'t initialized! GRPP will initialize this folder before moving on...`);
+            createLogEntry(`WARN - Unable to load settings because this location isn\'t initialized! GRPP will initialize this folder before moving on...`, 'warn');
             grpp_initPath();
             resolve();
         }
@@ -176,7 +176,7 @@ export function grpp_removeRepo(path:string){
         delete grppSettings.repoEntries[path];
         grpp_saveSettings();
     } else {
-        createLogEntry(`WARN - Unable to find ${path} on repo database!`);
+        createLogEntry(`WARN - Unable to find ${path} on repo database!`, 'warn');
     }
 }
 
