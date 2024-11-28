@@ -244,8 +244,5 @@ Some code snippets from internet were used on this project. You can see all of t
 - [Original snippet to convert array in smaller chunks](https://stackabuse.com/how-to-split-an-array-into-even-chunks-in-javascript)
 - [Original snippet that clears console + history](https://github.com/lukeed/console-clear/blob/master/index.js)
 
-<sup>
 
-_Some parts of this software derivates from TMS Engine source code._
-
-</sup>
+<sup>_Some parts of this software derivates from TMS Engine source code._</sup>
