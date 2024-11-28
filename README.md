@@ -1,6 +1,6 @@
 <h1 align="center">
-    <img src="GRPP.png" alt="grpp_logo" width="150">
-    <br>Git Repo Preservation Project (GRPP)
+    <img src="GRPP.png" alt="grpp_logo" width="150"><br>
+    Git Repo Preservation Project (GRPP)
 </h1>
 
 Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this is a tool written in ts that aims to help importing / preserving git repos.
