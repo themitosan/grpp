@@ -191,7 +191,7 @@ export async function grpp_processBatchFile(id:number){
 
                 // Create / update current process result
                 const resFilePath = `${module_path.parse(batchFilePath).dir}/GRPP_BATCH_RES_${id}.json`;
-                module_fs.writeFileSync(resFilePath, JSON.stringify(grpp_updateResults, void 0, 4), 'utf-8');
+                module_fs.writeFileSync(resFilePath, JSON.stringify(grpp_updateResults), 'utf-8');
 
             });
 
@@ -247,7 +247,7 @@ async function startBatchUpdate(){
 
     // Split update list on given runners, create GRPP batch files and set total res files / queued repos vars
     const chunkList = spliceArrayIntoChunks(updateList, grppSettings.maxReposPerList);
-    module_fs.writeFileSync(`${tempDir}/GRPP_BATCH.json`, JSON.stringify({ batchList: chunkList }, void 0, 4), 'utf-8');
+    module_fs.writeFileSync(`${tempDir}/GRPP_BATCH.json`, JSON.stringify({ batchList: chunkList }), 'utf-8');
     totalResFiles = structuredClone(chunkList.length);
 
     // Clear console screen, create log entry and spawn processes
