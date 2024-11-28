@@ -50,7 +50,7 @@ sudo dnf install nodejs git
 ## How to build
 There are three ways of compiling GRPP: Easy mode, development mode or production mode.
 
-Also: You will need `npm` in order to compile GRPP.
+**Also**: You will need `npm` in order to compile GRPP.
 
 <a id="how-to-build-easy"></a>
 ### Easy mode
@@ -71,7 +71,7 @@ npm i && npm run webpack
 ```
 The compiled script will be on `Build` dir.
 
-**TIP**: You can also run `npm run dev` and `ts` will watch all changes on your code and will compile script on the go! In this case, the compiled script will be on `App` dir instead.
+**TIP**: You can also run `npm run dev` - `ts` will watch all changes on your code and will compile script on the go! In this case, the compiled script will be on `App` dir instead.
 
 In order to run GRPP, you will need to run like this:
 ```shell
