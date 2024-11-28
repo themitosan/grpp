@@ -1,0 +1,9 @@
+name: Development Build
+on:
+  push:
+    branches:
+    - main
+jobs:
+  build-linux-x64:
+    name: Build
+    uses: ./.github/workflows/build.yaml

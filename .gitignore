@@ -1,6 +1,7 @@
 #
 #   Git Repo Preservation Project (GRPP)
 #   Created by TheMitoSan (@themitosan.bsky.social)
+#
 #   .gitignore
 #
 
@@ -19,6 +20,7 @@ logs/
 repos/
 
 # General files
+*.inc
 *.txt
 *.tgz
 grpp.js

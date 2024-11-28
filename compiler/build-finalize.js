@@ -15,13 +15,16 @@ function start(){
         module_fs = require('fs'),
         packageJson = require('../package.json');
 
+    var currentHash = module_fs.readFileSync('hash.inc', 'utf-8');
+    if (currentHash.length === 0) currentHash = 'DIRTY';
+
     // Create final script
     const grppScript = `#!/usr/bin/env node
 /*
     Git repo preservation project (GRPP)
     Created by TheMitoSan (@themitosan.bsky.social)
 
-    Version: ${packageJson.version}
+    Version: ${packageJson.version} [Hash: ${currentHash}]
     Compiled at ${new Date().toString()}
 
     A classic quote from an old one: \"Quem guarda, tem!\"
