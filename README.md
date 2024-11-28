@@ -29,17 +29,17 @@ Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this i
 - [External code snippets used on this project](#external-code-snippets)
 
 ## Requirements
-- `git`, `npm` and latest `node` version installed.
+- `git` and latest `node` version installed.
 
 You can install all required packages by running some of the commands below:
 
 ```shell
 # Arch based distros <3
-sudo pacman -Sy nodejs npm git
+sudo pacman -Sy nodejs git
 
 # Ubuntu based distros
 sudo apt update
-sudo apt install nodejs npm git
+sudo apt install nodejs git
 
 # Fedora based distros
 sudo dnf update
@@ -49,6 +49,8 @@ sudo dnf install nodejs git
 <a id="how-to-build"></a>
 ## How to build
 There are three ways of compiling GRPP: Easy mode, development mode or production mode.
+
+Also: You will need `npm` in order to compile GRPP.
 
 <a id="how-to-build-easy"></a>
 ### Easy mode
