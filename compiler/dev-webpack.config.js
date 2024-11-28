@@ -8,6 +8,7 @@
 */
 
 const path = require('path');
+
 module.exports = {
     watch: !0,
     mode: 'development',
