@@ -24,7 +24,7 @@ function start(){
     Git repo preservation project (GRPP)
     Created by TheMitoSan (@themitosan.bsky.social)
 
-    Version: ${packageJson.version} [Hash: ${currentHash.replace(RegExp('\n', 'gi'), '')}]
+    Version: ${packageJson.version} [${currentHash.replace(RegExp('\n', 'gi'), '').slice(0, 6)}]
     Compiled at ${new Date().toString()}
 
     A classic quote from an old one: \"Quem guarda, tem!\"
