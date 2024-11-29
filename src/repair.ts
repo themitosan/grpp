@@ -37,6 +37,9 @@ interface pushError {
 
 var
 
+    // Remove counter
+    removeRepoCounter = 0,
+
     // Import sucess counter
     importSuccessCounter = 0,
 
@@ -90,7 +93,7 @@ export async function grpp_startRepairDatabase(){
             }
 
             // Log process complete and log display error details if had any
-            createLogEntry(`\nINFO - Repair process imported ${importSuccessCounter} repos, with ${errorList.length} errors.\n`);
+            createLogEntry(`\nINFO - Repair process imported ${importSuccessCounter} repos, removed ${removeRepoCounter} repos, with ${errorList.length} errors.\n`);
             if (errorList.length !== 0){
                 createLogEntry(`==> Import errors:`);
                 errorList.forEach(function(currentError:pushError){
@@ -175,7 +178,10 @@ async function grpp_removeRepoEntry(path:string){
         const readline = module_readline.createInterface({ input: process.stdin, output: process.stdout });
         readline.question(`WARN - It seems that ${path} does not exists!\nDo you want to remove this entry from database? [Y/n] `, function(answer){
             readline.close();
-            if (answer.toLowerCase() === 'y') grpp_removeRepo(path);
+            if (answer.toLowerCase() === 'y'){
+                grpp_removeRepo(path);
+                removeRepoCounter++;
+            }
             resolve();
         });
 
