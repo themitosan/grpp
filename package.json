@@ -15,17 +15,16 @@
 		"webpack": "clear && webpack --config ./compiler/build-webpack.config.js"
 	},
 	"devDependencies": {
-		"@types/ini": "^4.1.1",
 		"@types/node": "^22.8.4",
 		"ts-loader": "^9.5.1",
 		"webpack": "^5.95.0",
 		"webpack-cli": "^5.1.4"
 	},
 	"bugs": {
-		"url": "http://192.168.15.200:3000/juliana/grpp/issues"
+		"url": "https://github.com/themitosan/grpp/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "http://192.168.15.200:3000/juliana/grpp.git"
+		"url": "https://github.com/themitosan/grpp.git"
 	}
 }
