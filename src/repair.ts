@@ -93,7 +93,7 @@ export async function grpp_startRepairDatabase(){
             }
 
             // Log process complete and log display error details if had any
-            createLogEntry(`\nINFO - Repair process imported ${importSuccessCounter} repos, removed ${removeRepoCounter} repos, with ${errorList.length} errors.\n`);
+            createLogEntry(`\nINFO - Repair process imported ${importSuccessCounter} repos and removed ${removeRepoCounter} repos entries with ${errorList.length} errors.\n`);
             if (errorList.length !== 0){
                 createLogEntry(`==> Import errors:`);
                 errorList.forEach(function(currentError:pushError){
