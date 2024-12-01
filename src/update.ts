@@ -414,7 +414,7 @@ async function batchUpdateComplete(){
 
 ──┬ Processes: ${totalResFiles}
   ├ Update duration: ${converMsToHHMMSS(updateDurationMs)} [${updateDurationMs}ms]
-  ├ Total repos queued: ${totalReposQueued} [From ${Object.keys(grppSettings.repoEntries).length} on database, ${totalReposQueued} were queued]
+  ├ Total repos queued: ${totalReposQueued} [From ${Object.keys(grppSettings.repoEntries).length} on database, ${totalReposQueued} were queued and ${skippedRepos.length} were skipped]
   ├ Repos updated on this run: ${updateList.length}
   └ Error counter: ${errorList.length}`;
 
