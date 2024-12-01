@@ -22,6 +22,7 @@ import { enableSilentMode, grppSettings } from './main';
 
 import * as module_fs from 'fs';
 import * as module_dns from 'dns';
+import * as module_readLine from 'readline';
 import * as module_childProcess from 'child_process';
 
 /*
@@ -57,6 +58,17 @@ export const runExternalCommand_Defaults:Pick <runExternalCommandOptions, 'chdir
 /*
     Functions
 */
+
+/**
+    * Update console line
+    * @param x [number] Console X position
+    * @param y [number] Console Y position
+    * @param str [string] New line content 
+*/
+export function updateConsoleLine(x:number, y:number, str:string){
+    module_readLine.cursorTo(process.stdout, x, y);
+    process.stdout.write(str);
+}
 
 /**
     * Better clear console

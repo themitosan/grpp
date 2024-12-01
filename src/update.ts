@@ -13,7 +13,7 @@ import { grppRepoEntry } from './import';
 import { consoleTextStyle } from './database';
 import { grpp_displayMainLogo } from './utils';
 import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
-import { checkConnection, consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString } from './tools';
+import { checkConnection, consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString, updateConsoleLine } from './tools';
 
 /*
     Require node modules
@@ -311,36 +311,53 @@ function processBatchResFiles(){
         grpp_displayMainLogo(!0);
     }
 
-    // Process all files and check if they are valid JSON files
+    // Declare vars
+    var errorCounter = 0,
+        updateCounter = 0,
+        reposProcessed = 0,
+        processCompleteCounter = 0;
+
+    // Reset console color, print status and start processing all files
+    updateConsoleLine(0, 9, `${consoleTextStyle.reset}==> Status:\n`);
     for (var currentFile = 0; currentFile < totalResFiles; currentFile++){
 
-        // Get file path and check if it exists / is a valid JSON file
+        // Get file data and check if is a valid JSON
         const fileData = module_fs.readFileSync(`${tempDir}/GRPP_BATCH_RES_${currentFile}.json`, 'utf-8');
         if (isValidJSON(fileData) === !0){
 
-            // Declare ASCII vars
+            // Declare vars and consts
             var entryChar = '  ├',
                 checkboxChar = '[ ]',
                 enableLineBreak = '';
 
-            // Change vars if current file is the last one
+            // Change entry char if current file is the first one, declare batchResData and update counters
+            if (currentFile === 0) entryChar = '──┬';
+            const batchResData:batchUpdate_results = JSON.parse(fileData);
+            reposProcessed = (reposProcessed + batchResData.currentRepo);
+            errorCounter = (errorCounter + batchResData.errorList.length);
+            updateCounter = (updateCounter + batchResData.updateList.length);
+
+            // Update vars / overall process if is the last file
             if (currentFile === (totalResFiles - 1)){
                 entryChar = '  └';
                 enableLineBreak = '\n';
+                updateConsoleLine(0, 11, `──┬ Overall Progress: ${parsePercentage(reposProcessed, totalReposQueued)}% [${reposProcessed} of ${totalReposQueued}]`);
+                updateConsoleLine(0, 13, `  ├ Processes completed: ${processCompleteCounter}
+  ├ Update counter: ${consoleTextStyle.fgGreen}${updateCounter}${consoleTextStyle.reset}
+  └ Error counter: ${consoleTextStyle.fgRed}${errorCounter}${consoleTextStyle.reset}\n\n==> Process list:\n\n`);
             }
 
-            // Read current res file and updated elapsed time
-            const batchResData:batchUpdate_results = JSON.parse(fileData);
-            module_readLine.cursorTo(process.stdout, 0, 9);
-            process.stdout.write(`${consoleTextStyle.reset}──┬ Elapsed time: ${converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime))}`);
+            // Update entryChar if there is only one process and update elapsed time line
+            if (totalResFiles === 1) entryChar = '───';
+            updateConsoleLine(0, 12, `  ├ Elapsed time: ${converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime))}`);
 
-            // Check if process finished. If so, update checkbox char
-            if (batchResData.currentRepo > (batchResData.totalRepos - 1)) checkboxChar = '[✓]';
+            // Check if process finished. If so, update checkbox char and update each process line
+            if (batchResData.currentRepo > (batchResData.totalRepos - 1)){
+                checkboxChar = '[✓]';
+                processCompleteCounter++;
+            }
+            updateConsoleLine(0, (currentFile + 19), `${entryChar} ${checkboxChar} Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${consoleTextStyle.fgGreen}${batchResData.updateList.length}${consoleTextStyle.reset}, Errors: ${consoleTextStyle.fgRed}${batchResData.errorList.length}${consoleTextStyle.reset}${enableLineBreak}`);
 
-            // Move to current console line correspondent to each process and update line
-            module_readLine.cursorTo(process.stdout, 0, (currentFile + 10));
-            process.stdout.write(`${entryChar} ${checkboxChar} Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${consoleTextStyle.fgGreen}${batchResData.updateList.length}${consoleTextStyle.reset}, Errors: ${consoleTextStyle.fgRed}${batchResData.errorList.length}${consoleTextStyle.reset}${enableLineBreak}`);
-        
         }
 
     }
