@@ -311,11 +311,10 @@ function processBatchResFiles(){
         grpp_displayMainLogo(!0);
     }
 
-    // Declare vars
+    // Declare counter vars
     var errorCounter = 0,
         updateCounter = 0,
-        reposProcessed = 0,
-        processCompleteCounter = 0;
+        reposProcessed = 0;
 
     // Reset console color, print status and start processing all files
     updateConsoleLine(0, 9, `${consoleTextStyle.reset}==> Status:\n`);
@@ -325,7 +324,7 @@ function processBatchResFiles(){
         const fileData = module_fs.readFileSync(`${tempDir}/GRPP_BATCH_RES_${currentFile}.json`, 'utf-8');
         if (isValidJSON(fileData) === !0){
 
-            // Declare vars and consts
+            // Declare vars
             var entryChar = '  ├',
                 checkboxChar = '[ ]',
                 enableLineBreak = '';
@@ -342,8 +341,7 @@ function processBatchResFiles(){
                 entryChar = '  └';
                 enableLineBreak = '\n';
                 updateConsoleLine(0, 11, `──┬ Overall Progress: ${parsePercentage(reposProcessed, totalReposQueued)}% [${reposProcessed} of ${totalReposQueued}]`);
-                updateConsoleLine(0, 13, `  ├ Processes completed: ${processCompleteCounter}
-  ├ Update counter: ${consoleTextStyle.fgGreen}${updateCounter}${consoleTextStyle.reset}
+                updateConsoleLine(0, 13, `  ├ Update counter: ${consoleTextStyle.fgGreen}${updateCounter}${consoleTextStyle.reset}
   └ Error counter: ${consoleTextStyle.fgRed}${errorCounter}${consoleTextStyle.reset}\n\n==> Process list:\n\n`);
             }
 
@@ -354,9 +352,8 @@ function processBatchResFiles(){
             // Check if process finished. If so, update checkbox char and update each process line
             if (batchResData.currentRepo > (batchResData.totalRepos - 1)){
                 checkboxChar = '[✓]';
-                processCompleteCounter++;
             }
-            updateConsoleLine(0, (currentFile + 19), `${entryChar} ${checkboxChar} Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${consoleTextStyle.fgGreen}${batchResData.updateList.length}${consoleTextStyle.reset}, Errors: ${consoleTextStyle.fgRed}${batchResData.errorList.length}${consoleTextStyle.reset}${enableLineBreak}`);
+            updateConsoleLine(0, (currentFile + 18), `${entryChar} ${checkboxChar} Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${consoleTextStyle.fgGreen}${batchResData.updateList.length}${consoleTextStyle.reset}, Errors: ${consoleTextStyle.fgRed}${batchResData.errorList.length}${consoleTextStyle.reset}${enableLineBreak}`);
 
         }
 
