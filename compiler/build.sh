@@ -28,7 +28,7 @@ webpack --config ./compiler/build-webpack.config.js
 
 # Appending required node string in order to make it executable
 printf "\nINFO - Finalizing JS module..."
-node compiler/build-finalize.js
+node compiler/build-finalize.js --sha=$GITHUB_SHA
 
 # Move to Build dir, install dependencies and prune
 printf "\nINFO - Installing dependencies...\n"

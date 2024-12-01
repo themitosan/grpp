@@ -15,7 +15,11 @@ function start(){
         module_fs = require('fs'),
         packageJson = require('../package.json');
 
-    var currentHash = module_fs.readFileSync('hash.inc', 'utf-8');
+    // Get build hash
+    var currentHash = 'DIRTY';
+    process.argv.forEach(function(cArg){
+        if (cArg.indexOf('--sha=') !== -1) currentHash = cArg.replace('--sha=', '').slice(0, 6);
+    });
     if (currentHash.length === 0) currentHash = 'DIRTY';
 
     // Create final script
@@ -24,7 +28,7 @@ function start(){
     Git repo preservation project (GRPP)
     Created by TheMitoSan (@themitosan.bsky.social)
 
-    Version: ${packageJson.version} [${currentHash.replace(RegExp('\n', 'gi'), '').slice(0, 6)}]
+    Version: ${packageJson.version} [${currentHash}]
     Compiled at ${new Date().toString()}
 
     A classic quote from an old one: \"Quem guarda, tem!\"
