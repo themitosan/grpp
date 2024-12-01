@@ -6,9 +6,9 @@
 */
 
 /**
-    * Start process
+    * Main function
 */
-function start(){
+function main(){
 
     // Declare consts
     const
@@ -50,5 +50,5 @@ function start(){
 
 }
 
-// Start process
-start();
+// Start main function
+main();

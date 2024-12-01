@@ -36,6 +36,10 @@ cd Build
 npm i
 npm prune
 
+# Minify package-lock.json
+printf "\nINFO - Minifying package-lock.json\n"
+node ../compiler/build-minify.js
+
 # Create bundle file
 printf "\nINFO - Running npm pack...\n"
 npm pack

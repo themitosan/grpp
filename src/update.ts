@@ -350,9 +350,7 @@ function processBatchResFiles(){
             updateConsoleLine(0, 12, `  ├ Elapsed time: ${converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime))}`);
 
             // Check if process finished. If so, update checkbox char and update each process line
-            if (batchResData.currentRepo > (batchResData.totalRepos - 1)){
-                checkboxChar = '[✓]';
-            }
+            if (batchResData.currentRepo > (batchResData.totalRepos - 1)) checkboxChar = '[✓]';
             updateConsoleLine(0, (currentFile + 18), `${entryChar} ${checkboxChar} Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${consoleTextStyle.fgGreen}${batchResData.updateList.length}${consoleTextStyle.reset}, Errors: ${consoleTextStyle.fgRed}${batchResData.errorList.length}${consoleTextStyle.reset}${enableLineBreak}`);
 
         }
