@@ -99,7 +99,7 @@ sudo npm i -g grpp.tgz
 ```
 
 > [!IMPORTANT]\
-> You MUST run this command as `sudo`, since it will install grpp as a global package.
+> You MUST run this command as `sudo`, since it will install grpp as a global package. If you don't have sudo access (like rootless termux), you can run without `sudo` (or run `npm run bi-sudoless` to do everything automatically)
 
 If everything is fine, you will be able to call `grpp` system-wide.
 
