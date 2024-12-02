@@ -152,6 +152,16 @@ export async function grpp_startRepairDatabase(){
 
             });
 
+            // Check if current path exists are present on current database entry (Usually present on on GRPP version 1.0.0)
+            const repoPathWithCwd = `${process.cwd()}/repos/`;
+            if (currentRepo.indexOf(repoPathWithCwd) !== -1){
+
+                createLogEntry(`INFO - Updating repo entry from previous GRPP version: \"${currentRepo}\"`);
+                grpp_updateRepoData(currentRepo.replace(repoPathWithCwd, ''), currentRepoData);
+                grpp_removeRepo(currentRepo);
+
+            }
+
         });
 
         // Create log entry if any repo was fixed.

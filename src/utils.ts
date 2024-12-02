@@ -97,9 +97,9 @@ export function grpp_getRepoInfo(path:string){
 
         // Get repo data
         const 
-            fullPath:string = Object.keys(grppSettings.repoEntries)[repoIndex!],
+            fullPath = Object.keys(grppSettings.repoEntries)[repoIndex!],
             currentRepoData:grppRepoEntry = grppSettings.repoEntries[fullPath];
-        createLogEntry(`==> Repo info:\n\n${JSON.stringify(currentRepoData, null, 4)}\n`);
+        createLogEntry(`==> Repo info:\n\n${JSON.stringify(currentRepoData, void 0, 4)}\n`);
     
     });
 
