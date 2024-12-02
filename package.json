@@ -11,6 +11,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "clear && webpack --config ./compiler/dev-webpack.config.js",
 		"bi": "clear && npm run build && cd Build && sudo npm i -g grpp.tgz",
+		"bi-sudoless": "clear && npm run build && cd Build && npm i -g grpp.tgz && cd ..",
 		"build": "chmod +x compiler/build.sh && ./compiler/build.sh",
 		"webpack": "clear && webpack --config ./compiler/build-webpack.config.js"
 	},
