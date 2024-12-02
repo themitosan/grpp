@@ -10,7 +10,7 @@
 */
 
 import { grppRepoEntry, repoEntry_Defaults } from './import';
-import { grpp_removeRepo, grpp_updateRepoData, grppSettings } from './main';
+import { grpp_removeRepo, grpp_updateRepoData, grppSettings, repair_removeAllKeys } from './main';
 import { convertArrayToString, createLogEntry, execReasonListCheck, getDirTree, parseINI, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
 /*
@@ -174,16 +174,27 @@ export async function grpp_startRepairDatabase(){
 async function grpp_removeRepoEntry(path:string){
     return new Promise<void>(function(resolve){
 
-        // Declare readline const and check if user wants to remove repo entry
-        const readline = module_readline.createInterface({ input: process.stdin, output: process.stdout });
-        readline.question(`WARN - It seems that ${path} does not exists!\nDo you want to remove this entry from database? [Y/n] `, function(answer){
-            readline.close();
-            if (answer.toLowerCase() === 'y'){
-                grpp_removeRepo(path);
-                removeRepoCounter++;
-            }
+        // Remove repo function
+        const removeRepo = function(){
+            grpp_removeRepo(path);
+            removeRepoCounter++;
+        };
+
+        // Check if needs to ask if user wants to remove current key from database
+        if (repair_removeAllKeys === !1){
+
+            // Declare readline const and check if user wants to remove repo entry
+            const readline = module_readline.createInterface({ input: process.stdin, output: process.stdout });
+            readline.question(`WARN - It seems that ${path} does not exists!\nDo you want to remove this entry from database? [Y/n] `, function(answer){
+                readline.close();
+                if (answer.toLowerCase() === 'y') removeRepo();
+                resolve();
+            });
+
+        } else {
+            removeRepo();
             resolve();
-        });
+        }
 
     });
 }

@@ -9,8 +9,9 @@
 - `status` - Display GRPP status from a initialized dir.
 - `silent` - Only print errors on screen.
 - `saveSettings` - Use this option to update current settings file. Example: `grpp --setConnectionTestURL=1.1.1.1 --saveSettings` will set main connection test to cloudflare dns and save it to settings file.
-- `repair` - This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.
 - `exportRemotes` - Export all clone urls from previously imported git repos into a file (grpp_urls.txt)
+- `repair` - This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.
+- `removeAllKeys` - Add this option allong `--repair` flag to automatically remove all missing keys from database.
 
 ## Settings list
 

@@ -74,6 +74,9 @@ export var
     // Is silent mode active
     enableSilentMode = !1,
 
+    // Repair: remove all missing keys from database automatically
+    repair_removeAllKeys = !1,
+
     // App settings
     grppSettings:grppSettingsFile | any = { ...grppSettingsFile_Defaults };
 
@@ -212,6 +215,9 @@ async function init(){
 
         // Check if needs to enable silent mode
         if (currentFlag.indexOf('silent') !== -1) enableSilentMode = !0;
+
+        // Repair: Check if will remove all missing keys from database automatically
+        if (currentFlag.indexOf('removeAllKeys') !== -1) repair_removeAllKeys = !0;
 
         // Set max repos a batch file should have
         if (currentFlag.indexOf('maxReposPerList=') !== -1) tempSettings.maxReposPerList = preventMinMax(Math.floor(Number(currentFlag.replace('maxReposPerList=', ''))), 1, maxValue);
