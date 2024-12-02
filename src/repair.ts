@@ -219,7 +219,7 @@ async function grpp_repairAddMissingRepo(path:string){
             // Create vars
             const
                 gitConfig = parseINI(module_fs.readFileSync(configPath, 'utf-8')),
-                originalChdir = structuredClone(process.cwd()),
+                originalCwd = structuredClone(process.cwd()),
                 repoUrl = gitConfig['remote "origin"'].url,
                 urlData = repoUrl.split('/'),
                 repoName = urlData[urlData.length - 1],
@@ -239,10 +239,10 @@ async function grpp_repairAddMissingRepo(path:string){
             createLogEntry(`INFO - Importing missing repo: ${repoName} [${path}]`);
             await runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: path })
             .then(function(){
-                runExternalCommand(`git config --global --add safe.directory ${path}`, { ...runExternalCommand_Defaults, chdir: originalChdir });
+                runExternalCommand(`git config --global --add safe.directory ${path}`, { ...runExternalCommand_Defaults, chdir: originalCwd });
             })
             .then(function(){
-                grpp_updateRepoData(path, repoData);
+                grpp_updateRepoData(path.replace(process.cwd(), ''), repoData);
                 importSuccessCounter++;
                 resolve();
             });

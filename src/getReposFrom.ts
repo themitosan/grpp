@@ -12,7 +12,7 @@
 import { grppSettings } from './main';
 import { grpp_importBatch } from './import';
 import { grpp_displayMainLogo } from './utils';
-import { checkConnection, convertArrayToString, createLogEntry, execReasonListCheck, openOnTextEditor, trimString } from './tools';
+import { checkConnection, consoleClear, convertArrayToString, createLogEntry, execReasonListCheck, openOnTextEditor, trimString } from './tools';
 
 /*
     Require node modules
@@ -166,7 +166,8 @@ async function startUserFetch(urlBase:string){
 
         } catch (err:any) {
 
-            grpp_displayMainLogo(!0);
+            consoleClear(!0);
+            grpp_displayMainLogo();
             createLogEntry(`ERROR - Unable to fetch repo data!\nReason: ${err.message} [Status: ${err.status}]`, 'error');
             process.exit();
 
@@ -199,7 +200,8 @@ function processRepoChunk(resultArray:any[]){
     repoList = trimString(repoList);
 
     // Clear window and display info
-    grpp_displayMainLogo(!0);
+    consoleClear(!0);
+    grpp_displayMainLogo();
     readline.question(`INFO - GRPP managed to find ${resultArray.length} repos. Here is the full list:\n\n${repoList}\n\nHere is what you can do:\n\n    1) Import all repos (default)\n    2) Edit current list on text editor (${grppSettings.userEditor})\n    3) Save repo list on a file to import later\n    4) Cancel\n\nYour choice: `, function(userAction){
 
         // Close readline and switch user action
@@ -218,7 +220,8 @@ function processRepoChunk(resultArray:any[]){
 
             // Save file to import later
             case '3':
-                grpp_displayMainLogo(!0);
+                consoleClear(!0);
+                grpp_displayMainLogo();
                 module_fs.writeFileSync(fetchResPath, repoList, 'utf-8');
                 createLogEntry(`INFO - Process Complete!\nFile path: ${process.cwd()}/grpp_fetch_res.txt\n\nTo import repos from a file, use the following flag: \"--importList=PATH_TO_FILE\"\n`);
                 break;

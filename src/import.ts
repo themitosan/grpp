@@ -11,7 +11,7 @@
 
 import { grpp_updateRepoData } from './main';
 import { grpp_displayMainLogo } from './utils';
-import { convertArrayToString, createLogEntry, execReasonListCheck, runExternalCommand, runExternalCommand_Defaults } from './tools';
+import { consoleClear, convertArrayToString, createLogEntry, execReasonListCheck, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
 /*
     Require node modules
@@ -71,12 +71,11 @@ export async function grpp_startImport(cloneURL:string){
 
         // Create vars before checking if can continue
         const
-            date = new Date(),
             reasonList:string[] = [],
             urlData = cloneURL.split('/'),
             name = urlData[urlData.length - 1],
             owner = urlData[urlData.length - 2],
-            originalChdir = structuredClone(process.cwd()),
+            originalCwd = structuredClone(process.cwd()),
             repoPath = `${process.cwd()}/repos/${urlData[2]}/${owner}/${name}`;
 
         // Check conditions
@@ -96,17 +95,17 @@ export async function grpp_startImport(cloneURL:string){
                 isPriority: !1,
                 updateCounter: 0,
                 lastUpdatedOn: 'Never',
-                importDate: date.toString()
+                importDate: new Date().toString()
             };
 
             // Start creating directory structure
             createLogEntry('INFO - Creating directory structure...');
             [
-                `${process.cwd()}/repos`,
-                `${process.cwd()}/repos/${urlData[2]}`,
-                `${process.cwd()}/repos/${urlData[2]}/${owner}`
+                `repos`,
+                `repos/${urlData[2]}`,
+                `repos/${urlData[2]}/${owner}`
             ].forEach(function(cEntry){
-                if (module_fs.existsSync(cEntry) === !1) module_fs.mkdirSync(cEntry);
+                if (module_fs.existsSync(`${process.cwd()}/${cEntry}`) === !1) module_fs.mkdirSync(`${process.cwd()}/${cEntry}`);
             });
 
             // Start clone process
@@ -117,10 +116,10 @@ export async function grpp_startImport(cloneURL:string){
             })
             .then(function(){
                 createLogEntry(`INFO - Setting repo dir ${name} as safe...`);
-                runExternalCommand(`git config --global --add safe.directory ${repoPath}`, { ...runExternalCommand_Defaults, chdir: originalChdir });
+                runExternalCommand(`git config --global --add safe.directory ${repoPath}`, { ...runExternalCommand_Defaults, chdir: originalCwd });
             })
             .then(function(){
-                grpp_updateRepoData(repoPath, currentRepo);
+                grpp_updateRepoData(`${urlData[2]}/${owner}/${name}`, currentRepo);
                 createLogEntry(`\nINFO - Process complete!\nRepo path: ${repoPath}\n`);
                 resolve();
             });
@@ -137,7 +136,8 @@ export async function grpp_startImport(cloneURL:string){
 export async function grpp_importBatch(urlList:string){
 
     // Clear screen, create url array and start processing it
-    grpp_displayMainLogo(!0);
+    consoleClear(!0);
+    grpp_displayMainLogo();
     createLogEntry(`INFO - Starting clone process...\n`);
     const urlArray = urlList.split('\n');
     for (const url of urlArray){

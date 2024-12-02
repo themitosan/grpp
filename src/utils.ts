@@ -50,10 +50,8 @@ export function grpp_printStatus(){
 
 /**
     * Clear screen and display main logo
-    * @param clearHistory [boolean] Set true to clear console history
 */
-export function grpp_displayMainLogo(clearHistory:boolean = !1){
-    consoleClear(clearHistory);
+export function grpp_displayMainLogo(){
     createLogEntry(`
     <=====================================================>
     <=|       Git Repo Preservation Project (GRPP)      |=>
