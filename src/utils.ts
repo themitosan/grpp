@@ -51,7 +51,8 @@ export function grpp_printStatus(){
 /**
     * Clear screen and display main logo
 */
-export function grpp_displayMainLogo(){
+export function grpp_displayMainLogo(clear:boolean){
+    consoleClear(clear);
     createLogEntry(`
     <=====================================================>
     <=|       Git Repo Preservation Project (GRPP)      |=>

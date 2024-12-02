@@ -11,7 +11,7 @@
 
 import { grpp_getReposFrom } from './getReposFrom';
 import { grpp_startRepairDatabase } from './repair';
-import { consoleClear, createLogEntry, preventMinMax } from './tools';
+import { createLogEntry, preventMinMax } from './tools';
 import { grpp_importBatch, grpp_startImport, grppRepoEntry } from './import';
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from './update';
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_exportRemotes, grpp_getRepoInfo, grpp_printStatus } from './utils';
@@ -247,7 +247,7 @@ async function init(){
     }
 
     // Display main logo, create vars and check if needs to display help string
-    grpp_displayMainLogo();
+    grpp_displayMainLogo(!1);
     var execFn:Function | null = null;
     createLogEntry('==> Use \"--help\" for more details.\n');
 
@@ -259,8 +259,7 @@ async function init(){
 
         // Display help menu
         if (currentFlag.indexOf('help') !== -1){
-            consoleClear(!0);
-            grpp_displayMainLogo();
+            grpp_displayMainLogo(!0);
             grpp_displayHelp();
             break;
         }

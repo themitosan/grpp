@@ -11,7 +11,7 @@
 
 import { grpp_updateRepoData } from './main';
 import { grpp_displayMainLogo } from './utils';
-import { consoleClear, convertArrayToString, createLogEntry, execReasonListCheck, runExternalCommand, runExternalCommand_Defaults } from './tools';
+import { convertArrayToString, createLogEntry, execReasonListCheck, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
 /*
     Require node modules
@@ -136,8 +136,7 @@ export async function grpp_startImport(cloneURL:string){
 export async function grpp_importBatch(urlList:string){
 
     // Clear screen, create url array and start processing it
-    consoleClear(!0);
-    grpp_displayMainLogo();
+    grpp_displayMainLogo(!0);
     createLogEntry(`INFO - Starting clone process...\n`);
     const urlArray = urlList.split('\n');
     for (const url of urlArray){

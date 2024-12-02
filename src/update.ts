@@ -13,7 +13,7 @@ import { grppRepoEntry } from './import';
 import { consoleTextStyle } from './database';
 import { grpp_displayMainLogo } from './utils';
 import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
-import { checkConnection, consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString, updateConsoleLine } from './tools';
+import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString, updateConsoleLine } from './tools';
 
 /*
     Require node modules
@@ -253,8 +253,7 @@ async function grpp_startBatchUpdate(){
     totalResFiles = structuredClone(chunkList.length);
 
     // Clear console screen, create log entry and spawn processes
-    consoleClear(!0);
-    grpp_displayMainLogo();
+    grpp_displayMainLogo(!1);
     createLogEntry(`INFO - Starting GRPP Batch Update process... (Creating ${totalResFiles} processes, with at max. ${grppSettings.maxReposPerList} repos per list)`);
     for (var currentList = 0; currentList < totalResFiles; currentList++){
 
@@ -291,8 +290,7 @@ function startCheckBatchResFiles(){
             if (module_fs.existsSync(`${tempDir}/GRPP_BATCH_RES_${currentFile}.json`) === !0) availableFiles++;
         }
         if (availableFiles >= totalResFiles){
-            consoleClear(!0);
-            grpp_displayMainLogo();
+            grpp_displayMainLogo(!0);
             for (var currentFile = 0; currentFile < totalResFiles; currentFile++){
                 resWatcherList.push(module_fs.watch(`${tempDir}/GRPP_BATCH_RES_${currentFile}.json`, { recursive: !0 }, processBatchResFiles));
             }
@@ -311,8 +309,7 @@ function processBatchResFiles(){
     if (process.stdout.columns !== consoleDimensions.x || process.stdout.rows !== consoleDimensions.y){
         consoleDimensions.x = process.stdout.columns;
         consoleDimensions.y = process.stdout.rows;
-        consoleClear(!0);
-        grpp_displayMainLogo();
+        grpp_displayMainLogo(!0);
     }
 
     // Declare counter vars
@@ -445,8 +442,7 @@ async function batchUpdateComplete(){
     module_fs.writeFileSync(exportLogPath, `Git Repository Preservation Project [GRPP]\nCreated by TheMitoSan (@themitosan.bsky.social)\n\nLog created at ${time.toString()}\n\n${baseLog}\n\n${updateDetails}`, 'utf-8');
 
     // Clear screen, display update results and ask if user wants to open exported log
-    consoleClear(!0);
-    grpp_displayMainLogo();
+    grpp_displayMainLogo(!0);
     readLine.question(`INFO - Process complete!\n${baseLog}\n\nYou can see more details on gereated log file: ${exportLogPath}\n\nDo you want to open it? [Y/n] `, async function(answer){
 
         // Close readline and check if user wants to check update data
