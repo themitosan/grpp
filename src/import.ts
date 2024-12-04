@@ -11,7 +11,8 @@
 
 import { grpp_updateRepoData } from './main';
 import { grpp_displayMainLogo } from './utils';
-import { convertArrayToString, createLogEntry, execReasonListCheck, runExternalCommand, runExternalCommand_Defaults } from './tools';
+import { grpp_convertLangVar, langDatabase } from './lang';
+import { createLogEntry, execReasonListCheck, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
 /*
     Require node modules
@@ -79,12 +80,12 @@ export async function grpp_startImport(cloneURL:string){
             repoPath = `${process.cwd()}/repos/${urlData[2]}/${owner}/${name}`;
 
         // Check conditions
-        if (cloneURL.length === 0) reasonList.push('You must provide a git url to import!');
-        if (module_fs.existsSync(`${repoPath}/HEAD`) === !0) reasonList.push(`This repo already exists on filesystem!\nPath: ${repoPath}`);
-        if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`You can\'t import any repo while GRPP Update Process is running!`);
+        if (cloneURL.length === 0) reasonList.push(langDatabase.import.warnUnableCloneRepo_noUrl);
+        if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(langDatabase.import.warnUnableCloneRepo_updateRunning);
+        if (module_fs.existsSync(`${repoPath}/HEAD`) === !0) reasonList.push(grpp_convertLangVar(langDatabase.import.warnUnableCloneRepo_repoExists, [repoPath]));
 
         // Check if can continue
-        execReasonListCheck(reasonList, `WARN - Unable to clone repo!\nReason: ${convertArrayToString(reasonList)}\n`, async function(){
+        execReasonListCheck(reasonList, langDatabase.import.warnUnableCloneRepo, async function(){
 
             // Set current repo var
             currentRepo = {
@@ -99,7 +100,6 @@ export async function grpp_startImport(cloneURL:string){
             };
 
             // Start creating directory structure
-            createLogEntry('INFO - Creating directory structure...');
             [
                 `repos`,
                 `repos/${urlData[2]}`,
@@ -109,18 +109,19 @@ export async function grpp_startImport(cloneURL:string){
             });
 
             // Start clone process
+            createLogEntry(langDatabase.import.startCloneProcess);
             await runExternalCommand(`git clone ${cloneURL} --bare --mirror --progress`, { ...runExternalCommand_Defaults, chdir: `${process.cwd()}/repos/${urlData[2]}/${owner}` })
             .then(function(){
-                createLogEntry('INFO - Setting git config to fetch all refs from origin...');
+                createLogEntry(langDatabase.import.setGitFetchAllRefs);
                 runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: repoPath });
             })
             .then(function(){
-                createLogEntry(`INFO - Setting repo dir ${name} as safe...`);
+                createLogEntry(grpp_convertLangVar(langDatabase.import.setPathSafe, [name]));
                 runExternalCommand(`git config --global --add safe.directory ${repoPath}`, { ...runExternalCommand_Defaults, chdir: originalCwd });
             })
             .then(function(){
                 grpp_updateRepoData(`${urlData[2]}/${owner}/${name}`, currentRepo);
-                createLogEntry(`\nINFO - Process complete!\nRepo path: ${repoPath}\n`);
+                createLogEntry(grpp_convertLangVar(langDatabase.import.cloneProcessComplete, [name, repoPath]));
                 resolve();
             });
 
@@ -133,15 +134,14 @@ export async function grpp_startImport(cloneURL:string){
     * Import all repos from a list
     * @param urlList [string] string with urls to be imported
 */
-export async function grpp_importBatch(urlList:string){
+export async function grpp_batchImport(urlList:string){
 
-    // Clear screen, create url array and start processing it
+    // Clear screen, create url array and starrt clone process
     grpp_displayMainLogo(!0);
-    createLogEntry(`INFO - Starting clone process...\n`);
     const urlArray = urlList.split('\n');
     for (const url of urlArray){
         if (url.length > 0){
-            createLogEntry(`INFO - [${(urlArray.indexOf(url) + 1)} of ${urlArray.length}] Clonning URL: ${url}`);
+            createLogEntry(grpp_convertLangVar(langDatabase.import.batchCurrentRepo, [(urlArray.indexOf(url) + 1), urlArray.length, url]));
             await grpp_startImport(url);
         }
     }

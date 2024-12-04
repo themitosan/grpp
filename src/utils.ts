@@ -11,7 +11,7 @@
 
 import { grppSettings } from './main';
 import { grppRepoEntry } from './import';
-import { grpp_commandList, grpp_optionList } from './database';
+import { grpp_convertLangVar, langDatabase } from './lang';
 import { consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, trimString } from './tools';
 
 /*
@@ -20,6 +20,42 @@ import { consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, e
 
 import * as module_fs from 'fs';
 import * as module_os from 'os';
+
+/*
+    Variables
+*/
+
+/*
+    Console text style database
+    Source code: https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
+*/
+export const consoleTextStyle = {
+    'reset': "\x1b[0m",
+    'bright': "\x1b[1m",
+    'dim': "\x1b[2m",
+    'underline': "\x1b[4m",
+    'blink': "\x1b[5m",
+    'reverse': "\x1b[7m",
+    'hidden': "\x1b[8m",
+    'fgBlack': "\x1b[30m",
+    'fgRed': "\x1b[31m",
+    'fgGreen': "\x1b[32m",
+    'fgYellow': "\x1b[33m",
+    'fgBlue': "\x1b[34m",
+    'fgMagenta': "\x1b[35m",
+    'fgCyan': "\x1b[36m",
+    'fgWhite': "\x1b[37m",
+    'fgGray': "\x1b[90m",
+    'bgBlack': "\x1b[40m",
+    'bgRed': "\x1b[41m",
+    'bgGreen': "\x1b[42m",
+    'bgYellow': "\x1b[43m",
+    'bgBlue': "\x1b[44m",
+    'bgMagenta': "\x1b[45m",
+    'bgCyan': "\x1b[46m",
+    'bgWhite': "\x1b[47m",
+    'bgGray': "\x1b[100m"
+};
 
 /*
     Functions
@@ -38,13 +74,16 @@ export function grpp_printStatus(){
     });
 
     // Display status
-    createLogEntry(`==> GRPP Status:
-    Current path: ${process.cwd()}\n
-──┬ GRPP update run conter: ${grppSettings.runCounter}
-  ├ Last GRPP update run: ${grppSettings.lastRun}
-  ├ GRPP update runtime: ${converMsToHHMMSS(grppSettings.updateRuntime)} [${grppSettings.updateRuntime} ms]
-  ├ Repos preserved: ${repoList.length}
-  └ Disabled repos: ${disabledRepos} [${(repoList.length - disabledRepos)} will be queued on batch update]\n`);
+    createLogEntry(grpp_convertLangVar(langDatabase.utils.grppStatus, [
+        process.cwd(),
+        grppSettings.runCounter,
+        grppSettings.lastRun,
+        converMsToHHMMSS(grppSettings.updateRuntime),
+        grppSettings.updateRuntime,
+        repoList.length,
+        disabledRepos,
+        (repoList.length - disabledRepos)
+    ]));
 
 }
 
@@ -67,13 +106,13 @@ export function grpp_displayMainLogo(clear:boolean){
     * Display help menu
 */
 export function grpp_displayHelp(){
-    createLogEntry(`Hi ${module_os.userInfo().username} - hopes for a great day!\nAll options displayed below can be triggered by using \"-\", \"--\" or even \"/\" (without quotes).\n\n==> Function list:\n`);
-    Object.keys(grpp_commandList).forEach(function(currentFlag:any){
-        createLogEntry(`--${currentFlag}\n${grpp_commandList[currentFlag]}\n`);
+    createLogEntry(grpp_convertLangVar(langDatabase.utils.help.welcomeStr, [module_os.userInfo().username]));
+    Object.keys(langDatabase.utils.help.fnList).forEach(function(currentFlag:any){
+        createLogEntry(`--${currentFlag}\n${langDatabase.utils.helpFnList[currentFlag]}\n`);
     });
-    createLogEntry('==> Options list:\n');
-    Object.keys(grpp_optionList).forEach(function(currentFlag:any){
-        createLogEntry(`--${currentFlag}\n${grpp_optionList[currentFlag]}\n`);
+    createLogEntry(langDatabase.utils.help.optionStr);
+    Object.keys(langDatabase.utils.help.optionList).forEach(function(currentFlag:any){
+        createLogEntry(`--${currentFlag}\n${langDatabase.utils.help.optionList[currentFlag]}\n`);
     });
 }
 
@@ -88,19 +127,19 @@ export function grpp_getRepoInfo(path:string){
     var repoIndex:number | null = grpp_getRepoIndex(path);
 
     // Test conditions to not get repo data
-    if (path.length < 1) reasonList.push('You must provide repo path!');
-    if (repoIndex === null) reasonList.push(`Unable to find repo with provided path!`);
-    if (grppSettings.repoEntries.length < 1) reasonList.push('You must import any repo before using this option.');
-    if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`You can\'t execute this action while GRPP Update Process is running!`);
+    if (path.length < 1) reasonList.push(langDatabase.utils.getRepoInfo.errorUnableGetRepoInfo_pathEmpty);
+    if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(langDatabase.common.errorBatchUpdateRunning);
+    if (grppSettings.repoEntries.length < 1) reasonList.push(langDatabase.utils.getRepoInfo.errorUnableGetRepoInfo_noReposAvailable);
+    if (repoIndex === null) reasonList.push(grpp_convertLangVar(langDatabase.utils.getRepoInfo.errorUnableGetRepoInfo_repoNull, [path]));
 
     // Check if can get repo data
-    execReasonListCheck(reasonList, `ERROR - Unable to get repo info!\nReason: ${convertArrayToString(reasonList)}`, function(){
+    execReasonListCheck(reasonList, langDatabase.utils.getRepoInfo.errorUnableGetRepoInfo, function(){
 
         // Get repo data
         const 
             fullPath = Object.keys(grppSettings.repoEntries)[repoIndex!],
             currentRepoData:grppRepoEntry = grppSettings.repoEntries[fullPath];
-        createLogEntry(`==> Repo info:\n\n${JSON.stringify(currentRepoData, void 0, 4)}\n`);
+        createLogEntry(grpp_convertLangVar(langDatabase.utils.getRepoInfo.repoData, [JSON.stringify(currentRepoData, void 0, 4)]));
     
     });
 
@@ -148,7 +187,7 @@ export function grpp_exportRemotes(){
     Object.keys(grppSettings.repoEntries).forEach(function(currentRepo){
         res = `${res}${grppSettings.repoEntries[currentRepo].repoUrl}\n`;
     });
-    createLogEntry(`INFO - Saving repos url list...`);
+    createLogEntry(langDatabase.utils.exportRemotes);
     module_fs.writeFileSync(`${process.cwd()}/grpp_urls.txt`, trimString(res), 'utf-8');
 
 }

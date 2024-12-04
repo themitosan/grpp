@@ -10,7 +10,7 @@
 */
 
 import { grppRepoEntry } from './import';
-import { consoleTextStyle } from './database';
+import { consoleTextStyle } from './utils';
 import { grpp_displayMainLogo } from './utils';
 import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
 import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString, updateConsoleLine } from './tools';

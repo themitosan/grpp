@@ -21,12 +21,13 @@ if [ -d "Build" ]; then
     rm -rf Build
 fi
 mkdir Build
+mkdir Build/Lang
 
 # Build webpack
 echo "INFO - Running webpack..."
 webpack --config ./compiler/build-webpack.config.js
 
-# Appending required node string in order to make it executable
+# Finalize script file and copy / minimize lang files into build dir
 printf "\nINFO - Finalizing JS module..."
 node compiler/build-finalize.js --sha=$GITHUB_SHA
 

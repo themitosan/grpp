@@ -27,5 +27,6 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/themitosan/grpp.git"
-	}
+	},
+	"files": ["*"]
 }

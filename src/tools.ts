@@ -4,7 +4,7 @@
 
     tools.ts
 
-    Some functions from this file were ported from TMS Engine
+    Some functions from this file were ported from TMS Engine.
 */
 
 // Remove console restrictions
@@ -14,6 +14,7 @@ declare var console:any;
     Import TS modules
 */
 
+import { grpp_convertLangVar } from './lang';
 import { enableSilentMode, grppSettings } from './main';
 
 /*
@@ -205,7 +206,7 @@ export function execReasonListCheck(reasonList:string[], errorMsg:string, action
     if (reasonList.length === 0){
 		action();
 	} else {
-        createLogEntry(errorMsg, 'error');
+        createLogEntry(grpp_convertLangVar(errorMsg, reasonList), 'error');
         onError();
 	}
 }

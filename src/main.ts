@@ -12,7 +12,8 @@
 import { grpp_getReposFrom } from './getReposFrom';
 import { grpp_startRepairDatabase } from './repair';
 import { createLogEntry, preventMinMax } from './tools';
-import { grpp_importBatch, grpp_startImport, grppRepoEntry } from './import';
+import { grpp_convertLangVar, grpp_loadLang, langDatabase } from './lang';
+import { grpp_batchImport, grpp_startImport, grppRepoEntry } from './import';
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from './update';
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_exportRemotes, grpp_getRepoInfo, grpp_printStatus } from './utils';
 
@@ -24,11 +25,27 @@ import * as module_fs from 'fs';
 import * as module_os from 'os';
 
 /*
+    Special consts
+*/
+
+const
+
+    // App version
+    version = '[APP_VERSION]',
+
+    // App hash
+    hash = '[APP_HASH]',
+
+    // Compiled at
+    compiledAt = '[APP_BUILD_DATE]';
+
+/*
     Interfaces
 */
 
 // GRPP Settings file
 export interface grppSettingsFile {
+    version:number,
     lastRun:string,
     maxPages:number,
     repoEntries:any,
@@ -40,12 +57,18 @@ export interface grppSettingsFile {
     connectionTestURL:string
 }
 
+// GRPP User Settings
+export interface grppUserSettings {
+    lang:string
+}
+
 /*
     Defaults
 */
 
 // Default settings file
-export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage' | 'userEditor'> = {
+export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' | 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage' | 'userEditor'> = {
+    version,
     maxPages: 5,
     runCounter: 0,
     repoEntries: {},
@@ -57,19 +80,24 @@ export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'lastRun' |
     connectionTestURL: '1.1.1.1'
 }
 
+// Default user settings
+export const grppUserSettings_Defaults: Pick <grppUserSettings, 'lang'> = {
+    lang: 'en-us'
+}
+
 /*
     Variables
 */
 
 const 
 
-    // Settings max value
+    // Settings max number value
     maxValue = 99999,
 
     // Temp settings to be appended on main settings file
     tempSettings:grppSettingsFile | any = {};
 
-export var 
+export var
 
     // Is silent mode active
     enableSilentMode = !1,
@@ -77,7 +105,10 @@ export var
     // Repair: remove all missing keys from database automatically
     repair_removeAllKeys = !1,
 
-    // App settings
+    // User settings
+    grppUserSettings:grppUserSettings = { ...grppUserSettings_Defaults },
+
+    // Database settings
     grppSettings:grppSettingsFile | any = { ...grppSettingsFile_Defaults };
 
 /*
@@ -122,7 +153,7 @@ async function grpp_loadSettings(){
             }
 
         } else {
-            createLogEntry(`WARN - Unable to load settings because this location isn\'t initialized! GRPP will initialize this folder before moving on...`, 'warn');
+            createLogEntry(langDatabase.main.warnPathNotInit, 'warn');
             grpp_initPath();
             resolve();
         }
@@ -136,6 +167,7 @@ async function grpp_loadSettings(){
 export async function grpp_saveSettings(){
     try {
         module_fs.writeFileSync(`${process.cwd()}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
+        module_fs.writeFileSync(`${module_os.userInfo().homedir}/.config/grpp/user_settings.json`, JSON.stringify(grppUserSettings));
     } catch (err) {
         throw err;
     }
@@ -203,9 +235,43 @@ function checkFlagIsValid(arg:string):string {
 }
 
 /**
+    * Load user settings 
+*/
+function loadUserSettings(){
+
+    // Check if user settings file / path exists
+    const userSettingsFilePath = `${module_os.userInfo().homedir}/.config/grpp/user_settings.json`;
+    if (module_fs.existsSync(userSettingsFilePath) === !1){
+
+        // Try creating path and user settings file
+        try {
+
+            [
+                `${module_os.userInfo().homedir}/.config`,
+                `${module_os.userInfo().homedir}/.config/grpp`
+            ].forEach(function(path){
+                if (module_fs.existsSync(path) === !1) module_fs.mkdirSync(path);
+            });
+            module_fs.writeFileSync(userSettingsFilePath, JSON.stringify(grppUserSettings));
+
+        } catch (err) {
+            throw err;
+        }
+
+    } else {
+        grppUserSettings = JSON.parse(module_fs.readFileSync(userSettingsFilePath, 'utf-8'));
+    }
+
+}
+
+/**
     * GRPP main function
 */
 async function init(){
+
+    // Load user settings and lang
+    loadUserSettings();
+    await grpp_loadLang();
 
     /*
         Process settings flags
@@ -243,13 +309,13 @@ async function init(){
             process.chdir(newPath);
 
         }
-
     }
 
-    // Display main logo, create vars and check if needs to display help string
+    // Display main logo, version and create execFn var
     grpp_displayMainLogo(!1);
+    createLogEntry(grpp_convertLangVar(langDatabase.main.version, [version, hash, compiledAt]));
+    createLogEntry(langDatabase.main.knowMore);
     var execFn:Function | null = null;
-    createLogEntry('==> Use \"--help\" for more details.\n');
 
     /*
         Process functions flags
@@ -311,7 +377,7 @@ async function init(){
         // Import repo from list
         if (currentFlag.indexOf('importList=') !== -1){
             execFn = function(){
-                grpp_importBatch(module_fs.readFileSync(currentFlag.replace('importList=', ''), 'utf-8'));
+                grpp_batchImport(module_fs.readFileSync(currentFlag.replace('importList=', ''), 'utf-8'));
             }
         }
 
@@ -361,7 +427,7 @@ async function init(){
     }
 
     // Check if no flags were provided
-    if (execFn === null && process.argv.length < 3) createLogEntry(`==> Since no args / flags were provided, We wish someone called ${module_os.userInfo().username} a great day! <3\n`);
+    if (execFn === null && process.argv.length < 3) createLogEntry(grpp_convertLangVar(langDatabase.main.noArgsProvided, [module_os.userInfo().username]));
 
 }
 

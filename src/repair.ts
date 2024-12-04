@@ -9,6 +9,7 @@
     Import TS modules
 */
 
+import { grpp_convertLangVar, langDatabase } from './lang';
 import { grppRepoEntry, repoEntry_Defaults } from './import';
 import { grpp_removeRepo, grpp_updateRepoData, grppSettings, repair_removeAllKeys } from './main';
 import { convertArrayToString, createLogEntry, execReasonListCheck, getDirTree, parseINI, runExternalCommand, runExternalCommand_Defaults } from './tools';
@@ -57,10 +58,10 @@ export async function grpp_startRepairDatabase(){
 
     // Declare vars and check if GRPP update is running
     const reasonList:string[] = [];
-    if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`You can\'t execute this action while GRPP Update Process is running!`);
+    if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(grpp_convertLangVar(langDatabase.common.errorBatchUpdateRunning));
 
     // Check if can start repair process
-    execReasonListCheck(reasonList, `WARN: Unable to perform GRPP repair!\nReason: ${convertArrayToString(reasonList)}`, async function(){
+    execReasonListCheck(reasonList, langDatabase.repair.warnUnablePerformRepair, async function(){
 
         /*
             Check for missing repo entries on grpp_settings.json
@@ -73,7 +74,7 @@ export async function grpp_startRepairDatabase(){
             tempList = getDirTree(`${process.cwd()}/repos`, '.git');
 
         // Filter git folders
-        createLogEntry(`INFO - Checking database files...`);
+        createLogEntry(langDatabase.repair.infoCheckDatabaseFiles);
         tempList.forEach(function(currentFolder){
             if (currentFolder.toLowerCase().indexOf('.git') !== -1) scanList.push(currentFolder);
         });
@@ -82,7 +83,7 @@ export async function grpp_startRepairDatabase(){
         if (scanList.length !== repoList.length){
 
             // Create log entry and start processing repo list
-            createLogEntry(`WARN - Repo counter mismatch! [${repoList.length} on database vs. ${scanList.length} found on current scan]\nStarting repair process...\n\n(Depending of how many repos are available, this may take a while!)\n`, 'warn');
+            createLogEntry(grpp_convertLangVar(langDatabase.repair.databaseLengthMismatch, [repoList.length, scanList.length]), 'warn');
             for (const currentRepo in scanList){
                 if (repoList.indexOf(scanList[currentRepo]) === -1) await grpp_repairAddMissingRepo(scanList[currentRepo]);
             }
@@ -93,11 +94,11 @@ export async function grpp_startRepairDatabase(){
             }
 
             // Log process complete and log display error details if had any
-            createLogEntry(`\nINFO - Repair process imported ${importSuccessCounter} repos and removed ${removeRepoCounter} repos entries with ${errorList.length} errors.\n`);
+            createLogEntry(grpp_convertLangVar(langDatabase.repair.importRemoveStatus, [importSuccessCounter, removeRepoCounter, errorList.length]));
             if (errorList.length !== 0){
-                createLogEntry(`==> Import errors:`);
+                createLogEntry(langDatabase.repair.importRemoveError);
                 errorList.forEach(function(currentError:pushError){
-                    createLogEntry(`Repo: ${currentError.repo}\nDetails: ${currentError.err}\n`);
+                    createLogEntry(grpp_convertLangVar(langDatabase.repair.importRemoveDetails, [currentError.repo, currentError.err]));
                 });
             }
 
@@ -113,7 +114,7 @@ export async function grpp_startRepairDatabase(){
             fixedRepos:string[] = [];
 
         // Create log entry and start processing repos
-        createLogEntry(`INFO - Checking missing keys on repos entries...`);
+        createLogEntry(langDatabase.repair.infoCheckMissingKeys);
         Object.keys(grppSettings.repoEntries).forEach(function(currentRepo){
 
             // Get current repo data and check all keys
@@ -124,7 +125,7 @@ export async function grpp_startRepairDatabase(){
                 if (currentRepoData[currentKey as keyof typeof currentRepoData] === void 0){
 
                     // Create log entry, add missing key to current repo and update it's data
-                    createLogEntry(`INFO - Adding missing key \"${currentKey}\" to ${currentRepo}...`);
+                    createLogEntry(grpp_convertLangVar(langDatabase.repair.infoAddMissingKey, [currentKey, currentRepo]));
                     currentRepoData[currentKey as keyof typeof currentRepoData] = repoEntry_Defaults[currentKey as keyof typeof repoEntry_Defaults];
                     grpp_updateRepoData(currentRepo, currentRepoData);
 
@@ -141,7 +142,7 @@ export async function grpp_startRepairDatabase(){
 
                 if (repoEntry_Defaults[currentKey as keyof typeof repoEntry_Defaults] === void 0){
 
-                    createLogEntry(`INFO - Removing deprecated key from ${currentRepo}: ${currentKey}`);
+                    createLogEntry(grpp_convertLangVar(langDatabase.repair.infoRemoveKey, [currentRepo, currentKey]));
                     delete currentRepoData[currentKey];
                     grpp_updateRepoData(currentRepo, currentRepoData);
 
@@ -156,7 +157,7 @@ export async function grpp_startRepairDatabase(){
             const repoPathWithCwd = `${process.cwd()}/repos/`;
             if (currentRepo.indexOf(repoPathWithCwd) !== -1){
 
-                createLogEntry(`INFO - Updating repo entry from previous GRPP version: \"${currentRepo}\"`);
+                createLogEntry(grpp_convertLangVar(langDatabase.repair.removePathFromKey, [currentRepo]));
                 grpp_updateRepoData(currentRepo.replace(repoPathWithCwd, ''), currentRepoData);
                 grpp_removeRepo(currentRepo);
 
@@ -165,12 +166,12 @@ export async function grpp_startRepairDatabase(){
         });
 
         // Create log entry if any repo was fixed.
-        if (fixedRepos.length !== 0) createLogEntry(`INFO - GRPP added ${addedMissingKeys} missing keys and removed ${removeDeprecatedKeys} deprecated keys on ${fixedRepos.length} repos.`);
+        if (fixedRepos.length !== 0) createLogEntry(grpp_convertLangVar(langDatabase.repair.infoAddRemoveKeys, [addedMissingKeys, removeDeprecatedKeys, fixedRepos.length]));
 
         /*
             Process complete
         */
-        createLogEntry(`INFO - Repair complete!\n`);
+        createLogEntry(langDatabase.repair.infoRepairComplete);
 
     });
 
@@ -195,9 +196,9 @@ async function grpp_removeRepoEntry(path:string){
 
             // Declare readline const and check if user wants to remove repo entry
             const readline = module_readline.createInterface({ input: process.stdin, output: process.stdout });
-            readline.question(`WARN - It seems that ${path} does not exists!\nDo you want to remove this entry from database? [Y/n] `, function(answer){
+            readline.question(grpp_convertLangVar(langDatabase.repair.confirmRemoveRepoDatabase, [path]), function(answer){
                 readline.close();
-                if (answer.toLowerCase() === 'y') removeRepo();
+                if (answer.toLowerCase() === langDatabase.common.confirmChar) removeRepo();
                 resolve();
             });
 
@@ -220,7 +221,7 @@ async function grpp_repairAddMissingRepo(path:string){
         var configPath = `${path}/config`;
         if (module_fs.existsSync(`${path}/.git/config`) === !0){
             configPath = `${path}/.git/config`;
-            createLogEntry(`WARN - It seems that ${module_path.parse(path).name}.git is not on bare format!`, 'warn');
+            createLogEntry(grpp_convertLangVar(langDatabase.repair.warnRepoNotBare, [module_path.parse(path).name]), 'warn');
         }
 
         // Check if config file exists
@@ -246,7 +247,7 @@ async function grpp_repairAddMissingRepo(path:string){
                 };
 
             // Create log entry and start import process
-            createLogEntry(`INFO - Importing missing repo: ${repoName} [${path}]`);
+            createLogEntry(grpp_convertLangVar(langDatabase.repair.importMissingRepo, [repoName, path]));
             await runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: path })
             .then(function(){
                 runExternalCommand(`git config --global --add safe.directory ${path}`, { ...runExternalCommand_Defaults, chdir: originalCwd });
@@ -260,7 +261,7 @@ async function grpp_repairAddMissingRepo(path:string){
         } else {
 
             // Create error msg, log, push error and resolve
-            pushError(path, `Unable to read data from ${module_path.parse(path).name}.git because config file doesn\'t exists!\nGRPP will remove this repo entry from database...`);
+            pushError(path, grpp_convertLangVar(langDatabase.repair.errorConfigFileNotExists, [module_path.parse(path).name]));
             grpp_removeRepo(path);
             resolve();
 
@@ -275,7 +276,7 @@ async function grpp_repairAddMissingRepo(path:string){
     * @param err [string] Error details
 */
 function pushError(repo:string, err:string){
-    createLogEntry(`WARN - ${err}`, 'warn');
+    createLogEntry(grpp_convertLangVar(langDatabase.repair.pushErrorWarn, [err]), 'warn');
     errorList.push({ repo, err });
 }
 
