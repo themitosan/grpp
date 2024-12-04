@@ -8,7 +8,7 @@
     "main": {
         "warnPathNotInit": "AVISO - Não foi possível carregar as configurações por que esse diretório não foi inicializado! GRPP irá inicializar antes de continuar...",
         "version": "Versão: %VAR_0% [%VAR_1%]\nCompilado em %VAR_2%\n",
-        "knowMore": "==> Use \"--help\" para saber mais detalhes.\n",
+        "knowMore": "==> Use o argumento \"--help\" para obter mais informações.\n",
         "noArgsProvided": "==> Visto que nenhum argumento foi passado, desejamos que uma bela pessoa chamada %VAR_0% tenha um ótimo dia! <3\n",
 
         "unableGetNpmRootPath": "ERRO - Não foi possível obter o local de instalação global do NPM!\nMotivo: %VAR_0%",
@@ -17,35 +17,35 @@
 
     "getReposFrom": {
 
-        "errorUnableSeekUserRepos": "ERRO - Unable to seek repos!\nMotivo: %VAR_0%",
-        "errorUnableSeekUserRepos_noUserName": "You must provide a username!",
+        "errorUnableSeekUserRepos": "ERRO - Não foi possível procurar repositórios!\nMotivo: %VAR_0%",
+        "errorUnableSeekUserRepos_noUserName": "Você precisa informar o nome do usuário!",
 
-        "questionReposHost": "Please specify where \"%VAR_0%\" repos are hosted:\n\n    1) GitHub (default)\n    2) GitLab\n    3) Gitea based server\n\nAnswer: ",
-        "questionGiteaUrl": "\nPlease, insert base domain where gitea server is hosted (Example: \"192.168.1.150:3000\")\nURL: ",
+        "questionReposHost": "Por favor, especifique onde os repositórios de \"%VAR_0%\" estão hosteados:\n\n    1) GitHub (padrão)\n    2) GitLab\n    3) Gitea based server\n\nResposta: ",
+        "questionGiteaUrl": "\nPor favor, insira a URL base onde o servidor Gitea está hosteado (Exemplo: \"192.168.1.150:3000\")\nURL: ",
 
-        "errorNoReposAvailable": "No repos available for this user.",
-        "errorFetchNotOk": "ERRO - Unable to fetch repo data!\nMotivo: %VAR_0% [Status: %VAR_1%]",
+        "errorNoReposAvailable": "Esse usuário não tem repositórios.",
+        "errorFetchNotOk": "ERRO - Não foi possível obter dados do repositório!\nMotivo: %VAR_0% [Status: %VAR_1%]",
 
-        "infoFetchUrl": "INFO - Fetching URL: %VAR_0%",
+        "infoFetchUrl": "INFO - Obtendo lista de repositórios: %VAR_0%",
 
-        "questionFetchRepoList": "INFO - GRPP managed to find %VAR_0% repos. Here is the full list:\n\n%VAR_1%\n\nHere is what you can do:\n\n    1) Import all repos (default)\n    2) Edit current list on text editor (%VAR_2%)\n    3) Save repo list on a file to import later\n    4) Cancel\n\nYour choice: ",
-        "saveFileImportLater": "INFO - Process Complete!\nFile path: %VAR_0%/grpp_fetch_res.txt\n\nTo import repos from a file, use the following flag: \"--importList=PATH_TO_FILE\"\n"
+        "questionFetchRepoList": "INFO - GRPP conseguiu encontrar %VAR_0% repositórios. Veja a lista abaixo:\n\n%VAR_1%\n\nO que você pretende fazer?\n\n    1) Importar todos os repositórios (Padrão)\n    2) Editar a lista de repositórios (%VAR_2%)\n    3) Salvar lista em um arquivo para importar depois\n    4) Cancelar\n\nSua ação: ",
+        "saveFileImportLater": "INFO - Processo concluído!\nCaminho: %VAR_0%/grpp_fetch_res.txt\n\nPara importar repositórios a partir de um arquivo de texto, use a opção \"--importList=PATH_TO_FILE\"\n"
 
     },
 
     "import": {
 
-        "startCloneProcess": "INFO - Staring clone process...",
-        "setGitFetchAllRefs": "INFO - Setting git config remote to fetch all refs from origin...",
-        "setPathSafe": "INFO - GRPP will set %VAR_0% path as safe...",
-        "cloneProcessComplete": "\nINFO - Process complete!\nRepo name: %VAR_0%\nPath: %VAR_1%\n",
+        "startCloneProcess": "INFO - Iniciando processo de clonagem...",
+        "setGitFetchAllRefs": "INFO - Informando ao git para que obtenha todas as refs de origin...",
+        "setPathSafe": "INFO - GRPP irá configurar %VAR_0% como repositório seguro...",
+        "cloneProcessComplete": "\nINFO - Processo concluído!\nNome: %VAR_0%\nCaminho: %VAR_1%\n",
 
-        "batchCurrentRepo": "INFO - [%VAR_0% of %VAR_1%] Clonning URL: %VAR_2%",
+        "batchCurrentRepo": "INFO - [%VAR_0% de %VAR_1%] Clonando repositório: %VAR_2%",
 
-        "warnUnableCloneRepo": "AVISO - Unable to clone repo!\nMotivo: %VAR_0%\n",
-        "warnUnableCloneRepo_noUrl": "You must provide a git url to import!",
-        "warnUnableCloneRepo_repoExists": "This repo already exists on filesystem!\nPath: %VAR_0%",
-        "warnUnableCloneRepo_updateRunning": "You can't import any repo while GRPP Update Process is running!"
+        "warnUnableCloneRepo": "AVISO - Não foi possível clonar repositório!\nMotivo: %VAR_0%\n",
+        "warnUnableCloneRepo_noUrl": "Se faz necessário providenciar uma URL para ser clonada!",
+        "warnUnableCloneRepo_repoExists": "Esse repositório já existe!\nCaminho: %VAR_0%",
+        "warnUnableCloneRepo_updateRunning": "Você não pode importar nenhum repositório enquando o processo de atualização estiver em andamento!"
 
     },
 
@@ -53,136 +53,133 @@
 
         "help": {
 
-            "welcomeStr": "Hi %VAR_0% - hopes for a great day!\nAll options displayed below can be triggered by using \"-\", \"--\" or even \"/\" (without quotes).\n\n==> Function list:\n",
-            "fnArgsStr": "==> Functions with args:\n",
-            "settingsStr": "==> Settings list:\n",
+            "welcomeStr": "Olá %VAR_0% - Espero que tenha um bom dia / tarde / noite!\nTodas as opções podem ser chamadas usando \"-\", \"--\" ou até \"/\" (sem aspas).\n\n==> Lista de funções:\n",
+            "fnArgsStr": "==> Funções com argumentos:\n",
+            "settingsStr": "==> Lista de configurações:\n",
 
             "fnList": {
-                "help": "Display this menu.",
-                "updateAll": "Update all imported repos",
-                "status": "Display GRPP status from a initialized dir.",
-                "silent": "Only print errors on screen.",
-                "exportRemotes": "Export all clone urls from previously imported git repos into a file (grpp_urls.txt)",
-                "repair": "This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.",
-                "removeAllKeys": "Add this option along \"--repair\" flag to automatically remove all missing keys from database.",
-                "langList": "List all available languages GRPP can be displayed."
+                "help": "Mostra esse menu.",
+                "updateAll": "(Atualização global) GRPP irá tentar atualizar todos os repositórios que foram préviamente importados, excluindo aqueles que foram desabilitados.",
+                "status": "Mostra informações de uma pasta GRPP inicializada.",
+                "silent": "Apenas mostra erros na tela.",
+                "exportRemotes": "Exporta uma lista com todas URL's de repositórios préviamente clonados em um arquivo (grpp_urls.txt)",
+                "repair": "GRPP irá procurar por erros nos repositórios, anexando qualquer repositório que não esteja no banco de dados, removendo itens que não se fazem presente no banco de dados (ou no sistema) e etc.",
+                "removeAllKeys": "Use juto do argumento \"--repair\" para remover todos os itens que não se fazem presentes no banco de dados. (USE COM CUIDADO!)",
+                "langList": "Liste todos os idiomas no qual GRPP pode ser executado."
             },
 
             "fnArgsList": {
-                "init=[PATH]": "Set a location where GRPP will initialize and backup your repos.\nYou can also just use \"--init\" to initialize where you currently are!",
-                "import=[GIT_URL]": "Imports a git repository to database.",
-                "importList=[PATH]": "Import a list of git repositories from a text file.",
-                "path=[PATH]": "Set GRPP current working directory.",
-                "update=[PATH]": "Updates a previously imported repo.",
-                "getReposFrom=[USERNAME]": "Attempts to get all repos from a specified user.",
-                "getRepoData=[PATH]": "Get information about a previously imported repo."
+                "init=[PATH]": "Informa aonde GRPP deve inicializar / guardar os repositórios.\nVocê pode apenas user \"--init\" para inicializar a pasta atual!",
+                "import=[GIT_URL]": "Importa (clona) o repositório especificado para o sistema.",
+                "importList=[PATH]": "Importa (clona) todos os repositórios de um arquivo de texto.",
+                "path=[PATH]": "Especifica aonde GRPP deve operar.",
+                "update=[PATH]": "Atualiza um repositório previamente importado.",
+                "getReposFrom=[USERNAME]": "Tenta obter todos os repositórios de um usuário, tendo como possibilidade importa-los ao sistema.",
+                "getRepoData=[PATH]": "Obtem informações a respeito de um repositório previamente importado.",
+                "processBatchFile=[NUMBER]": "Carrega uma lista de repositórios a serem atualizados, gerado pelo processo de atualização (\"--updateAll\").\nIMPORTANTE: É recomendado que não utilize essa opção de forma manual."
             },
 
             "settingsList": {
-                "setLang=[LANG]": "Set which language GRPP should be displayed. You can see the lang available list by using \"--langList\" option.",
-                "maxReposPerList=[NUMBER]": "Set how many repos a GRPP Batch Update list should have.",
-                "setStartPage=[NUMBER]": "Set which page GRPP should start fetching user repos from git hosting website.",
-                "setMaxFetchPages=[NUMBER]": "Set maximum of pages GRPP will fetch from remote on get user repos process.",
-                "setConnectionTestURL=[URL]": "Set URL which GRPP will use to test internet connection.",
-                "processBatchFile=[NUMBER]": "Loads and updates all repos from a file created by \"--updateAll\" option.",
-                "setEditor=[EDITOR]": "Set which text editor GRPP should use to open text files. (Default: nano)"
+                "setLang=[LANG]": "Altera qual idimoa GRPP será exibido. Você pode ver a lista de idiomas disponíveis usando o argumento \"--langList\".",
+                "maxReposPerList=[NUMBER]": "Informa quantos repositórios cada processo deverá ter quando GRPP for atualizar.",
+                "setStartPage=[NUMBER]": "Informa qual página GRPP deve começar a listar os repositórios de usuário.",
+                "setMaxFetchPages=[NUMBER]": "Informa o número máximo de paginas com repositórios que GRPP deve obter ao procurar repositórios de um usuário.",
+                "setConnectionTestURL=[URL]": "Informa qual URL será usada para testar a conexão de internet.",
+                "setEditor=[EDITOR]": "Informa qual editor de texto GRPP deverá usar para abrir arquivos de texto. (Padrão: nano)"
             }
 
         },
 
         "getRepoInfo": {
-
-            "errorUnableGetRepoInfo": "ERRO - Unable to get repo info!\nMotivo: %VAR_0%\n",
-            "errorUnableGetRepoInfo_pathEmpty": "You must provide repo path!",
-            "errorUnableGetRepoInfo_repoNull": "Unable to find repo: %VAR_0%",
-            "errorUnableGetRepoInfo_noReposAvailable": "You must import any repo before using this option.",
-
-            "repoData": "==> Repo data:\n\n%VAR_0%\n"
-
+            "errorUnableGetRepoInfo": "ERRO - Não foi possível obter informações do repositório!\nMotivo: %VAR_0%\n",
+            "errorUnableGetRepoInfo_pathEmpty": "Você precisa informar o caminho do repositório!",
+            "errorUnableGetRepoInfo_repoNull": "Não foi possível encontrar o repositório: %VAR_0%",
+            "errorUnableGetRepoInfo_noReposAvailable": "Você precisa importar pelo menos um repositório antes de usar essa opção.",
+            "repoData": "==> Status do repositório:\n\n%VAR_0%\n"
         },
 
-        "exportRemotes": "INFO - Saving repos URL list...",
-        "grppStatus": "==> GRPP Status:\n    Current path: %VAR_0%\n\n──┬ GRPP update run conter: %VAR_1%\n  ├ Last GRPP update run: %VAR_2%\n  ├ GRPP update runtime: %VAR_3% [%VAR_4% ms]\n  ├ Repos preserved: %VAR_5%\n  └ Disabled repos: %VAR_6% [%VAR_7% will be queued on batch update]\n"
+        "exportRemotes": "INFO - Gravando lista de repositórios...",
+        "grppStatus": "==> Status de GRPP:\n    Local: %VAR_0%\n\n──┬ Número de atualizações globais: %VAR_1%\n  ├ Última atualização global: %VAR_2%\n  ├ Tempo total atualizando: %VAR_3% [%VAR_4% ms]\n  ├ Repositórios preservados: %VAR_5%\n  └ Repositórios desabilitados: %VAR_6% [%VAR_7% serão atualizados na próxima atualização global]\n"
 
     },
 
     "repair": {
 
-        "warnUnablePerformRepair": "AVISO - Unable to perform repair!\nMotivo: %VAR_0%",
+        "warnUnablePerformRepair": "AVISO - Não foi possível realizar reparo!\nMotivo: %VAR_0%",
 
-        "infoCheckDatabaseFiles": "INFO - Checking database files...",
+        "infoCheckDatabaseFiles": "INFO - Verificando arquivos de banco de dados...",
 
-        "databaseLengthMismatch": "AVISO - Repo counter mismatch! [%VAR_0% on database vs. %VAR_1% found on current scan]\nStarting repair process...\n\n(Depending of how many repos are available, this may take a while!)\n",
+        "databaseLengthMismatch": "AVISO - O número de repositórios listados no banco de dados não bate com o número de repositórios presentes! [%VAR_0% no banco de dados contra %VAR_1% encontrados presentes]\nIniciando processo de reparo...\n\n(Dependendo de quantos repositórios estiverem presentes, isso pode demorar um pouco!)\n",
 
-        "importRemoveStatus": "\nINFO - Repair process imported %VAR_0% repos and removed %VAR_1% repos entries with %VAR_2% errors.\n",
-        "importRemoveError": "==> Import / Remove errors:",
+        "importRemoveStatus": "\nINFO - O processo de reparo incluiu %VAR_0% repositórios e removeu %VAR_1% itens no banco de dados com %VAR_2% erros.\n",
+        "importRemoveError": "==> Erros de inclusão / exclusão:",
         "importRemoveDetails": "Repo: %VAR_0%\nDetails: %VAR_1%\n",
 
-        "infoCheckMissingKeys": "INFO - Checking missing keys on repos entries...",
-        "infoAddMissingKey": "INFO - Adding missing key \"%VAR_0%\" to %VAR_1%...",
-        "infoRemoveKey": "INFO - Removing deprecated key from %VAR_0%: %VAR_1%",
+        "infoCheckMissingKeys": "INFO - Verificando possíveis chaves que não estão presentes nos repositórios do banco de dados...",
+        "infoAddMissingKey": "INFO - Adicionando chave \"%VAR_0%\" no %VAR_1%...",
+        "infoRemoveKey": "INFO - Removendo chave desnecessária de %VAR_0%: %VAR_1%",
 
-        "removePathFromKey": "INFO - Removing path from current repo entry: \"%VAR_0%\"",
+        "removePathFromKey": "INFO - Removendo caminho do item: \"%VAR_0%\"",
 
-        "infoAddRemoveKeys": "INFO - GRPP added %VAR_0% missing keys and removed %VAR_1% deprecated keys on %VAR_2% repos.",
+        "infoAddRemoveKeys": "INFO - GRPP adicionou %VAR_0% chaves que estavam faltando e removeu %VAR_1% chaves desnecessárias em %VAR_2% repositórios.",
 
-        "infoRepairComplete": "INFO - Repair complete!\n",
+        "infoRepairComplete": "INFO - Processo de reparo completo!\n",
 
-        "confirmRemoveRepoDatabase": "AVISO - It seems that %VAR_0% does not exists!\nDo you want to remove this entry from database? [S/n] ",
+        "confirmRemoveRepoDatabase": "AVISO - Parece que %VAR_0% não existe!\nVocê quer remover esse item do banco de dados? [S/n] ",
 
-        "warnRepoNotBare": "AVISO - It seems that %VAR_0%.git is not on bare format!",
-        "importMissingRepo": "INFO - Importing missing repo: %VAR_0% [%VAR_1%]",
+        "warnRepoNotBare": "AVISO - Parece que %VAR_0%.git não foi clonado em formato bare!",
+        "importMissingRepo": "INFO - Incluindo repositório ao banco de dados: %VAR_0% [%VAR_1%]",
 
-        "errorConfigFileNotExists": "Unable to read data from %VAR_0%.git because config file doesn't exists!\nGRPP will remove this repo entry from database...",
+        "errorConfigFileNotExists": "Não foi possível obter informações de %VAR_0%.git por que o arquivo de configurações não existe!\nGRPP irá remover esse item do banco de dados...",
         "pushErrorWarn": "AVISO - %VAR_0%"
 
     },
 
     "update": {
 
-        "errorUnableStartUpdate": "ERRO - Unable to start update process!\nMotivo: %VAR_0%",
-        "errorUnableStartUpdate_noRepos": "You must import any repo in order to continue!",
-        "errorUnableStartUpdate_updateRunning": "It seems that GRPP Update Process is running! Make sure to wait current update process ends before trying again.",
+        "errorUnableStartUpdate": "ERRO - Não foi possível iniciar o processo de atualização!\nMotivo: %VAR_0%",
+        "errorUnableStartUpdate_noRepos": "Você precisa pelo menos importar / clonar um repositório antes!",
+        "errorUnableStartUpdate_updateRunning": "Parece que o processo de atualização global está em andamento! Certifique-se de que o processo terminou antes de tentar novamente.",
 
-        "errorUnableUpdateRepo": "ERRO - Unable to update repo!\nMotivo: %VAR_0%\n",
-        "errorUnableUpdateRepo_repoNotFound": "Unable to find following entry on database: %VAR_0%",
+        "errorUnableUpdateRepo": "ERRO - Não foi possível atualizar o repositório!\nMotivo: %VAR_0%\n",
+        "errorUnableUpdateRepo_repoNotFound": "Não foi possível encontrar o repositório no banco de dados: %VAR_0%",
 
-        "repoUpToDate": "INFO - %VAR_0% is up to date!",
-        "repoUpdateData": "INFO - Update data:\n%VAR_0%",
+        "repoUpToDate": "INFO - %VAR_0% está atualizado!",
+        "repoUpdateData": "INFO - Atualizações:\n%VAR_0%",
 
-        "errorBatchFileNotFound": "ERRO - Unable to locate batch file!\nPath: %VAR_0%",
+        "errorBatchFileNotFound": "ERRO - Não foi possível encontrar o arquivo de atualização batch!\nCaminho: %VAR_0%",
 
-        "startBatchUpdate": "INFO - Starting GRPP Batch Update process... (Creating %VAR_0% processes, with at max. %VAR_1% repos per list)",
+        "startBatchUpdate": "INFO - Iniciando processo de atualização global... (Criando %VAR_0% processos, com no máximo %VAR_1% repositórios por processo)",
 
         "batchStatus": "==> Status:",
-        "batch_overallProgress": "Overall Progress: %VAR_0%% [%VAR_1% of %VAR_2%]",
-        "batch_updateCounter": "Update counter: %VAR_0%%VAR_1%%VAR_2%",
-        "batch_errorCounter": "Error counter: %VAR_0%%VAR_1%%VAR_2%",
-        "batch_elapsedTime": "Elapsed time: %VAR_0%%VAR_1%%VAR_2%",
-        "batchProcessList": "==> Process list:",
+        "batch_overallProgress": "Progresso geral: %VAR_0%% [%VAR_1% de %VAR_2%]",
+        "batch_updateCounter": "Repositórios atualizados: %VAR_0%%VAR_1%%VAR_2%",
+        "batch_errorCounter": "Número de erros: %VAR_0%%VAR_1%%VAR_2%",
+        "batch_elapsedTime": "Tempo decorrido: %VAR_0%%VAR_1%%VAR_2%",
+        "batchProcessList": "==> Processos ativos:",
 
-        "batchProcess": "%VAR_0% %VAR_1% Process %VAR_2%: Status: %VAR_3%% [%VAR_4% of %VAR_5%] - Repos updated: %VAR_6%%VAR_7%%VAR_8%, Errors: %VAR_9%%VAR_10%%VAR_11%%VAR_12%",
+        "batchProcess": "%VAR_0% %VAR_1% Processo %VAR_2% - Status: %VAR_3%% [%VAR_4% de %VAR_5%] - Atualizações: %VAR_6%%VAR_7%%VAR_8%, Erros: %VAR_9%%VAR_10%%VAR_11%%VAR_12%",
 
-        "noErrorsRun": "...there was no errors on this run.",
-        "noUpdatesRun": "...there was no updates on this run.",
-        "noSkippedReposRun": "...there was no skipped repos on this run.",
+        "noErrorsRun": "...Nenhum erro ocorreu durante todo o processo.",
+        "noUpdatesRun": "...Nenhum repositório foi atualizado durante todo o processo.",
+        "noSkippedReposRun": "...Nenhum repositório esteve desabilitado para esse processo.",
 
-        "resultDetails": "==> Updates:\n%VAR_0%\n\n==> Errors:\n%VAR_1%\n\n==> Skipped Repos:\n%VAR_2%\n",
+        "resultDetails": "==> Atualizações:\n%VAR_0%\n\n==> Erros:\n%VAR_1%\n\n==> Repositórios desabilitados:\n%VAR_2%\n",
 
-        "resultPage": "GRPP location: %VAR_0%\n\n==> Results:\n\n──┬ Processes: %VAR_1%\n  ├ Update duration: %VAR_2% [%VAR_3%ms]\n  ├ Total repos queued: %VAR_4% [From %VAR_5% on database, %VAR_6% were skipped]\n  ├ Repos updated on this run: %VAR_7%\n  └ Error counter: %VAR_8%",
+        "resultPage": "Local: %VAR_0%\n\n==> Resultado:\n\n──┬ Processos: %VAR_1%\n  ├ Tempo de duração: %VAR_2% [%VAR_3%ms]\n  ├ Repositórios verificados: %VAR_4% [De %VAR_5% no banco de dados, %VAR_6% foram omitidos]\n  ├ Atualizações: %VAR_7%\n  └ Erros: %VAR_8%",
 
-        "logTemplate": "%VAR_0%\nVersion: %VAR_1% [%VAR_2%]\nCompiled at %VAR_3%\n\nLog created at %VAR_4%\n\n%VAR_5%\n\n%VAR_6%",
-        "infoProcessComplete": "INFO - Process complete!\n%VAR_0%\n\nYou can see more details on gereated log file: %VAR_1%\n\nDo you want to open it? [S/n] "
+        "logTemplate": "%VAR_0%\nVersão: %VAR_1% [%VAR_2%]\nCompiled at %VAR_3%\n\nLog created at %VAR_4%\n\n%VAR_5%\n\n%VAR_6%",
+        "infoProcessComplete": "INFO - Processo concluído!\n%VAR_0%\n\nVocê pode ver mais detalhes no arquivo de log gerado: %VAR_1%\n\nDeseja abrir o arquivo? [S/n] "
 
     },
 
     "lang": {
-        "unableSetLang": "ERRO - Unable to set lang!\nMotivo: %VAR_0%",
-        "unableSetLang_fileNotFound": "Unable to locate lang file: %VAR_0%",
-        "errorUnableLoadLang": "ERRO - Unable to load lang %VAR_0%!\nMotivo: %VAR_1%",
-        "errorUnableLoadLang_fileNotFound": "Unable to load lang \"%VAR_0%\" because it was not found or is not a valid file.",
-        "errorUnableLoadLang_keyMismatch": "Key counter mismatch from main lang database!",
-        "displayLangList": "==> Here is the list of all available languages you can pick:\n\n%VAR_0%\n\nTo set, run \"grpp --setLang=[LANG]\".\n"
+        "unableSetLang": "ERRO - Não foi possível alterar idioma!\nMotivo: %VAR_0%",
+        "unableSetLang_fileNotFound": "Não foi possível localizar arquivo de idioma: %VAR_0%",
+        "errorUnableLoadLang": "ERRO - Não foi possível carregar idioma %VAR_0%!\nMotivo: %VAR_1%",
+        "errorUnableLoadLang_fileNotFound": "Não foi possível carregar idioma \"%VAR_0%\" por que o arquivo não foi encontrado ou não é um arquivo válido.",
+        "errorUnableLoadLang_keyMismatch": "Número de itens / chaves difere do banco de dados! Repare o arquivo de idioma ou restaure o idioma para \"en-us\" nas configurações de usuário.",
+        "displayLangList": "==> Veja a lista de todos os idiomas que podem ser escolhidos:\n\n%VAR_0%\n\nPara aplicar, basta usar a opção \"grpp --setLang=[LANG]\". (Sem aspas)\n"
     }
 
 }
