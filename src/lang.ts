@@ -96,6 +96,7 @@ export var langDatabase:any = {
 
             // Common strings
             welcomeStr: 'Hi %VAR_0% - hopes for a great day!\nAll options displayed below can be triggered by using \"-\", \"--\" or even \"/\" (without quotes).\n\n==> Function list:\n',
+            fnArgsStr: '==> Functions with args:\n',
             optionStr: '==> Options list:\n',
 
             // Function list

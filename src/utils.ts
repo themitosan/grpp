@@ -133,7 +133,11 @@ export function grpp_displayMainLogo(clear:boolean){
 export function grpp_displayHelp(){
     createLogEntry(grpp_convertLangVar(langDatabase.utils.help.welcomeStr, [module_os.userInfo().username]));
     Object.keys(langDatabase.utils.help.fnList).forEach(function(currentFlag:any){
-        createLogEntry(`--${currentFlag}\n${langDatabase.utils.helpFnList[currentFlag]}\n`);
+        createLogEntry(`--${currentFlag}\n${langDatabase.utils.help.fnList[currentFlag]}\n`);
+    });
+    createLogEntry(langDatabase.utils.help.fnArgsStr);
+    Object.keys(langDatabase.utils.help.fnArgsList).forEach(function(currentFlag:any){
+        createLogEntry(`--${currentFlag}\n${langDatabase.utils.help.fnArgsList[currentFlag]}\n`);
     });
     createLogEntry(langDatabase.utils.help.optionStr);
     Object.keys(langDatabase.utils.help.optionList).forEach(function(currentFlag:any){
