@@ -12,6 +12,7 @@ Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this i
 
 ## Table of contents
 - [Requirements](#requirements)
+- [How to install](#how-to-install)
 - [How to build](#how-to-build)
     - [Easy mode](#how-to-build-easy)
     - [Development mode](#build-dev-mode)
@@ -35,7 +36,7 @@ You can install all required packages by running some of the commands below:
 
 ```shell
 # Arch based distros <3
-sudo pacman -Sy nodejs git
+sudo pacman -Sy nodejs git npm
 
 # Ubuntu based distros
 sudo apt update
@@ -45,6 +46,14 @@ sudo apt install nodejs git
 sudo dnf update
 sudo dnf install nodejs git
 ```
+
+<a id="how-to-install"></a>
+## How to install
+
+If you want to install GRPP from this repo actions, follow these steps:
+
+- Download `GRPP.zip` from latest actions and extract `grpp.tgz`.
+- Open terminal and run: `sudo npm i -g grpp.tgz`.
 
 <a id="how-to-build"></a>
 ## How to build
