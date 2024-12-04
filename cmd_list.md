@@ -8,12 +8,11 @@
 - `updateAll` - Update all imported repos.
 - `status` - Display GRPP status from a initialized dir.
 - `silent` - Only print errors on screen.
-- `saveSettings` - Use this option to update current settings file. Example: `grpp --setConnectionTestURL=1.1.1.1 --saveSettings` will set main connection test to cloudflare dns and save it to settings file.
 - `exportRemotes` - Export all clone urls from previously imported git repos into a file (grpp_urls.txt)
 - `repair` - This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.
-- `removeAllKeys` - Add this option allong `--repair` flag to automatically remove all missing keys from database.
+- `removeAllKeys` - Add this option along `--repair` flag to automatically remove all missing keys from database.
 
-## Settings list
+## Function list (with args)
 
 - `init=[PATH]` - Set a location where GRPP will initialize and backup your repos. You can also just use `--init` to initialize where you currently are!
 - `import=[GIT_URL]` - Imports a git repository to database.
@@ -22,6 +21,9 @@
 - `update=[PATH]` - Updates a previously imported repo.
 - `getReposFrom=[USERNAME]` - Attempts to get all repos from a specified user.
 - `getRepoData=[PATH]` - Get information about a previously imported repo.
+
+## Settings list
+
 - `maxReposPerList=[NUMBER]` - Set how many repos a GRPP Batch Update list should have.
 - `setStartPage=[NUMBER]` - Set which page GRPP should start fetching user repos from git hosting website.
 - `setMaxFetchPages=[NUMBER]` - Set maximum of pages GRPP will fetch from remote on get user repos process.

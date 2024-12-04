@@ -88,18 +88,43 @@ export function grpp_printStatus(){
 }
 
 /**
-    * Clear screen and display main logo
+    * Get logo string
+    * @param removeColors [boolean] Set true to remove colors (Default: false) 
 */
-export function grpp_displayMainLogo(clear:boolean){
-    consoleClear(clear);
-    createLogEntry(`
+export function grpp_getLogoString(removeColors:boolean = !1):string {
+
+    var logo = `
     <=====================================================>
     <=|       Git Repo Preservation Project (GRPP)      |=>
     <=| Created by TheMitoSan (@themitosan.bsky.social) |=>
     <=|=================================================|=>
     <=|         A classic quote from an old one:        |=>
     <=|               \"Quem guarda, \x1b[1;32mt\x1b[1;33me\x1b[1;34mm\x1b[0m!\"               |=>
-    <=====================================================>\n`);
+    <=====================================================>\n`;
+
+    // Check if needs to remove color chars and return logo
+    if (removeColors === !0){
+
+        [
+            '\x1b[1;32m',
+            '\x1b[1;33m',
+            '\x1b[1;34m',
+            '\x1b[0m'
+        ].forEach(function(currentChar){
+            logo = logo.replace(currentChar, '');
+        });
+
+    }
+    return logo;
+
+}
+
+/**
+    * Clear screen and display main logo
+*/
+export function grpp_displayMainLogo(clear:boolean){
+    consoleClear(clear);
+    createLogEntry(grpp_getLogoString());
 }
 
 /**

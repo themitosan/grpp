@@ -97,21 +97,20 @@ export var langDatabase:any = {
             // Common strings
             welcomeStr: 'Hi %VAR_0% - hopes for a great day!\nAll options displayed below can be triggered by using \"-\", \"--\" or even \"/\" (without quotes).\n\n==> Function list:\n',
             optionStr: '==> Options list:\n',
-    
-            // Help function list
+
+            // Function list
             fnList: {
                 help: `Display this menu.`,
                 updateAll: `Update all imported repos`,
                 status: `Display GRPP status from a initialized dir.`,
                 silent: `Only print errors on screen.`,
-                saveSettings: `Use this option to update current settings file.\nExample: \"grpp --setConnectionTestURL=1.1.1.1 --saveSettings\" will set main connection test to cloudflare dns and save it to settings file.`,
                 exportRemotes: `Export all clone urls from previously imported git repos into a file (grpp_urls.txt)`,
                 repair: `This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.`,
-                removeAllKeys: 'Add this option allong \"--repair\" flag to automatically remove all missing keys from database.'
+                removeAllKeys: 'Add this option along \"--repair\" flag to automatically remove all missing keys from database.'
             },
-    
-            // Help option list
-            optionList: {
+
+            // Function with args
+            fnArgsList: {
                 'init=[PATH]': `Set a location where GRPP will initialize and backup your repos.\nYou can also just use \"--init\" to initialize where you currently are!`,
                 'import=[GIT_URL]': `Imports a git repository to database.`,
                 'importList=[PATH]': `Import a list of git repositories from a text file.`,
@@ -119,6 +118,10 @@ export var langDatabase:any = {
                 'update=[PATH]': `Updates a previously imported repo.`,
                 'getReposFrom=[USERNAME]': `Attempts to get all repos from a specified user.`,
                 'getRepoData=[PATH]': `Get information about a previously imported repo.`,
+            },
+
+            // Settings list
+            optionList: {
                 'maxReposPerList=[NUMBER]': `Set how many repos a GRPP Batch Update list should have.`,
                 'setStartPage=[NUMBER]': `Set which page GRPP should start fetching user repos from git hosting website.`,
                 'setMaxFetchPages=[NUMBER]': `Set maximum of pages GRPP will fetch from remote on get user repos process.`,
@@ -160,7 +163,7 @@ export var langDatabase:any = {
         infoCheckDatabaseFiles: 'INFO - Checking database files...',
 
         databaseLengthMismatch: 'WARN - Repo counter mismatch! [%VAR_0% on database vs. %VAR_1% found on current scan]\nStarting repair process...\n\n(Depending of how many repos are available, this may take a while!)\n',
-        
+
         importRemoveStatus: '\nINFO - Repair process imported %VAR_0% repos and removed %VAR_1% repos entries with %VAR_2% errors.\n',
         importRemoveError: '==> Import / Remove errors:',
         importRemoveDetails: 'Repo: %VAR_0%\nDetails: %VAR_1%\n',
@@ -182,6 +185,50 @@ export var langDatabase:any = {
 
         errorConfigFileNotExists: 'Unable to read data from %VAR_0%.git because config file doesn\'t exists!\nGRPP will remove this repo entry from database...',
         pushErrorWarn: 'WARN - %VAR_0%'
+
+    },
+
+    // update.ts
+    update: {
+
+        errorUnableStartUpdate: 'ERROR - Unable to start update process!\nReason: %VAR_0%',
+        errorUnableStartUpdate_noRepos: 'You must import any repo in order to continue!',
+        errorUnableStartUpdate_updateRunning: 'It seems that GRPP Update Process is running! Make sure to wait current update process ends before trying again.',
+
+        errorUnableUpdateRepo: 'ERROR - Unable to update repo!\nReason: %VAR_0%\n',
+        errorUnableUpdateRepo_repoNotFound: 'Unable to find following entry on database: %VAR_0%',
+
+        repoUpToDate: 'INFO - %VAR_0% is up to date!',
+        repoUpdateData: 'INFO - Update data:\n%VAR_0%',
+
+        errorBatchFileNotFound: 'ERROR - Unable to locate batch file!\nPath: %VAR_0%',
+
+        startBatchUpdate: 'INFO - Starting GRPP Batch Update process... (Creating %VAR_0% processes, with at max. %VAR_1% repos per list)',
+
+        batchStatus: '==> Status:',
+        batch_overallProgress: 'Overall Progress: %VAR_0%% [%VAR_1% of %VAR_2%]',
+        batch_updateCounter: 'Update counter: %VAR_0%%VAR_1%%VAR_2%',
+        batch_errorCounter: 'Error counter: %VAR_0%%VAR_1%%VAR_2%',
+        batch_elapsedTime: 'Elapsed time: %VAR_0%%VAR_1%%VAR_2%',
+        batchProcessList: '==> Process list:',
+
+        batchProcess: '%VAR_0% %VAR_1% Process %VAR_2%: Status: %VAR_3%% [%VAR_4% of %VAR_5%] - Repos updated: %VAR_6%%VAR_7%%VAR_8%, Errors: %VAR_9%%VAR_10%%VAR_11%%VAR_12%',
+
+        noErrorsRun: '...there was no errors on this run.',
+        noUpdatesRun: '...there was no updates on this run.',
+        noSkippedReposRun: '...there was no skipped repos on this run.',
+
+        resultDetails: '==> Updates:\n%VAR_0%\n\n==> Errors:\n%VAR_1%\n\n==> Skipped Repos:\n%VAR_2%\n',
+
+        resultPage: `GRPP location: %VAR_0%\n\n==> Results:\n
+──┬ Processes: %VAR_1%
+  ├ Update duration: %VAR_2% [%VAR_3%ms]
+  ├ Total repos queued: %VAR_4% [From %VAR_5% on database, %VAR_6% were skipped]
+  ├ Repos updated on this run: %VAR_7%
+  └ Error counter: %VAR_8%`,
+
+        logTemplate: '%VAR_0%\nVersion: %VAR_1% [%VAR_2%]\nCompiled at %VAR_3%\n\nLog created at %VAR_4%\n\n%VAR_5%\n\n%VAR_6%',
+        infoProcessComplete: 'INFO - Process complete!\n%VAR_0%\n\nYou can see more details on gereated log file: %VAR_1%\n\nDo you want to open it? [Y/n] '
 
     }
 

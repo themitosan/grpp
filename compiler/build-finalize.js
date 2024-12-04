@@ -65,7 +65,7 @@ function main(){
     module_fs.writeFileSync('Build/package.json', JSON.stringify(packageJson), 'utf-8');
 
     // Process lang files
-    console.info(`\nINFO - Copying lang files...`);
+    console.info(`\nINFO - Copying minified lang files...`);
     module_fs.readdirSync('Lang').forEach(function(currentFile){
         if (module_path.parse(`Lang/${currentFile}`).ext.toLowerCase() === '.json') langList.push(currentFile);
     });

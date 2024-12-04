@@ -28,16 +28,16 @@ import * as module_os from 'os';
     Special consts
 */
 
-const
+export const
 
     // App version
-    version = '[APP_VERSION]',
+    APP_VERSION = '[APP_VERSION]',
 
     // App hash
-    hash = '[APP_HASH]',
+    APP_HASH = '[APP_HASH]',
 
     // Compiled at
-    compiledAt = '[APP_BUILD_DATE]';
+    APP_COMPILED_AT = '[APP_BUILD_DATE]';
 
 /*
     Interfaces
@@ -68,7 +68,6 @@ export interface grppUserSettings {
 
 // Default settings file
 export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' | 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage' | 'userEditor'> = {
-    version,
     maxPages: 5,
     runCounter: 0,
     repoEntries: {},
@@ -77,6 +76,7 @@ export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' |
     fetchStartPage: 1,
     userEditor: 'nano',
     maxReposPerList: 50,
+    version: APP_VERSION,
     connectionTestURL: '1.1.1.1'
 }
 
@@ -163,11 +163,26 @@ async function grpp_loadSettings(){
 
 /**
     * Save GRPP settings
+    * @param mode [string] Which settings file should be updated (Default: grpp_settings)
 */
-export async function grpp_saveSettings(){
+export async function grpp_saveSettings(mode:string = 'db'){
     try {
-        module_fs.writeFileSync(`${process.cwd()}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
-        module_fs.writeFileSync(`${module_os.userInfo().homedir}/.config/grpp/user_settings.json`, JSON.stringify(grppUserSettings));
+
+        // Swicth save mode
+        switch (mode){
+
+            // User settings
+            case 'user':
+                module_fs.writeFileSync(`${module_os.userInfo().homedir}/.config/grpp/user_settings.json`, JSON.stringify(grppUserSettings));
+                break;
+
+            // Database
+            default:
+                module_fs.writeFileSync(`${process.cwd()}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
+                break;
+
+        }
+
     } catch (err) {
         throw err;
     }
@@ -286,19 +301,34 @@ async function init(){
         if (currentFlag.indexOf('removeAllKeys') !== -1) repair_removeAllKeys = !0;
 
         // Set max repos a batch file should have
-        if (currentFlag.indexOf('maxReposPerList=') !== -1) tempSettings.maxReposPerList = preventMinMax(Math.floor(Number(currentFlag.replace('maxReposPerList=', ''))), 1, maxValue);
+        if (currentFlag.indexOf('maxReposPerList=') !== -1){
+            tempSettings.maxReposPerList = preventMinMax(Math.floor(Number(currentFlag.replace('maxReposPerList=', ''))), 1, maxValue);
+            grpp_saveSettings();
+        }
 
         // Set max fetch pages
-        if (currentFlag.indexOf('setMaxFetchPages=') !== -1) tempSettings.maxPages = preventMinMax(Math.floor(Number(currentFlag.replace('setMaxFetchPages=', ''))), 1, maxValue);
+        if (currentFlag.indexOf('setMaxFetchPages=') !== -1){
+            tempSettings.maxPages = preventMinMax(Math.floor(Number(currentFlag.replace('setMaxFetchPages=', ''))), 1, maxValue);
+            grpp_saveSettings();
+        }
 
         // Set web test url
-        if (currentFlag.indexOf('setConnectionTestURL=') !== -1) tempSettings.connectionTestURL = currentFlag.replace('setConnectionTestURL=', '');
+        if (currentFlag.indexOf('setConnectionTestURL=') !== -1){
+            tempSettings.connectionTestURL = currentFlag.replace('setConnectionTestURL=', '');
+            grpp_saveSettings();
+        }
 
         // Set starting fetch page
-        if (currentFlag.indexOf('setStartPage=') !== -1) tempSettings.fetchStartPage = preventMinMax(Math.floor(Number(currentFlag.replace('setStartPage=', ''))), 0, maxValue);
+        if (currentFlag.indexOf('setStartPage=') !== -1){
+            tempSettings.fetchStartPage = preventMinMax(Math.floor(Number(currentFlag.replace('setStartPage=', ''))), 0, maxValue);
+            grpp_saveSettings();
+        }
 
         // Set text editor
-        if (currentFlag.indexOf('setEditor') !== -1) tempSettings.userEditor = currentFlag.replace('setEditor=', '');
+        if (currentFlag.indexOf('setEditor') !== -1){
+            tempSettings.userEditor = currentFlag.replace('setEditor=', '');
+            grpp_saveSettings();
+        }
 
         // Set GRPP path
         if (currentFlag.indexOf('path=') !== -1){
@@ -313,7 +343,7 @@ async function init(){
 
     // Display main logo, version and create execFn var
     grpp_displayMainLogo(!1);
-    createLogEntry(grpp_convertLangVar(langDatabase.main.version, [version, hash, compiledAt]));
+    createLogEntry(grpp_convertLangVar(langDatabase.main.version, [APP_VERSION, APP_HASH, APP_COMPILED_AT]));
     createLogEntry(langDatabase.main.knowMore);
     var execFn:Function | null = null;
 
@@ -333,12 +363,6 @@ async function init(){
         // Print current stats
         if (currentFlag.indexOf('status') !== -1){
             execFn = grpp_printStatus;
-            break;
-        }
-
-        // Save / update settings
-        if (currentFlag.indexOf('saveSettings') !== -1){
-            execFn = grpp_saveSettings;
             break;
         }
 

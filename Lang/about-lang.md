@@ -4,4 +4,4 @@ I would like to thank all efforts of translating this software to all other lang
 
 Many thanks to:
 
-- [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social) - Brazilian Portuguese 🇧🇷
+- [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social) - English and Brazilian Portuguese 🇧🇷 🇺🇸 <sup> Hi! </sup>

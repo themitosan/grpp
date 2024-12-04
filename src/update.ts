@@ -10,9 +10,10 @@
 */
 
 import { grppRepoEntry } from './import';
-import { consoleTextStyle } from './utils';
 import { grpp_displayMainLogo } from './utils';
-import { grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
+import { grpp_convertLangVar, langDatabase } from './lang';
+import { consoleTextStyle, grpp_getLogoString } from './utils';
+import { APP_COMPILED_AT, APP_HASH, APP_VERSION, grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
 import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString, updateConsoleLine } from './tools';
 
 /*
@@ -102,9 +103,9 @@ export async function grpp_checkBatchUpdateProcess(){
 
         // Declare vars, test if there is repos to be updated, if GRPP update process is running and check if can start update process
         const reasonList:string[] = [];
-        if (grppSettings.repoEntries.length === 0) reasonList.push('You must import any repo before starting GRPP Update process!');
-        if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(`It seems that GRPP Update Process is running! Make sure to wait current update process ends before trying again.`);
-        execReasonListCheck(reasonList, `ERROR - Unable to start update process!\nReason: ${convertArrayToString(reasonList)}`, grpp_startBatchUpdate);
+        if (grppSettings.repoEntries.length === 0) reasonList.push(langDatabase.update.errorUnableStartUpdate_noRepos);
+        if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(langDatabase.update.errorUnableStartUpdate_updateRunning);
+        execReasonListCheck(reasonList, langDatabase.update.errorUnableStartUpdate, grpp_startBatchUpdate);
 
     });
 
@@ -119,8 +120,8 @@ export async function grpp_updateRepo(path:string){
 
         // Declare reasonList const, check if repo exists on database and check if can continue
         const reasonList:string[] = [];
-        if (grppSettings.repoEntries[path] === void 0) reasonList.push(`Unable to find the following path on database: ${path}`);
-        execReasonListCheck(reasonList, `ERROR: Unable to update repo!\nReason: ${convertArrayToString(reasonList)}\n`, async function(){
+        if (grppSettings.repoEntries[path] === void 0) reasonList.push(grpp_convertLangVar(langDatabase.update.errorUnableUpdateRepo_repoNotFound, [path]));
+        execReasonListCheck(reasonList, langDatabase.update.errorUnableUpdateRepo, async function(){
 
             // Get current repo data and start fetching updates
             const currentRepoData:grppRepoEntry = grppSettings.repoEntries[path];
@@ -129,7 +130,7 @@ export async function grpp_updateRepo(path:string){
                 // Bump current repo, measure fetch time duration and check if process output any data
                 grpp_updateResults.currentRepo++;
                 if (processOutput.stdData.length === 0){
-                    createLogEntry(`INFO - ${currentRepoData.name} is up to date!`);
+                    createLogEntry(grpp_convertLangVar(langDatabase.update.repoUpToDate, [currentRepoData.name]));
                 } else {
 
                     // Declare vars and check if current output had any errors
@@ -146,7 +147,7 @@ export async function grpp_updateRepo(path:string){
                     if (errorCounter === 0){
 
                         // Print update data, push process output to update data and bump update counter
-                        createLogEntry(`INFO - Update data:\n${processOutput.stdData}`);
+                        createLogEntry(grpp_convertLangVar(langDatabase.update.repoUpdateData, [processOutput.stdData]));
                         grpp_updateResults.updateList.push(processOutput.stdData);
 
                         // Update current repo data
@@ -201,7 +202,7 @@ export async function grpp_processBatchFile(id:number){
         process.exit();
 
     } else {
-        createLogEntry(`ERROR - Unable to locate batch file with id ${id}!\nPath: ${batchFilePath}`, 'error');
+        createLogEntry(grpp_convertLangVar(langDatabase.update.errorBatchFileNotFound, [batchFilePath]), 'error');
     }
 
 }
@@ -254,7 +255,7 @@ async function grpp_startBatchUpdate(){
 
     // Clear console screen, create log entry and spawn processes
     grpp_displayMainLogo(!1);
-    createLogEntry(`INFO - Starting GRPP Batch Update process... (Creating ${totalResFiles} processes, with at max. ${grppSettings.maxReposPerList} repos per list)`);
+    createLogEntry(grpp_convertLangVar(langDatabase.update.startBatchUpdate, [totalResFiles, grppSettings.maxReposPerList]));
     for (var currentList = 0; currentList < totalResFiles; currentList++){
 
         // Spawn process and start watching for batch res files
@@ -318,7 +319,7 @@ function processBatchResFiles(){
         reposProcessed = 0;
 
     // Reset console color, print status and start processing all files
-    updateConsoleLine(0, 9, `${consoleTextStyle.reset}==> Status:\n`);
+    updateConsoleLine(0, 9, `${consoleTextStyle.reset}${langDatabase.update.batchStatus}\n`);
     for (var currentFile = 0; currentFile < totalResFiles; currentFile++){
 
         // Get file data and check if is a valid JSON
@@ -341,18 +342,32 @@ function processBatchResFiles(){
             if (currentFile === (totalResFiles - 1)){
                 entryChar = '  └';
                 enableLineBreak = '\n';
-                updateConsoleLine(0, 11, `──┬ Overall Progress: ${parsePercentage(reposProcessed, totalReposQueued)}% [${reposProcessed} of ${totalReposQueued}]`);
-                updateConsoleLine(0, 13, `  ├ Update counter: ${consoleTextStyle.fgGreen}${updateCounter}${consoleTextStyle.reset}
-  └ Error counter: ${consoleTextStyle.fgRed}${errorCounter}${consoleTextStyle.reset}\n\n==> Process list:\n\n`);
+                updateConsoleLine(0, 11, `──┬ ${grpp_convertLangVar(langDatabase.update.batch_overallProgress, [parsePercentage(reposProcessed, totalReposQueued), reposProcessed, totalReposQueued])}`);
+                updateConsoleLine(0, 13, `  ├ ${grpp_convertLangVar(langDatabase.update.batch_updateCounter, [consoleTextStyle.fgGreen, updateCounter, consoleTextStyle.reset])}`);
+                updateConsoleLine(0, 14, `  └ ${grpp_convertLangVar(langDatabase.update.batch_errorCounter, [consoleTextStyle.fgRed, errorCounter, consoleTextStyle.reset])}\n\n${langDatabase.update.batchProcessList}\n\n`);
             }
 
             // Update entryChar if there is only one process and update elapsed time line
             if (totalResFiles === 1) entryChar = '───';
-            updateConsoleLine(0, 12, `  ├ Elapsed time: ${converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime))}`);
+            updateConsoleLine(0, 12, `  ├ ${grpp_convertLangVar(langDatabase.update.batch_elapsedTime, [consoleTextStyle.fgGreen, converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime)), consoleTextStyle.reset])}`);
 
             // Check if process finished. If so, update checkbox char and update each process line
             if (batchResData.currentRepo > (batchResData.totalRepos - 1)) checkboxChar = '[✓]';
-            updateConsoleLine(0, (currentFile + 18), `${entryChar} ${checkboxChar} Process ${currentFile}: Status: ${parsePercentage(batchResData.currentRepo, batchResData.totalRepos)}% [${batchResData.currentRepo} of ${batchResData.totalRepos}] - Repos updated: ${consoleTextStyle.fgGreen}${batchResData.updateList.length}${consoleTextStyle.reset}, Errors: ${consoleTextStyle.fgRed}${batchResData.errorList.length}${consoleTextStyle.reset}${enableLineBreak}`);
+            updateConsoleLine(0, (currentFile + 18), grpp_convertLangVar(langDatabase.update.batchProcess, [
+                entryChar,
+                checkboxChar,
+                currentFile,
+                parsePercentage(batchResData.currentRepo, batchResData.totalRepos),
+                batchResData.currentRepo,
+                batchResData.totalRepos,
+                consoleTextStyle.fgGreen,
+                batchResData.updateList.length,
+                consoleTextStyle.reset,
+                consoleTextStyle.fgRed,
+                batchResData.errorList.length,
+                consoleTextStyle.reset,
+                enableLineBreak
+            ]));
 
         }
 
@@ -383,9 +398,9 @@ async function batchUpdateComplete(){
         updateDetails = '',
         errorList:string[] = [],
         updateList:string[] = [],
-        errorString = '...there was no errors on this run.',
-        updateString = '...there was no updates on this run.',
-        skippedReposString = '...there was no skipped repos on this run.';
+        errorString = langDatabase.update.noErrorsRun,
+        updateString = langDatabase.update.noUpdatesRun,
+        skippedReposString = langDatabase.update.noSkippedReposRun;
 
     // Create consts
     const
@@ -420,16 +435,18 @@ async function batchUpdateComplete(){
     if (skippedRepos.length > 0) skippedReposString = convertArrayToString(skippedRepos);
 
     // Set string vars
-    updateDetails = `==> Updates:\n${updateString}\n\n==> Errors:\n${errorString}\n\n==> Skipped Repos:\n${skippedReposString}\n`;
-    baseLog = `GRPP location: ${process.cwd()}
-
-==> Results:
-
-──┬ Processes: ${totalResFiles}
-  ├ Update duration: ${converMsToHHMMSS(updateDurationMs)} [${updateDurationMs}ms]
-  ├ Total repos queued: ${totalReposQueued} [From ${Object.keys(grppSettings.repoEntries).length} on database, ${skippedRepos.length} were skipped]
-  ├ Repos updated on this run: ${updateList.length}
-  └ Error counter: ${errorList.length}`;
+    updateDetails = grpp_convertLangVar(langDatabase.update.resultDetails, [updateString, errorString, skippedReposString]);
+    baseLog = grpp_convertLangVar(langDatabase.update.resultPage, [
+        process.cwd(),
+        totalResFiles,
+        converMsToHHMMSS(updateDurationMs),
+        updateDurationMs,
+        totalReposQueued,
+        Object.keys(grppSettings.repoEntries).length,
+        skippedRepos.length,
+        updateList.length,
+        errorList.length
+    ]);
 
     // Update GRPP Settings file data
     tempSettings.runCounter++;
@@ -439,15 +456,23 @@ async function batchUpdateComplete(){
 
     // Check if log dir exists, if not, create it and write log data
     if (module_fs.existsSync(`${process.cwd()}/logs`) === !1) module_fs.mkdirSync(`${process.cwd()}/logs`);
-    module_fs.writeFileSync(exportLogPath, `Git Repository Preservation Project [GRPP]\nCreated by TheMitoSan (@themitosan.bsky.social)\n\nLog created at ${time.toString()}\n\n${baseLog}\n\n${updateDetails}`, 'utf-8');
+    module_fs.writeFileSync(exportLogPath, grpp_convertLangVar(langDatabase.update.logTemplate, [
+        grpp_getLogoString(!0),
+        APP_VERSION,
+        APP_HASH,
+        APP_COMPILED_AT,
+        new Date().toString(),
+        baseLog,
+        updateDetails
+    ]), 'utf-8');
 
     // Clear screen, display update results and ask if user wants to open exported log
     grpp_displayMainLogo(!0);
-    readLine.question(`INFO - Process complete!\n${baseLog}\n\nYou can see more details on gereated log file: ${exportLogPath}\n\nDo you want to open it? [Y/n] `, async function(answer){
+    readLine.question(grpp_convertLangVar(langDatabase.update.infoProcessComplete, [baseLog, exportLogPath]), async function(answer){
 
         // Close readline and check if user wants to check update data
         readLine.close();
-        if (answer.toLowerCase() === 'y'){
+        if (answer.toLowerCase() === langDatabase.common.confirmChar){
             await openOnTextEditor(exportLogPath).then(process.exit);
         } else {
             process.exit();
