@@ -151,20 +151,20 @@
 
         "startBatchUpdate": "INFO - Iniciando processo de atualização global... (Criando %VAR_0% processos, com no máximo %VAR_1% repositórios por processo)",
 
-        "batchStatus": "==> Status:",
+        "batchStatus": "==> Atualização global:",
         "batch_overallProgress": "Progresso geral: %VAR_0%% [%VAR_1% de %VAR_2%]",
-        "batch_updateCounter": "Repositórios atualizados: %VAR_0%%VAR_1%%VAR_2%",
-        "batch_errorCounter": "Número de erros: %VAR_0%%VAR_1%%VAR_2%",
+        "batch_updateCounter": "Atualizações: %VAR_0%%VAR_1%%VAR_2%",
+        "batch_errorCounter": "Erros: %VAR_0%%VAR_1%%VAR_2%",
         "batch_elapsedTime": "Tempo decorrido: %VAR_0%%VAR_1%%VAR_2%",
         "batchProcessList": "==> Processos ativos:",
 
-        "batchProcess": "%VAR_0% %VAR_1% Processo %VAR_2% - Status: %VAR_3%% [%VAR_4% de %VAR_5%] - Atualizações: %VAR_6%%VAR_7%%VAR_8%, Erros: %VAR_9%%VAR_10%%VAR_11%%VAR_12%",
+        "batchProcess": "%VAR_0% %VAR_1% Processo %VAR_2% - Progresso: %VAR_3%% [%VAR_4% de %VAR_5%] - Atualizações: %VAR_6%%VAR_7%%VAR_8%, Erros: %VAR_9%%VAR_10%%VAR_11%%VAR_12%",
 
         "noErrorsRun": "...Nenhum erro ocorreu durante todo o processo.",
         "noUpdatesRun": "...Nenhum repositório foi atualizado durante todo o processo.",
         "noSkippedReposRun": "...Nenhum repositório esteve desabilitado para esse processo.",
 
-        "resultDetails": "==> Atualizações:\n%VAR_0%\n\n==> Erros:\n%VAR_1%\n\n==> Repositórios desabilitados:\n%VAR_2%\n",
+        "resultDetails": "==> Atualizações:\n%VAR_0%\n\n==> Erros:\n%VAR_1%\n\n==> Repositórios omitidos:\n%VAR_2%\n",
 
         "resultPage": "Local: %VAR_0%\n\n==> Resultado:\n\n──┬ Processos: %VAR_1%\n  ├ Tempo de duração: %VAR_2% [%VAR_3%ms]\n  ├ Repositórios verificados: %VAR_4% [De %VAR_5% no banco de dados, %VAR_6% foram omitidos]\n  ├ Atualizações: %VAR_7%\n  └ Erros: %VAR_8%",
 

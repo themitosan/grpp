@@ -184,7 +184,7 @@ export var langDatabase:any = {
         "batch_elapsedTime": "Elapsed time: %VAR_0%%VAR_1%%VAR_2%",
         "batchProcessList": "==> Process list:",
 
-        "batchProcess": "%VAR_0% %VAR_1% Process %VAR_2% - Status: %VAR_3%% [%VAR_4% of %VAR_5%] - Repos updated: %VAR_6%%VAR_7%%VAR_8%, Errors: %VAR_9%%VAR_10%%VAR_11%%VAR_12%",
+        "batchProcess": "%VAR_0% %VAR_1% Process %VAR_2% - Progress: %VAR_3%% [%VAR_4% of %VAR_5%] - Repos updated: %VAR_6%%VAR_7%%VAR_8%, Errors: %VAR_9%%VAR_10%%VAR_11%%VAR_12%",
 
         "noErrorsRun": "...there was no errors on this run.",
         "noUpdatesRun": "...there was no updates on this run.",
