@@ -32,6 +32,9 @@ Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this i
 ## Requirements
 - `git`, `npm` and `node`.
 
+> [!IMPORTANT]
+> Since GRPP uses `nano` as default text editor, we recommend having it on your system. If you want to use something else, you can change it by using `--setEditor` later.
+
 You can install all required packages by running some of the commands below:
 
 ```shell
