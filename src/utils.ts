@@ -131,18 +131,23 @@ export function grpp_displayMainLogo(clear:boolean){
     * Display help menu
 */
 export function grpp_displayHelp(){
+
+    grpp_displayMainLogo(!0);
     createLogEntry(grpp_convertLangVar(langDatabase.utils.help.welcomeStr, [module_os.userInfo().username]));
     Object.keys(langDatabase.utils.help.fnList).forEach(function(currentFlag:any){
         createLogEntry(`--${currentFlag}\n${langDatabase.utils.help.fnList[currentFlag]}\n`);
     });
+
     createLogEntry(langDatabase.utils.help.fnArgsStr);
     Object.keys(langDatabase.utils.help.fnArgsList).forEach(function(currentFlag:any){
         createLogEntry(`--${currentFlag}\n${langDatabase.utils.help.fnArgsList[currentFlag]}\n`);
     });
-    createLogEntry(langDatabase.utils.help.optionStr);
-    Object.keys(langDatabase.utils.help.optionList).forEach(function(currentFlag:any){
-        createLogEntry(`--${currentFlag}\n${langDatabase.utils.help.optionList[currentFlag]}\n`);
+
+    createLogEntry(langDatabase.utils.help.settingsStr);
+    Object.keys(langDatabase.utils.help.settingsList).forEach(function(currentFlag:any){
+        createLogEntry(`--${currentFlag}\n${langDatabase.utils.help.settingsList[currentFlag]}\n`);
     });
+
 }
 
 /**

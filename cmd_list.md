@@ -11,6 +11,7 @@
 - `exportRemotes` - Export all clone urls from previously imported git repos into a file (grpp_urls.txt)
 - `repair` - This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.
 - `removeAllKeys` - Add this option along `--repair` flag to automatically remove all missing keys from database.
+- `langList` - List all available languages GRPP can be displayed.
 
 ## Function list (with args)
 
@@ -24,6 +25,7 @@
 
 ## Settings list
 
+- `setLang=[LANG]` - Set which language GRPP should be displayed. You can see the lang available list by using `--langList` option.
 - `maxReposPerList=[NUMBER]` - Set how many repos a GRPP Batch Update list should have.
 - `setStartPage=[NUMBER]` - Set which page GRPP should start fetching user repos from git hosting website.
 - `setMaxFetchPages=[NUMBER]` - Set maximum of pages GRPP will fetch from remote on get user repos process.

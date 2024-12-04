@@ -30,7 +30,7 @@ Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this i
 - [External code snippets used on this project](#external-code-snippets)
 
 ## Requirements
-- `git`, `npm` and latest `node` version installed.
+- `git`, `npm` and `node`.
 
 You can install all required packages by running some of the commands below:
 

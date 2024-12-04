@@ -51,10 +51,10 @@ var currentRepo:grppRepoEntry;
 export const repoEntry_Defaults:Pick <grppRepoEntry, 'canUpdate' | 'importDate' | 'lastUpdatedOn' | 'updateCounter' | 'name' | 'owner' | 'url' | 'isPriority'> = {
     canUpdate: !0,
     isPriority: !1,
-    updateCounter: 0,
     url: 'UNKNOWN',
     name: 'UNKNOWN',
     owner: 'UNKNOWN',
+    updateCounter: 0,
     lastUpdatedOn: 'Never',
     importDate: new Date().toString()
 }

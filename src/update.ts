@@ -13,7 +13,7 @@ import { grppRepoEntry } from './import';
 import { grpp_displayMainLogo } from './utils';
 import { grpp_convertLangVar, langDatabase } from './lang';
 import { consoleTextStyle, grpp_getLogoString } from './utils';
-import { APP_COMPILED_AT, APP_HASH, APP_VERSION, grpp_updateRepoData, grpp_updateSettings, grppSettings } from './main';
+import { APP_COMPILED_AT, APP_HASH, APP_VERSION, grpp_updateRepoData, grpp_updateDatabaseSettings, grppSettings } from './main';
 import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString, updateConsoleLine } from './tools';
 
 /*
@@ -452,7 +452,7 @@ async function batchUpdateComplete(){
     tempSettings.runCounter++;
     tempSettings.lastRun = time.toString();
     tempSettings.updateRuntime = (tempSettings.updateRuntime + updateDurationMs);
-    grpp_updateSettings(tempSettings);
+    grpp_updateDatabaseSettings(tempSettings);
 
     // Check if log dir exists, if not, create it and write log data
     if (module_fs.existsSync(`${process.cwd()}/logs`) === !1) module_fs.mkdirSync(`${process.cwd()}/logs`);

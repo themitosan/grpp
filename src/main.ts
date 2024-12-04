@@ -12,8 +12,8 @@
 import { grpp_getReposFrom } from './getReposFrom';
 import { grpp_startRepairDatabase } from './repair';
 import { createLogEntry, preventMinMax } from './tools';
-import { grpp_convertLangVar, grpp_loadLang, langDatabase } from './lang';
 import { grpp_batchImport, grpp_startImport, grppRepoEntry } from './import';
+import { grpp_convertLangVar, grpp_displayLangList, grpp_loadLang, grpp_setLang, langDatabase } from './lang';
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from './update';
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_exportRemotes, grpp_getRepoInfo, grpp_printStatus } from './utils';
 
@@ -23,6 +23,7 @@ import { grpp_displayHelp, grpp_displayMainLogo, grpp_exportRemotes, grpp_getRep
 
 import * as module_fs from 'fs';
 import * as module_os from 'os';
+import * as module_childProcess from 'child_process';
 
 /*
     Special consts
@@ -104,6 +105,9 @@ export var
 
     // Repair: remove all missing keys from database automatically
     repair_removeAllKeys = !1,
+
+    // NPM global path
+    NPM_GLOBAL_PATH = '',
 
     // User settings
     grppUserSettings:grppUserSettings = { ...grppUserSettings_Defaults },
@@ -189,12 +193,21 @@ export async function grpp_saveSettings(mode:string = 'db'){
 }
 
 /**
-    * Update GRPP settings
+    * Update database settings
     * @param data [grppSettingsFile] settings to be updated
 */
-export function grpp_updateSettings(data:any){
+export function grpp_updateDatabaseSettings(data:any){
     grppSettings = { ...grppSettings, ...data };
     grpp_saveSettings();
+}
+
+/**
+    * Update user settings
+    * @param data [grppSettingsFile] settings to be updated
+*/
+export function grpp_updateUserSettings(data:any){
+    grppUserSettings = { ...grppUserSettings, ...data };
+    grpp_saveSettings('user');
 }
 
 /**
@@ -252,7 +265,7 @@ function checkFlagIsValid(arg:string):string {
 /**
     * Load user settings 
 */
-function loadUserSettings(){
+function grpp_loadUserSettings(){
 
     // Check if user settings file / path exists
     const userSettingsFilePath = `${module_os.userInfo().homedir}/.config/grpp/user_settings.json`;
@@ -280,13 +293,47 @@ function loadUserSettings(){
 }
 
 /**
+    * Get NPM root path
+    * This is required in order to load language files from grpp install path
+*/
+async function grpp_getNpmRootPath(){
+    return new Promise<void>(function(resolve){
+
+        try {
+
+            // Run command to get global path and set NPM_GLOBAL_PATH value
+            const childProcess = module_childProcess.exec(`npm root -g`);
+            childProcess.stdout!.on('data', function(data){
+                NPM_GLOBAL_PATH = data.replaceAll('\n', '');
+            });
+
+            // Check if grpp managed to get pathc correctly after process exit
+            childProcess.on('exit', function(){
+                if (module_fs.existsSync(NPM_GLOBAL_PATH) === !0){
+                    resolve();
+                } else {
+                    throw grpp_convertLangVar(langDatabase.main.unableGetNpmRootPath_notFound, [NPM_GLOBAL_PATH]);
+                }
+            });
+
+        } catch (err) {
+            throw err;
+        }
+
+    });
+}
+
+/**
     * GRPP main function
 */
 async function init(){
 
-    // Load user settings and lang
-    loadUserSettings();
-    await grpp_loadLang();
+    // Load user settings, get NPM root path and load user language
+    grpp_loadUserSettings();
+    await grpp_getNpmRootPath().catch(function(err){
+        createLogEntry(grpp_convertLangVar(langDatabase.main.unableGetNpmRootPath, [err]));
+    })
+    .then(grpp_loadLang);
 
     /*
         Process settings flags
@@ -305,6 +352,9 @@ async function init(){
             tempSettings.maxReposPerList = preventMinMax(Math.floor(Number(currentFlag.replace('maxReposPerList=', ''))), 1, maxValue);
             grpp_saveSettings();
         }
+
+        // User settings: Set lang
+        if (currentFlag.indexOf('setLang=') !== -1) grpp_setLang(currentFlag.replace('setLang=', ''));
 
         // Set max fetch pages
         if (currentFlag.indexOf('setMaxFetchPages=') !== -1){
@@ -355,8 +405,13 @@ async function init(){
 
         // Display help menu
         if (currentFlag.indexOf('help') !== -1){
-            grpp_displayMainLogo(!0);
             grpp_displayHelp();
+            break;
+        }
+
+        // List all available lang options
+        if (currentFlag.indexOf('langList') !== -1){
+            grpp_displayLangList();
             break;
         }
 

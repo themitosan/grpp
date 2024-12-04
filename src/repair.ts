@@ -12,7 +12,7 @@
 import { grpp_convertLangVar, langDatabase } from './lang';
 import { grppRepoEntry, repoEntry_Defaults } from './import';
 import { grpp_removeRepo, grpp_updateRepoData, grppSettings, repair_removeAllKeys } from './main';
-import { convertArrayToString, createLogEntry, execReasonListCheck, getDirTree, parseINI, runExternalCommand, runExternalCommand_Defaults } from './tools';
+import { createLogEntry, execReasonListCheck, getDirTree, parseINI, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
 /*
     Require node modules
@@ -58,7 +58,7 @@ export async function grpp_startRepairDatabase(){
 
     // Declare vars and check if GRPP update is running
     const reasonList:string[] = [];
-    if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(grpp_convertLangVar(langDatabase.common.errorBatchUpdateRunning));
+    if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(langDatabase.common.errorBatchUpdateRunning);
 
     // Check if can start repair process
     execReasonListCheck(reasonList, langDatabase.repair.warnUnablePerformRepair, async function(){
