@@ -33,9 +33,7 @@ Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this i
 - `git`, `npm` and `node`.
 
 > [!IMPORTANT]
-> Since GRPP uses `nano` as default text editor, we recommend having it on your system too.
-> 
-> If you want to use something else, you can change it by using `--setEditor` later.
+> GRPP uses `nano` as default text editor! If you want to use something else, you can change it by running `grpp --setEditor=[YOUR_COOL_EDITOR]` later.
 
 You can install all required packages by running some of the commands below:
 
@@ -55,7 +53,7 @@ sudo dnf install nodejs git
 <a id="how-to-install"></a>
 ## How to install
 
-If you want to install GRPP from [actions](actions/), follow these steps:
+If you want to install GRPP from [actions](https://github.com/themitosan/grpp/actions), follow these steps:
 
 - Download `GRPP.zip` from latest actions and extract `grpp.tgz`.
 - Open terminal and run the command below:
