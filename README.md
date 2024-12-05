@@ -51,7 +51,7 @@ sudo dnf install nodejs git
 <a id="how-to-install"></a>
 ## How to install
 
-If you want to install GRPP from [actions](https://github.com/themitosan/grpp/actions) or [releases](releases/), follow these steps:
+If you want to install GRPP from [actions](https://github.com/themitosan/grpp/actions) or [releases](/themitosan/grpp/releases/), follow these steps:
 
 - Download `GRPP.zip` and extract `grpp.tgz`.
 - Open terminal and run the command below:
