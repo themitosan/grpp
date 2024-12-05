@@ -41,7 +41,7 @@ You can install all required packages by running some of the commands below:
 # Arch based distros <3
 sudo pacman -Sy nodejs git npm
 
-# Ubuntu based distros
+# Debian based distros
 sudo apt update
 sudo apt install nodejs git
 
