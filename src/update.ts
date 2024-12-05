@@ -456,7 +456,7 @@ async function batchUpdateComplete(){
 
     // Check if log dir exists, if not, create it and write log data
     if (module_fs.existsSync(`${process.cwd()}/logs`) === !1) module_fs.mkdirSync(`${process.cwd()}/logs`);
-    module_fs.writeFileSync(exportLogPath, grpp_convertLangVar(langDatabase.update.logTemplate, [
+    module_fs.writeFileSync(exportLogPath, trimString(grpp_convertLangVar(langDatabase.update.logTemplate, [
         grpp_getLogoString(!0),
         APP_VERSION,
         APP_HASH,
@@ -464,7 +464,7 @@ async function batchUpdateComplete(){
         new Date().toString(),
         baseLog,
         updateDetails
-    ]), 'utf-8');
+    ])), 'utf-8');
 
     // Clear screen, display update results and ask if user wants to open exported log
     grpp_displayMainLogo(!0);
