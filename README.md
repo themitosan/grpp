@@ -8,7 +8,7 @@ Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this i
 > [!IMPORTANT]\
 > **GRPP is a tool that only focus on git repos.**
 >
-> If you want to preserve GitHub repos including issues, releases and more - check out [jan9103's](https://github.com/Jan9103) [github-repo-backuper](https://github.com/Jan9103/github-repo-backuper).
+> If you want to preserve GitHub repos including issues, releases and more - check out [jan9103's github-repo-backuper](https://github.com/Jan9103/github-repo-backuper).
 
 ## Table of contents
 - [Requirements](#requirements)
@@ -33,7 +33,9 @@ Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this i
 - `git`, `npm` and `node`.
 
 > [!IMPORTANT]
-> Since GRPP uses `nano` as default text editor, we recommend having it on your system. If you want to use something else, you can change it by using `--setEditor` later.
+> Since GRPP uses `nano` as default text editor, we recommend having it on your system too.
+> 
+> If you want to use something else, you can change it by using `--setEditor` later.
 
 You can install all required packages by running some of the commands below:
 
@@ -53,10 +55,14 @@ sudo dnf install nodejs git
 <a id="how-to-install"></a>
 ## How to install
 
-If you want to install GRPP from this repo actions, follow these steps:
+If you want to install GRPP from [actions](actions/), follow these steps:
 
 - Download `GRPP.zip` from latest actions and extract `grpp.tgz`.
-- Open terminal and run: `sudo npm i -g grpp.tgz`.
+- Open terminal and run the command below:
+
+```shell
+sudo npm i -g grpp.tgz
+```
 
 <a id="how-to-build"></a>
 ## How to build
@@ -84,6 +90,7 @@ The compiled script will be on `Build` dir.
 **TIP**: You can also run `npm run dev` - `ts` will watch all changes on your code and will compile script on the go! In this case, the compiled script will be on `App` dir instead.
 
 In order to run GRPP, you will need to run like this:
+
 ```shell
 # webpack
 node Build/grpp.js
@@ -111,7 +118,9 @@ sudo npm i -g grpp.tgz
 ```
 
 > [!IMPORTANT]\
-> You MUST run this command as `sudo`, since it will install grpp as a global package. If you don't have sudo access (like rootless termux), you can run without `sudo` (or run `npm run bi-sudoless` to do everything automatically)
+> You MUST run this command as `sudo`, since it will install grpp as a global package.
+> 
+> If you don't have sudo access (like termux without su), you can run without `sudo` (or run `npm run bi-sudoless` to do everything automatically)
 
 If everything is fine, you will be able to call `grpp` system-wide.
 
@@ -151,12 +160,12 @@ There is some ways you can do this: By importing them one by one, a repo list or
 To do that, you can use the `--import=` command with your desired git url:
 
 ```shell
-grpp --import=http://github.com/themitosan/themitosan.git
+grpp --import=http://github.com/themitosan/grpp.git
 ```
 
 If everything is fine, you will be able to import this git repo to your current location organized by host/user/repo.
 
-_(On this case, `themitosan.git` will be located on `YOUR_CURRENT_PATH/repos/github.com/themitosan/themitosan.git`)_
+_(On this case, `grpp.git` will be located on `YOUR_CURRENT_PATH/repos/github.com/themitosan/grpp.git`)_
 
 <a id="import-multiple-repos"></a>
 #### Multiple repos
@@ -217,7 +226,7 @@ grpp --update=[PATH_TO_GRPP_REPO]
 <a id="update-all-repos"></a>
 #### Update all repos
 
-This is where GRPP shines! To update all repos, run the following command:
+**This is where GRPP shines!** To update all repos, run the following command:
 
 ```shell
 grpp --updateAll
