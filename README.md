@@ -6,9 +6,7 @@
 Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this is a tool written in ts that aims to help importing / preserving git repos.
 
 > [!IMPORTANT]\
-> **GRPP is a tool that only focus on git repos.**
->
-> If you want to preserve GitHub repos including issues, releases and more - check out [jan9103's github-repo-backuper](https://github.com/Jan9103/github-repo-backuper).
+> **GRPP is a tool that only focus on git repos!** If you want to preserve GitHub repos including issues, releases and more - check out [jan9103's github-repo-backuper](https://github.com/Jan9103/github-repo-backuper).
 
 ## Table of contents
 - [Requirements](#requirements)
@@ -30,10 +28,7 @@ Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this i
 - [External code snippets used on this project](#external-code-snippets)
 
 ## Requirements
-- `git`, `npm` and `node`.
-
-> [!IMPORTANT]
-> GRPP uses `nano` as default text editor! If you want to use something else, you can change it by running `grpp --setEditor=[YOUR_COOL_EDITOR]` later.
+- `git`, `npm` and `node` packages.
 
 You can install all required packages by running some of the commands below:
 
@@ -49,6 +44,9 @@ sudo apt install nodejs git
 sudo dnf update
 sudo dnf install nodejs git
 ```
+
+> [!IMPORTANT]
+> GRPP uses `nano` as default text editor! If you want to use something else, you can change it by running `grpp --setEditor=[YOUR_COOL_EDITOR]` later.
 
 <a id="how-to-install"></a>
 ## How to install

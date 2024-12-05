@@ -162,7 +162,7 @@
 
         "noErrorsRun": "...Nenhum erro ocorreu durante todo o processo.",
         "noUpdatesRun": "...Nenhum repositório foi atualizado durante todo o processo.",
-        "noSkippedReposRun": "...Nenhum repositório esteve desabilitado para esse processo.",
+        "noSkippedReposRun": "...Nenhum repositório foi omitido nesse processo.",
 
         "resultDetails": "==> Atualizações:\n%VAR_0%\n\n==> Erros:\n%VAR_1%\n\n==> Repositórios omitidos:\n%VAR_2%\n",
 
