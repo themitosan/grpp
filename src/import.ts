@@ -116,10 +116,6 @@ export async function grpp_startImport(cloneURL:string){
                 runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: repoPath });
             })
             .then(function(){
-                createLogEntry(grpp_convertLangVar(langDatabase.import.setPathSafe, [name]));
-                runExternalCommand(`git config --global --add safe.directory ${repoPath}`, { ...runExternalCommand_Defaults, chdir: originalCwd });
-            })
-            .then(function(){
                 grpp_updateRepoData(`${urlData[2]}/${owner}/${name}`, currentRepo);
                 createLogEntry(grpp_convertLangVar(langDatabase.import.cloneProcessComplete, [name, repoPath]));
                 resolve();

@@ -250,9 +250,6 @@ async function grpp_repairAddMissingRepo(path:string){
             createLogEntry(grpp_convertLangVar(langDatabase.repair.importMissingRepo, [repoName, path]));
             await runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: path })
             .then(function(){
-                runExternalCommand(`git config --global --add safe.directory ${path}`, { ...runExternalCommand_Defaults, chdir: originalCwd });
-            })
-            .then(function(){
                 grpp_updateRepoData(path.replace(process.cwd(), ''), repoData);
                 importSuccessCounter++;
                 resolve();
