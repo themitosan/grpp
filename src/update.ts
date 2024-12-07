@@ -10,11 +10,10 @@
 */
 
 import { grppRepoEntry } from './import';
-import { grpp_displayMainLogo } from './utils';
 import { grpp_convertLangVar, langDatabase } from './lang';
-import { consoleTextStyle, grpp_getLogoString } from './utils';
+import { grpp_displayMainLogo, grpp_getLogoString } from './utils';
 import { APP_COMPILED_AT, APP_HASH, APP_VERSION, grpp_updateRepoData, grpp_updateDatabaseSettings, grppSettings } from './main';
-import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString, updateConsoleLine } from './tools';
+import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString, updateConsoleLine, consoleTextStyle, changeTextColorNumber } from './tools';
 
 /*
     Require node modules
@@ -343,16 +342,16 @@ function processBatchResFiles(){
                 entryChar = '  └';
                 enableLineBreak = '\n';
                 updateConsoleLine(0, 11, `──┬ ${grpp_convertLangVar(langDatabase.update.batch_overallProgress, [parsePercentage(reposProcessed, totalReposQueued), reposProcessed, totalReposQueued])}`);
-                updateConsoleLine(0, 13, `  ├ ${grpp_convertLangVar(langDatabase.update.batch_updateCounter, [consoleTextStyle.fgGreen, updateCounter, consoleTextStyle.reset])}`);
-                updateConsoleLine(0, 14, `  └ ${grpp_convertLangVar(langDatabase.update.batch_errorCounter, [consoleTextStyle.fgRed, errorCounter, consoleTextStyle.reset])}\n\n${langDatabase.update.batchProcessList}\n\n`);
+                updateConsoleLine(0, 13, `  ├ ${grpp_convertLangVar(langDatabase.update.batch_updateCounter, [changeTextColorNumber(updateCounter, consoleTextStyle.fgGreen)])}`);
+                updateConsoleLine(0, 14, `  └ ${grpp_convertLangVar(langDatabase.update.batch_errorCounter, [changeTextColorNumber(errorCounter, consoleTextStyle.fgGreen)])}\n\n${langDatabase.update.batchProcessList}\n\n`);
             }
 
             // Update entryChar if there is only one process and update elapsed time line
-            if (totalResFiles === 1) entryChar = '───';
+            if (totalResFiles === 1) entryChar = '-->';
             updateConsoleLine(0, 12, `  ├ ${grpp_convertLangVar(langDatabase.update.batch_elapsedTime, [consoleTextStyle.fgGreen, converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime)), consoleTextStyle.reset])}`);
 
-            // Check if process finished. If so, update checkbox char and update each process line
-            if (batchResData.currentRepo > (batchResData.totalRepos - 1)) checkboxChar = '[✓]';
+            // Check if process finished - if so, update checkbox char and update each process line
+            if (batchResData.currentRepo > (batchResData.totalRepos - 1)) checkboxChar = `[${consoleTextStyle.fgGreen}✓${consoleTextStyle.reset}]`;
             updateConsoleLine(0, (currentFile + 18), grpp_convertLangVar(langDatabase.update.batchProcess, [
                 entryChar,
                 checkboxChar,
@@ -360,12 +359,8 @@ function processBatchResFiles(){
                 parsePercentage(batchResData.currentRepo, batchResData.totalRepos),
                 batchResData.currentRepo,
                 batchResData.totalRepos,
-                consoleTextStyle.fgGreen,
-                batchResData.updateList.length,
-                consoleTextStyle.reset,
-                consoleTextStyle.fgRed,
-                batchResData.errorList.length,
-                consoleTextStyle.reset,
+                changeTextColorNumber(batchResData.updateList.length, consoleTextStyle.fgGreen),
+                changeTextColorNumber(batchResData.errorList.length, consoleTextStyle.fgRed),
                 enableLineBreak
             ]));
 
