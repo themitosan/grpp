@@ -155,7 +155,7 @@
         "batch_overallProgress": "Progresso geral: %VAR_0%% [%VAR_1% de %VAR_2%]",
         "batch_updateCounter": "Atualizações: %VAR_0%",
         "batch_errorCounter": "Erros: %VAR_0%",
-        "batch_elapsedTime": "Tempo decorrido: %VAR_0%%VAR_1%%VAR_2%",
+        "batch_elapsedTime": "Tempo decorrido: %VAR_0%",
         "batchProcessList": "==> Processos ativos:",
 
         "batchProcess": "%VAR_0% %VAR_1% Processo %VAR_2% - Progresso: %VAR_3%% [%VAR_4% de %VAR_5%] - Atualizações: %VAR_6%, Erros: %VAR_7%%VAR_8%",

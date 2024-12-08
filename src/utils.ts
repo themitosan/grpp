@@ -12,7 +12,7 @@
 import { grppSettings } from './main';
 import { grppRepoEntry } from './import';
 import { grpp_convertLangVar, langDatabase } from './lang';
-import { consoleClear, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, trimString } from './tools';
+import { consoleClear, consoleTextStyle, converMsToHHMMSS, createLogEntry, execReasonListCheck, trimString } from './tools';
 
 /*
     Require node modules
@@ -57,7 +57,7 @@ export function grpp_printStatus(){
 */
 export function grpp_getLogoString(removeColors:boolean = !1):string {
 
-    var logo = `
+    var logo = `${consoleTextStyle.reset}
     <=====================================================>
     <=|       Git Repo Preservation Project (GRPP)      |=>
     <=| Created by TheMitoSan (@themitosan.bsky.social) |=>

@@ -348,7 +348,7 @@ function processBatchResFiles(){
 
             // Update entryChar if there is only one process and update elapsed time line
             if (totalResFiles === 1) entryChar = '-->';
-            updateConsoleLine(0, 12, `  ├ ${grpp_convertLangVar(langDatabase.update.batch_elapsedTime, [consoleTextStyle.fgGreen, converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime)), consoleTextStyle.reset])}`);
+            updateConsoleLine(0, 12, `  ├ ${grpp_convertLangVar(langDatabase.update.batch_elapsedTime, [converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime))])}`);
 
             // Check if process finished - if so, update checkbox char and update each process line
             if (batchResData.currentRepo > (batchResData.totalRepos - 1)) checkboxChar = `[${consoleTextStyle.fgGreen}✓${consoleTextStyle.reset}]`;
