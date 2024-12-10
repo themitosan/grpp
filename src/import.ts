@@ -116,6 +116,7 @@ export async function grpp_startImport(cloneURL:string){
                 runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: repoPath });
             })
             .then(function(){
+                process.chdir(originalCwd);
                 grpp_updateRepoData(`${urlData[2]}/${owner}/${name}`, currentRepo);
                 createLogEntry(grpp_convertLangVar(langDatabase.import.cloneProcessComplete, [name, repoPath]));
                 resolve();
@@ -135,13 +136,11 @@ export async function grpp_batchImport(urlList:string){
     // Clear screen, create url array and starrt clone process
     grpp_displayMainLogo(!0);
     const
-        originalCwd = structuredClone(process.cwd()),
         urlArray = urlList.split('\n');
     for (const url of urlArray){
         if (url.length > 0){
             createLogEntry(grpp_convertLangVar(langDatabase.import.batchCurrentRepo, [(urlArray.indexOf(url) + 1), urlArray.length, url]));
             await grpp_startImport(url);
-            process.chdir(originalCwd);
         }
     }
 
