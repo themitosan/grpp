@@ -97,10 +97,10 @@ export const consoleTextStyle = {
 */
 
 /**
-    * Check if current arg is valid
+    * Get argument name
     * @param arg [string] Arg to be checked
 */
-export function checkFlagIsValid(arg:string):string {
+export function getArgName(arg:string):string {
 
     var res = '',
         handleDatabase = ['-', '/'];

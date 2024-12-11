@@ -11,7 +11,7 @@
 
 import { grpp_getReposFrom } from './getReposFrom';
 import { grpp_startRepairDatabase } from './repair';
-import { createLogEntry, preventMinMax, checkFlagIsValid } from './tools';
+import { createLogEntry, preventMinMax, getArgName } from './tools';
 import { grpp_batchImport, grpp_startImport, grppRepoEntry } from './import';
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from './update';
 import { grpp_convertLangVar, grpp_displayLangList, grpp_loadLang, grpp_setLang, langDatabase } from './lang';
@@ -318,6 +318,32 @@ async function grpp_getNpmRootPath(){
 }
 
 /**
+    * Checks if all args are valid
+    * @param startIndex [number] process.argv starting position
+*/
+function checkArgIsValid(startIndex:number){
+    
+    // Declare vars
+    const
+        unknownArgs:string[] = [],
+        argList = structuredClone(process.argv).splice(startIndex + 1),
+        fnList = Object.keys(langDatabase.utils.help.fnList),
+        fnArgsList = Object.keys(langDatabase.utils.help.fnArgsList),
+        settingsList = Object.keys(langDatabase.utils.help.settingsList);
+
+    // Process arg list and check if all of them exists on function / settings database
+    for (var argIndex = 0; argIndex < argList.length; argIndex++){
+        var currentArg = getArgName(argList[argIndex]);
+        if (currentArg.indexOf('=') !== -1) currentArg = currentArg.slice(0, currentArg.indexOf('='));
+        if ([fnList.indexOf(currentArg) !== -1, fnArgsList.indexOf(currentArg) !== -1, settingsList.indexOf(currentArg) !== -1 ].indexOf(!0) === -1) unknownArgs.push(currentArg);
+    }
+
+    // Check if needs to display unknown args list
+    if (unknownArgs.length > 0) createLogEntry(grpp_convertLangVar(langDatabase.main.warnUnknownArgs, [unknownArgs]), 'warn');
+
+}
+
+/**
     * GRPP main function
 */
 async function init(){
@@ -330,164 +356,174 @@ async function init(){
     })
     .then(grpp_loadLang);
 
+    // Create vars
+    var execFn:Function | null = null,
+        grppCmdIndex:number | null = null;
+
     /*
         Process settings flags
     */
     for (var i = 0; i < process.argv.length; i++){
-        const currentFlag = checkFlagIsValid(process.argv[i]);
+
+        // Get current flag and check if current flag is grpp call
+        const currentArg = getArgName(process.argv[i]);
+        if (process.argv[i].indexOf('/grpp') !== -1 && i < (process.argv.length - 1)) grppCmdIndex = i;
 
         // Check if needs to enable silent mode
-        if (currentFlag.indexOf('silent') !== -1) enableSilentMode = !0;
+        if (currentArg.indexOf('silent') !== -1) enableSilentMode = !0;
 
         // Repair: Check if will remove all missing keys from database automatically
-        if (currentFlag.indexOf('removeAllKeys') !== -1) repair_removeAllKeys = !0;
+        if (currentArg.indexOf('removeAllKeys') !== -1) repair_removeAllKeys = !0;
 
         // Set max repos a batch file should have
-        if (currentFlag.indexOf('maxReposPerList=') !== -1){
-            tempSettings.maxReposPerList = preventMinMax(Math.floor(Number(currentFlag.replace('maxReposPerList=', ''))), 1, maxValue);
+        if (currentArg.indexOf('maxReposPerList=') !== -1){
+            tempSettings.maxReposPerList = preventMinMax(Math.floor(Number(currentArg.replace('maxReposPerList=', ''))), 1, maxValue);
             grpp_saveSettings();
         }
 
         // User settings: Set lang
-        if (currentFlag.indexOf('setLang=') !== -1) grpp_setLang(currentFlag.replace('setLang=', ''));
+        if (currentArg.indexOf('setLang=') !== -1) grpp_setLang(currentArg.replace('setLang=', ''));
 
         // Set max fetch pages
-        if (currentFlag.indexOf('setMaxFetchPages=') !== -1){
-            tempSettings.maxPages = preventMinMax(Math.floor(Number(currentFlag.replace('setMaxFetchPages=', ''))), 1, maxValue);
+        if (currentArg.indexOf('setMaxFetchPages=') !== -1){
+            tempSettings.maxPages = preventMinMax(Math.floor(Number(currentArg.replace('setMaxFetchPages=', ''))), 1, maxValue);
             grpp_saveSettings();
         }
 
         // Set web test url
-        if (currentFlag.indexOf('setConnectionTestURL=') !== -1){
-            tempSettings.connectionTestURL = currentFlag.replace('setConnectionTestURL=', '');
+        if (currentArg.indexOf('setConnectionTestURL=') !== -1){
+            tempSettings.connectionTestURL = currentArg.replace('setConnectionTestURL=', '');
             grpp_saveSettings();
         }
 
         // Set starting fetch page
-        if (currentFlag.indexOf('setStartPage=') !== -1){
-            tempSettings.fetchStartPage = preventMinMax(Math.floor(Number(currentFlag.replace('setStartPage=', ''))), 0, maxValue);
+        if (currentArg.indexOf('setStartPage=') !== -1){
+            tempSettings.fetchStartPage = preventMinMax(Math.floor(Number(currentArg.replace('setStartPage=', ''))), 0, maxValue);
             grpp_saveSettings();
         }
 
         // Set text editor
-        if (currentFlag.indexOf('setEditor') !== -1){
-            tempSettings.userEditor = currentFlag.replace('setEditor=', '');
+        if (currentArg.indexOf('setEditor') !== -1){
+            tempSettings.userEditor = currentArg.replace('setEditor=', '');
             grpp_saveSettings();
         }
 
         // Set GRPP path
-        if (currentFlag.indexOf('path=') !== -1){
+        if (currentArg.indexOf('path=') !== -1){
 
             // Set new path var and check if it exists. If not, try creating it
-            const newPath = currentFlag.replace('path=', '');
+            const newPath = currentArg.replace('path=', '');
             if (module_fs.existsSync(newPath) === !1) module_fs.mkdirSync(newPath);
             originalCwd = structuredClone(newPath);
             process.chdir(newPath);
 
         }
+
     }
 
     // Display main logo, version and create execFn var
     grpp_displayMainLogo(!1);
     createLogEntry(grpp_convertLangVar(langDatabase.main.version, [APP_VERSION, APP_HASH, APP_COMPILED_AT]));
     createLogEntry(langDatabase.main.knowMore);
-    var execFn:Function | null = null;
+
+    // Check if grpp command position was found. If so, check if all arguments are valid
+    if (grppCmdIndex !== null) checkArgIsValid(grppCmdIndex);
 
     /*
         Process functions flags
     */
     for (var i = 0; i < process.argv.length; i++){
-        const currentFlag = checkFlagIsValid(process.argv[i]);
+        const currentArg = getArgName(process.argv[i]);
 
         // Display help menu
-        if (currentFlag.indexOf('help') !== -1){
+        if (currentArg.indexOf('help') !== -1){
             grpp_displayHelp();
             break;
         }
 
         // List all available lang options
-        if (currentFlag.indexOf('langList') !== -1){
+        if (currentArg.indexOf('langList') !== -1){
             grpp_displayLangList();
             break;
         }
 
         // Print current stats
-        if (currentFlag.indexOf('status') !== -1){
+        if (currentArg.indexOf('status') !== -1){
             execFn = grpp_printStatus;
             break;
         }
 
         // Initialize folder / path
-        if (currentFlag.indexOf('init=') !== -1){
-            grpp_initPath(currentFlag.replace('init=', ''));
+        if (currentArg.indexOf('init=') !== -1){
+            grpp_initPath(currentArg.replace('init=', ''));
             break;
         }
-        if (currentFlag.indexOf('init') !== -1){
+        if (currentArg.indexOf('init') !== -1){
             grpp_initPath();
             break;
         }
 
         // Repair database
-        if (currentFlag.indexOf('repair') !== -1){
+        if (currentArg.indexOf('repair') !== -1){
             execFn = grpp_startRepairDatabase;
             break;
         }
 
         // Get repos from user
-        if (currentFlag.indexOf('getReposFrom=') !== -1){
+        if (currentArg.indexOf('getReposFrom=') !== -1){
             execFn = function(){
-                grpp_getReposFrom(currentFlag.replace('getReposFrom=', ''));
+                grpp_getReposFrom(currentArg.replace('getReposFrom=', ''));
             }
             break;
         }
 
         // Import repo
-        if (currentFlag.indexOf('import=') !== -1){
+        if (currentArg.indexOf('import=') !== -1){
             execFn = function(){
-                grpp_startImport(currentFlag.replace('import=', ''));
+                grpp_startImport(currentArg.replace('import=', ''));
             }
             break;
         }
 
         // Import repo from list
-        if (currentFlag.indexOf('importList=') !== -1){
+        if (currentArg.indexOf('importList=') !== -1){
             execFn = function(){
-                grpp_batchImport(module_fs.readFileSync(currentFlag.replace('importList=', ''), 'utf-8'));
+                grpp_batchImport(module_fs.readFileSync(currentArg.replace('importList=', ''), 'utf-8'));
             }
         }
 
         // Get info from a previously imported repo
-        if (currentFlag.indexOf('getRepoData=') !== -1){
+        if (currentArg.indexOf('getRepoData=') !== -1){
             execFn = function(){
-                grpp_getRepoInfo(currentFlag.replace('getRepoData=', ''));
+                grpp_getRepoInfo(currentArg.replace('getRepoData=', ''));
             }
             break;
         }
 
         // Update an specific repo
-        if (currentFlag.indexOf('update=') !== -1){
+        if (currentArg.indexOf('update=') !== -1){
             execFn = function(){
-                grpp_updateRepo(currentFlag.replace('update=', ''));
+                grpp_updateRepo(currentArg.replace('update=', ''));
             }
             break;
         }
 
         // Update all repos
-        if (currentFlag.indexOf('updateAll') !== -1){
+        if (currentArg.indexOf('updateAll') !== -1){
             execFn = grpp_checkBatchUpdateProcess;
             break;
         }
 
         // Process GRPP batch files
-        if (currentFlag.indexOf('processBatchFile=') !== -1){
+        if (currentArg.indexOf('processBatchFile=') !== -1){
             execFn = async function(){
-                await grpp_processBatchFile(Number(currentFlag.replace('processBatchFile=', '')));
+                await grpp_processBatchFile(Number(currentArg.replace('processBatchFile=', '')));
             }   
             break;
         }
 
         // Save repos url list
-        if (currentFlag.indexOf('exportRemotes') !== -1){
+        if (currentArg.indexOf('exportRemotes') !== -1){
             execFn = grpp_exportRemotes;
             break;
         }

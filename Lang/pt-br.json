@@ -6,13 +6,17 @@
     },
 
     "main": {
+
+        "warnUnknownArgs": "AVISO - GRPP não indentificou a seguinte lista de argumentos: \"%VAR_0%\"\n",
+
         "warnPathNotInit": "AVISO - Não foi possível carregar as configurações por que esse diretório não foi inicializado! GRPP irá inicializar antes de continuar...",
         "version": "Versão: %VAR_0% [%VAR_1%]\nCompilado em %VAR_2%\n",
         "knowMore": "==> Use o argumento \"--help\" para obter mais informações.\n",
-        "noArgsProvided": "==> Visto que nenhum argumento foi passado, desejamos que uma bela pessoa chamada %VAR_0% tenha um ótimo dia! <3\n",
+        "noArgsProvided": "==> Visto que nenhum argumento foi passado, desejamos que uma bela pessoa com o nome %VAR_0% tenha um ótimo dia! <3\n",
 
         "unableGetNpmRootPath": "ERRO - Não foi possível obter o local de instalação global do NPM!\nMotivo: %VAR_0%",
         "unableGetNpmRootPath_notFound": "Caminho não encontrado! (%VAR_0%)"
+
     },
 
     "getReposFrom": {
@@ -69,23 +73,23 @@
             },
 
             "fnArgsList": {
-                "init=[PATH]": "Informa aonde GRPP deve inicializar / guardar os repositórios.\nVocê pode apenas user \"--init\" para inicializar a pasta atual!",
-                "import=[GIT_URL]": "Importa (clona) o repositório especificado para o sistema.",
-                "importList=[PATH]": "Importa (clona) todos os repositórios de um arquivo de texto.",
-                "path=[PATH]": "Especifica aonde GRPP deve operar.",
-                "update=[PATH]": "Atualiza um repositório previamente importado.",
-                "getReposFrom=[USERNAME]": "Tenta obter todos os repositórios de um usuário, tendo como possibilidade importa-los ao sistema.",
-                "getRepoData=[PATH]": "Obtem informações a respeito de um repositório previamente importado.",
-                "processBatchFile=[NUMBER]": "Carrega uma lista de repositórios a serem atualizados, gerado pelo processo de atualização (\"--updateAll\").\nIMPORTANTE: É recomendado que não utilize essa opção de forma manual."
+                "init": "[CAMINHO] Informa aonde GRPP deve inicializar / guardar os repositórios.\nVocê pode apenas user \"--init\" para inicializar a pasta atual!",
+                "import": "[URL_GIT] Importa (clona) o repositório especificado para o sistema.",
+                "importList": "[CAMINHO] Importa (clona) todos os repositórios de um arquivo de texto.",
+                "path": "[CAMINHO] Especifica aonde GRPP deve operar.",
+                "update": "[CAMINHO] Atualiza um repositório previamente importado.",
+                "getReposFrom": "[NOME_DO_USUÁRIO] Tenta obter todos os repositórios de um usuário, tendo como possibilidade importa-los ao sistema.",
+                "getRepoData": "[CAMINHO] Obtem informações a respeito de um repositório previamente importado.",
+                "processBatchFile": "[NÚMERO] Carrega uma lista de repositórios a serem atualizados, gerado pelo processo de atualização (\"--updateAll\").\nIMPORTANTE: É recomendado que não utilize essa opção de forma manual."
             },
 
             "settingsList": {
-                "setLang=[LANG]": "Altera qual idimoa GRPP será exibido. Você pode ver a lista de idiomas disponíveis usando o argumento \"--langList\".",
-                "maxReposPerList=[NUMBER]": "Informa quantos repositórios cada processo deverá ter quando GRPP for atualizar.",
-                "setStartPage=[NUMBER]": "Informa qual página GRPP deve começar a listar os repositórios de usuário.",
-                "setMaxFetchPages=[NUMBER]": "Informa o número máximo de paginas com repositórios que GRPP deve obter ao procurar repositórios de um usuário.",
-                "setConnectionTestURL=[URL]": "Informa qual URL será usada para testar a conexão de internet.",
-                "setEditor=[EDITOR]": "Informa qual editor de texto GRPP deverá usar para abrir arquivos de texto. (Padrão: nano)"
+                "setLang": "[IDIOMA] Altera qual idimoa GRPP será exibido. Você pode ver a lista de idiomas disponíveis usando o argumento \"--langList\".",
+                "maxReposPerList": "[NÚMERO] Informa quantos repositórios cada processo deverá ter quando GRPP for atualizar.",
+                "setStartPage": "[NÚMERO] Informa qual página GRPP deve começar a listar os repositórios de usuário.",
+                "setMaxFetchPages": "[NÚMERO] Informa o número máximo de paginas com repositórios que GRPP deve obter ao procurar repositórios de um usuário.",
+                "setConnectionTestURL": "[URL] Informa qual URL será usada para testar a conexão de internet.",
+                "setEditor": "[EDITOR] Informa qual editor de texto GRPP deverá usar para abrir arquivos de texto. (Padrão: nano)"
             }
 
         },
