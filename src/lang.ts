@@ -132,8 +132,9 @@ export var langDatabase:any = {
     "repair": {
 
         "warnUnablePerformRepair": "WARN - Unable to perform repair!\nReason: %VAR_0%",
+        "warnUnablePerformRepair_noRepos": "There is no repos on database!",
 
-        "infoCheckDatabaseFiles": "INFO - Checking database files...",
+        "infoCheckDatabaseFiles": "INFO - Checking repo list...",
 
         "databaseLengthMismatch": "WARN - Repo counter mismatch! [%VAR_0% on database vs. %VAR_1% found on current scan]\nStarting repair process...\n\n(Depending of how many repos are available, this may take a while!)\n",
 

@@ -510,5 +510,9 @@ async function init(){
 
 }
 
+process.on('uncaughtException', function(err) {
+    console.error(err);
+});
+
 // Start GRPP
 await init();

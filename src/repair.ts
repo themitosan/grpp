@@ -36,6 +36,9 @@ interface pushError {
     Variables
 */
 
+// Current scan list
+const scanList:string[] = [];
+
 var
 
     // Remove counter
@@ -43,6 +46,9 @@ var
 
     // Import sucess counter
     importSuccessCounter = 0,
+
+    // Repo entries array
+    repoList:string[] = [],
 
     // Repair error list
     errorList:pushError[] = [];
@@ -56,30 +62,40 @@ var
 */
 export async function grpp_startRepairDatabase(){
 
-    // Declare vars and check if GRPP update is running
+    // Declare reasonList const and get repo entries
     const reasonList:string[] = [];
+    repoList = structuredClone([...Object.keys(grppSettings.repoEntries)]);
+
+    // Test conditions to not run repair process
+    if (repoList.length === 0) reasonList.push(langDatabase.repair.warnUnablePerformRepair_noRepos);
     if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(langDatabase.common.errorBatchUpdateRunning);
 
     // Check if can start repair process
     execReasonListCheck(reasonList, langDatabase.repair.warnUnablePerformRepair, async function(){
 
-        /*
-            Check for missing repo entries on grpp_settings.json
-        */
-
-        // Read current path dir structure
-        const
-            scanList:string[] = [],
-            repoList = Object.keys(grppSettings.repoEntries),
-            tempList = getDirTree(`${process.cwd()}/repos`, '.git');
-
         // Filter git folders
-        createLogEntry(langDatabase.repair.infoCheckDatabaseFiles);
-        tempList.forEach(function(currentFolder){
-            if (currentFolder.toLowerCase().indexOf('.git') !== -1) scanList.push(currentFolder);
+        getDirTree(`${process.cwd()}/repos`, '.git').forEach(function(currentFolder){
+            if (currentFolder.toLowerCase().indexOf('.git') !== -1) scanList.push(currentFolder.replace(`${process.cwd()}/repos/`, ''));
         });
 
+        // Check missing entry keys, check missing repos and finish process
+        await grpp_scanMissingEntryKeys();
+        await grpp_checkMissingRepos().then(function(){
+            createLogEntry(langDatabase.repair.infoRepairComplete);
+        });
+
+    });
+
+}
+
+/**
+    * Check for missing repo entries on grpp_settings.json
+*/
+async function grpp_checkMissingRepos(){
+    return new Promise<void>(async function(resolve){
+
         // Check if all available repos are listed on settings file
+        createLogEntry(langDatabase.repair.infoCheckDatabaseFiles);
         if (scanList.length !== repoList.length){
 
             // Create log entry and start processing repo list
@@ -90,7 +106,7 @@ export async function grpp_startRepairDatabase(){
 
             // Check if repo path exists
             for (const currentRepo in repoList){
-                if (module_fs.existsSync(repoList[currentRepo]) !== !0) await grpp_removeRepoEntry(repoList[currentRepo]);
+                if (module_fs.existsSync(`${process.cwd()}/repos/${repoList[currentRepo]}`) !== !0) await grpp_removeRepoEntry(repoList[currentRepo]);
             }
 
             // Log process complete and log display error details if had any
@@ -103,15 +119,24 @@ export async function grpp_startRepairDatabase(){
             }
 
         }
+        resolve();
 
-        /*
-            Scan for missing entry keys on database entries
-        */
+    });
+}
 
-        // Declare vars 
+/**
+    * Scan for missing entry keys on database entries
+*/
+async function grpp_scanMissingEntryKeys(){
+    return new Promise<void>(function(resolve){
+
+        // Declare vars and consts
         var addedMissingKeys = 0,
-            removeDeprecatedKeys = 0,
-            fixedRepos:string[] = [];
+            removeDeprecatedKeys = 0;
+        
+        const
+            fixedRepos:string[] = [],
+            repoPathWithCwd = `${process.cwd()}/repos/`;
 
         // Create log entry and start processing repos
         createLogEntry(langDatabase.repair.infoCheckMissingKeys);
@@ -129,7 +154,7 @@ export async function grpp_startRepairDatabase(){
                     currentRepoData[currentKey as keyof typeof currentRepoData] = repoEntry_Defaults[currentKey as keyof typeof repoEntry_Defaults];
                     grpp_updateRepoData(currentRepo, currentRepoData);
 
-                    // Bump added missing keys counter and check if current repo was already fixed. If not, push to fixed list
+                    // Bump added missing keys counter and check if current repo was already fixed - if not, push to fixed list
                     if (fixedRepos.indexOf(currentRepo) === -1) fixedRepos.push(currentRepo);
                     addedMissingKeys++;
 
@@ -154,7 +179,6 @@ export async function grpp_startRepairDatabase(){
             });
 
             // Check if current path exists are present on current database entry (Usually present on on GRPP version 1.0.0)
-            const repoPathWithCwd = `${process.cwd()}/repos/`;
             if (currentRepo.indexOf(repoPathWithCwd) !== -1){
 
                 createLogEntry(grpp_convertLangVar(langDatabase.repair.removePathFromKey, [currentRepo]));
@@ -165,16 +189,11 @@ export async function grpp_startRepairDatabase(){
 
         });
 
-        // Create log entry if any repo was fixed.
+        // Create log entry if any repo was fixed and resolve
         if (fixedRepos.length !== 0) createLogEntry(grpp_convertLangVar(langDatabase.repair.infoAddRemoveKeys, [addedMissingKeys, removeDeprecatedKeys, fixedRepos.length]));
-
-        /*
-            Process complete
-        */
-        createLogEntry(langDatabase.repair.infoRepairComplete);
+        resolve();
 
     });
-
 }
 
 /**
@@ -185,12 +204,6 @@ export async function grpp_startRepairDatabase(){
 async function grpp_removeRepoEntry(path:string){
     return new Promise<void>(function(resolve){
 
-        // Remove repo function
-        const removeRepo = function(){
-            grpp_removeRepo(path);
-            removeRepoCounter++;
-        };
-
         // Check if needs to ask if user wants to remove current key from database
         if (repair_removeAllKeys === !1){
 
@@ -198,12 +211,12 @@ async function grpp_removeRepoEntry(path:string){
             const readline = module_readline.createInterface({ input: process.stdin, output: process.stdout });
             readline.question(grpp_convertLangVar(langDatabase.repair.confirmRemoveRepoDatabase, [path]), function(answer){
                 readline.close();
-                if (answer.toLowerCase() === langDatabase.common.confirmChar) removeRepo();
+                if (answer.toLowerCase() === langDatabase.common.confirmChar) removeRepo(path);
                 resolve();
             });
 
         } else {
-            removeRepo();
+            removeRepo(path);
             resolve();
         }
 
@@ -250,7 +263,8 @@ async function grpp_repairAddMissingRepo(path:string){
             createLogEntry(grpp_convertLangVar(langDatabase.repair.importMissingRepo, [repoName, path]));
             await runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: path })
             .then(function(){
-                grpp_updateRepoData(path.replace(process.cwd(), ''), repoData);
+                grpp_updateRepoData(path.replace(`${process.cwd()}/repos/`, ''), repoData);
+                process.chdir(originalCwd);
                 importSuccessCounter++;
                 resolve();
             });
@@ -265,6 +279,15 @@ async function grpp_repairAddMissingRepo(path:string){
         }
 
     });
+}
+
+/**
+    * Remove repo and bump removeRepoCounter
+    * @param path [string] repo to be removed 
+*/
+function removeRepo(path:string){
+    grpp_removeRepo(path);
+    removeRepoCounter++;
 }
 
 /**

@@ -106,8 +106,9 @@
     "repair": {
 
         "warnUnablePerformRepair": "AVISO - Não foi possível realizar reparo!\nMotivo: %VAR_0%",
+        "warnUnablePerformRepair_noRepos": "Não há repositórios no banco de dados!",
 
-        "infoCheckDatabaseFiles": "INFO - Verificando arquivos de banco de dados...",
+        "infoCheckDatabaseFiles": "INFO - Verificando lista de repositórios...",
 
         "databaseLengthMismatch": "AVISO - O número de repositórios listados no banco de dados não bate com o número de repositórios presentes! [%VAR_0% no banco de dados contra %VAR_1% encontrados presentes]\nIniciando processo de reparo...\n\n(Dependendo de quantos repositórios estiverem presentes, isso pode demorar um pouco!)\n",
 
