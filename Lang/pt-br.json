@@ -183,7 +183,7 @@
         "unableSetLang_fileNotFound": "Não foi possível localizar arquivo de idioma: %VAR_0%",
         "errorUnableLoadLang": "ERRO - Não foi possível carregar idioma %VAR_0%!\nMotivo: %VAR_1%",
         "errorUnableLoadLang_fileNotFound": "Não foi possível carregar idioma \"%VAR_0%\" por que o arquivo não foi encontrado ou não é um arquivo válido.",
-        "errorUnableLoadLang_keyMismatch": "Número de itens / chaves difere do banco de dados! Repare o arquivo de idioma ou restaure o idioma para \"en-us\" nas configurações de usuário.",
+        "errorUnableLoadLang_keyMismatch": "Número de itens / chaves difere do banco de dados!\n\"%VAR_0%\" não está presente no arquivo de idimoa.\n\nRepare o arquivo de idioma ou restaure o idioma para \"en-us\" nas configurações de usuário.",
         "displayLangList": "==> Veja a lista de todos os idiomas que podem ser escolhidos:\n\n%VAR_0%\n\nPara aplicar, basta usar a opção \"grpp --setLang=[LANG]\". (Sem aspas)\n"
     }
 

@@ -162,7 +162,7 @@ export var langDatabase:any = {
         "errorConfigFileNotExists": "Unable to read data from %VAR_0%.git because config file doesn't exists!\nGRPP will remove this repo entry from database...",
         "pushErrorWarn": "WARN - %VAR_0%",
 
-        "warnDbVersionMismatch": "WARN - It seems that your database version is from another grpp version!\nMake sure to run grpp on repair mode to prevent any possible issues."
+        "warnDbVersinoMismatch": "WARN - It seems that your database version is from another grpp version!\nMake sure to run grpp on repair mode to prevent any possible issues."
 
     },
 
@@ -209,7 +209,7 @@ export var langDatabase:any = {
         "unableSetLang_fileNotFound": "Unable to locate lang file: %VAR_0%",
         "errorUnableLoadLang": "ERROR - Unable to load lang %VAR_0%!\nReason: %VAR_1%",
         "errorUnableLoadLang_fileNotFound": "Unable to load lang \"%VAR_0%\" because it was not found or is not a valid file.",
-        "errorUnableLoadLang_keyMismatch": "Key counter mismatch from main lang database! Please fix lang file or reset user settings lang to \"en-us\".",
+        "errorUnableLoadLang_keyMismatch": "Key counter mismatch from main lang database!\n\"%VAR_0%\" is not present on lang file!\n\nPlease fix lang file or reset user settings lang to \"en-us\".",
         "displayLangList": "==> Here is the list of all available languages you can pick:\n\n%VAR_0%\n\nTo set, run \"grpp --setLang=[LANG]\". (Without quotes)\n"
     }
 
@@ -284,8 +284,8 @@ export async function grpp_loadLang(){
 async function checkLangKeys(langKeys:any){
     return new Promise<void>(function(resolve){
 
-        // Create isValidLang var and check object function
-        var isValidLang = !0;
+        // Create missingKeys var and check object function
+        const missingKeys:string[] = [];
         const checkObject = function(currentObject:any, sampleObject:any){
 
             // Create object array and start check process
@@ -295,7 +295,7 @@ async function checkLangKeys(langKeys:any){
                 // Get current key and check if sample object contains it
                 const currentKey = objectArray[keyIndex];
                 if (sampleObject[currentKey] === void 0){
-                    isValidLang = !1;
+                    missingKeys.push(currentKey);
                     break;
                 }
 
@@ -308,11 +308,11 @@ async function checkLangKeys(langKeys:any){
 
         // Start check process and check if current lang file is valid
         checkObject(langKeys, langDatabase);
-        if (isValidLang === !0){
+        if (missingKeys.length === 0){
             langDatabase = structuredClone(langKeys);
             resolve();
         } else {
-            throw langDatabase.lang.errorUnableLoadLang_keyMismatch;
+            throw grpp_convertLangVar(langDatabase.lang.errorUnableLoadLang_keyMismatch, [missingKeys]);
         }
 
     });
