@@ -13,8 +13,8 @@ import { grpp_getReposFrom } from './getReposFrom';
 import { grpp_startRepairDatabase } from './repair';
 import { createLogEntry, preventMinMax } from './tools';
 import { grpp_batchImport, grpp_startImport, grppRepoEntry } from './import';
-import { grpp_convertLangVar, grpp_displayLangList, grpp_loadLang, grpp_setLang, langDatabase } from './lang';
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from './update';
+import { grpp_convertLangVar, grpp_displayLangList, grpp_loadLang, grpp_setLang, langDatabase } from './lang';
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_exportRemotes, grpp_getRepoInfo, grpp_printStatus } from './utils';
 
 /*
@@ -509,10 +509,6 @@ async function init(){
     if (execFn === null && process.argv.length < 3) createLogEntry(grpp_convertLangVar(langDatabase.main.noArgsProvided, [module_os.userInfo().username]));
 
 }
-
-process.on('uncaughtException', function(err) {
-    console.error(err);
-});
 
 // Start GRPP
 await init();
