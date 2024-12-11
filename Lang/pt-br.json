@@ -130,7 +130,9 @@
         "importMissingRepo": "INFO - Incluindo repositório ao banco de dados: %VAR_0% [%VAR_1%]",
 
         "errorConfigFileNotExists": "Não foi possível obter informações de %VAR_0%.git por que o arquivo de configurações não existe!\nGRPP irá remover esse item do banco de dados...",
-        "pushErrorWarn": "AVISO - %VAR_0%"
+        "pushErrorWarn": "AVISO - %VAR_0%",
+
+        "warnDbVersinoMismatch": "AVISO - É possível que o banco de dados atual esteja desatualizado (ou seja de outra versão).\nCertifique-se de executar grpp em modo de reparo para prevenir possíveis problemas."
 
     },
 

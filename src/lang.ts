@@ -156,7 +156,9 @@ export var langDatabase:any = {
         "importMissingRepo": "INFO - Importing missing repo: %VAR_0% [%VAR_1%]",
 
         "errorConfigFileNotExists": "Unable to read data from %VAR_0%.git because config file doesn't exists!\nGRPP will remove this repo entry from database...",
-        "pushErrorWarn": "WARN - %VAR_0%"
+        "pushErrorWarn": "WARN - %VAR_0%",
+
+        "warnDbVersionMismatch": "WARN - It seems that your database version is from another grpp version!\nMake sure to run grpp on repair mode to prevent any possible issues."
 
     },
 

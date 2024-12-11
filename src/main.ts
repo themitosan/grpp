@@ -151,6 +151,13 @@ async function grpp_loadSettings(){
                     }
                 });
 
+                // Check if versio matches. If not, warn user to run repair mode
+                if (grppSettings.version !== APP_VERSION){
+                    createLogEntry(langDatabase.repair.warnDbVersinoMismatch, 'warn');
+                    grppSettings.version = APP_VERSION;
+                    grpp_saveSettings();
+                }
+
                 // Check if needs to update settings file and resolve
                 if (requestSave !== !1) grpp_saveSettings();
                 resolve();
