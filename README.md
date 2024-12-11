@@ -253,6 +253,7 @@ After processing all repos, GRPP will show the update results and save a copy on
 Some code snippets from internet were used on this project. You can see all of them listed below:
 
 - [Console text color sheet](https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color)
+- [Original snippet that changes terminal window title](https://github.com/daguej/node-console-title/blob/master/rename.js)
 - [Original INI Parser](https://gist.github.com/anonymous/dad852cde5df545ed81f1bc334ea6f72)
 - [Original DNS internet check](https://stackoverflow.com/questions/54887025/get-ip-address-by-domain-with-dns-lookup-node-js)
 - [Original snippet to format time in hhmmss](https://stackoverflow.com/questions/6312993/javascript-seconds-to-time-string-with-format-hhmmss)

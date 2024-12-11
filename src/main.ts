@@ -315,7 +315,8 @@ async function grpp_getNpmRootPath(){
 */
 async function init(){
 
-    // Load user settings, get NPM root path and load user language
+    // Change window title, load user settings, get NPM root path and load user language
+    process.stdout.write('\x1b]2;Git Repo Preservarion Project (GRPP)\x1b\x5c');
     grpp_loadUserSettings();
     await grpp_getNpmRootPath().catch(function(err){
         createLogEntry(grpp_convertLangVar(langDatabase.main.unableGetNpmRootPath, [err]));
