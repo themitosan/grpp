@@ -114,17 +114,15 @@
 
         "importRemoveStatus": "\nINFO - O processo de reparo incluiu %VAR_0% repositórios e removeu %VAR_1% itens no banco de dados com %VAR_2% erros.\n",
         "importRemoveError": "==> Erros de inclusão / exclusão:",
-        "importRemoveDetails": "Repo: %VAR_0%\nDetails: %VAR_1%\n",
+        "importRemoveDetails": "Repo: %VAR_0%\nDetalhes: %VAR_1%\n",
 
         "infoCheckMissingKeys": "INFO - Verificando possíveis chaves que não estão presentes nos repositórios do banco de dados...",
         "infoAddMissingKey": "INFO - Adicionando chave \"%VAR_0%\" no %VAR_1%...",
         "infoRemoveKey": "INFO - Removendo chave desnecessária de %VAR_0%: %VAR_1%",
 
         "removePathFromKey": "INFO - Removendo caminho do item: \"%VAR_0%\"",
-
         "infoAddRemoveKeys": "INFO - GRPP adicionou %VAR_0% chaves que estavam faltando e removeu %VAR_1% chaves desnecessárias em %VAR_2% repositórios.",
-
-        "infoRepairComplete": "INFO - Processo de reparo completo!\n",
+        "infoRepairComplete": "\nINFO - Processo de reparo completo!\n",
 
         "confirmRemoveRepoDatabase": "AVISO - Parece que %VAR_0% não existe!\nVocê quer remover esse item do banco de dados? [S/n] ",
 

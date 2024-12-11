@@ -12,7 +12,7 @@
 import { grppRepoEntry } from './import';
 import { grpp_convertLangVar, langDatabase } from './lang';
 import { grpp_displayMainLogo, grpp_getLogoString } from './utils';
-import { APP_COMPILED_AT, APP_HASH, APP_VERSION, grpp_updateRepoData, grpp_updateDatabaseSettings, grppSettings } from './main';
+import { APP_COMPILED_AT, APP_HASH, APP_VERSION, grpp_updateRepoData, grpp_updateDatabaseSettings, grppSettings, originalCwd } from './main';
 import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString, updateConsoleLine, consoleTextStyle, changeTextColorNumber } from './tools';
 
 /*
@@ -174,12 +174,8 @@ export async function grpp_updateRepo(path:string){
 */
 export async function grpp_processBatchFile(id:number){
 
-    // Create consts
-    const
-        originalCwd = structuredClone(process.cwd()),
-        batchFilePath = `${originalCwd}/.temp/GRPP_BATCH.json`;
-
-    // Check if batch file exists
+    // Create batch file path and check if batch file exists
+    const batchFilePath = `${originalCwd}/.temp/GRPP_BATCH.json`;
     if (module_fs.existsSync(batchFilePath) === !0){
 
         // Read batch update file, set total repos var on update results and start processing repos
@@ -212,7 +208,6 @@ export async function grpp_processBatchFile(id:number){
 async function grpp_startBatchUpdate(){
 
     // Declare vars
-    const originalCwd = structuredClone(process.cwd());
     var completedRunners = 0,
         updateList:string[] = [],
         priorityRepos:string[] = [];

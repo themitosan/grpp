@@ -147,10 +147,8 @@ export var langDatabase:any = {
         "infoRemoveKey": "INFO - Removing deprecated key from %VAR_0%: %VAR_1%",
 
         "removePathFromKey": "INFO - Removing path from current repo entry: \"%VAR_0%\"",
-
         "infoAddRemoveKeys": "INFO - GRPP added %VAR_0% missing keys and removed %VAR_1% deprecated keys on %VAR_2% repos.",
-
-        "infoRepairComplete": "INFO - Repair complete!\n",
+        "infoRepairComplete": "\nINFO - Repair complete!\n",
 
         "confirmRemoveRepoDatabase": "WARN - It seems that %VAR_0% does not exists!\nDo you want to remove this entry from database? [Y/n] ",
 

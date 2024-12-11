@@ -9,8 +9,8 @@
     Import TS modules
 */
 
-import { grpp_updateRepoData } from './main';
 import { grpp_displayMainLogo } from './utils';
+import { grpp_updateRepoData, originalCwd } from './main';
 import { grpp_convertLangVar, langDatabase } from './lang';
 import { createLogEntry, execReasonListCheck, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
@@ -76,7 +76,6 @@ export async function grpp_startImport(cloneURL:string){
             urlData = cloneURL.split('/'),
             name = urlData[urlData.length - 1],
             owner = urlData[urlData.length - 2],
-            originalCwd = structuredClone(process.cwd()),
             repoPath = `${process.cwd()}/repos/${urlData[2]}/${owner}/${name}`;
 
         // Check conditions

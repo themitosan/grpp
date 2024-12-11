@@ -11,7 +11,7 @@
 
 import { grpp_getReposFrom } from './getReposFrom';
 import { grpp_startRepairDatabase } from './repair';
-import { createLogEntry, preventMinMax } from './tools';
+import { createLogEntry, preventMinMax, checkFlagIsValid } from './tools';
 import { grpp_batchImport, grpp_startImport, grppRepoEntry } from './import';
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from './update';
 import { grpp_convertLangVar, grpp_displayLangList, grpp_loadLang, grpp_setLang, langDatabase } from './lang';
@@ -82,7 +82,7 @@ export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' |
 }
 
 // Default user settings
-export const grppUserSettings_Defaults: Pick <grppUserSettings, 'lang'> = {
+export const grppUserSettings_Defaults:Pick <grppUserSettings, 'lang'> = {
     lang: 'en-us'
 }
 
@@ -108,6 +108,9 @@ export var
 
     // NPM global path
     NPM_GLOBAL_PATH = '',
+
+    // App default working dir
+    originalCwd = structuredClone(process.cwd()),
 
     // User settings
     grppUserSettings:grppUserSettings = { ...grppUserSettings_Defaults },
@@ -171,8 +174,9 @@ async function grpp_loadSettings(){
 */
 export async function grpp_saveSettings(mode:string = 'db'){
     try {
-
+        
         // Swicth save mode
+        process.chdir(originalCwd);
         switch (mode){
 
             // User settings
@@ -235,33 +239,16 @@ export function grpp_updateRepoData(path:string, repoData:grppRepoEntry){
     * @param path [string] Repo to be removed from database 
 */
 export function grpp_removeRepo(path:string){
-    if (grppSettings.repoEntries[path] !== void 0){
-        delete grppSettings.repoEntries[path];
-        grpp_saveSettings();
-    } else {
-        createLogEntry(`WARN - Unable to find ${path} on repo database!`, 'warn');
-    }
+    return new Promise<void>(function(resolve){
+        if (grppSettings.repoEntries[path] !== void 0){
+            delete grppSettings.repoEntries[path];
+            grpp_saveSettings();
+        } else {
+            createLogEntry(`WARN - Unable to find ${path} on repo database!`, 'warn');
+        }
+        resolve();
+    });
 }
-
-/**
-    * Check if current arg is valid
-    * @param arg [string] Arg to be checked
-*/
-function checkFlagIsValid(arg:string):string {
-
-    var res = '',
-        handleDatabase = ['-', '/'];
-
-    if (arg.slice(0, 2) === '--'){
-        res = arg.slice(2, arg.length);
-    } else {
-        if (handleDatabase.indexOf(arg.slice(0, 1)) !== -1) res = arg.slice(1, arg.length);
-    }
-
-    return res;
-
-}
-
 /**
     * Load user settings 
 */
@@ -386,6 +373,7 @@ async function init(){
             // Set new path var and check if it exists. If not, try creating it
             const newPath = currentFlag.replace('path=', '');
             if (module_fs.existsSync(newPath) === !1) module_fs.mkdirSync(newPath);
+            originalCwd = structuredClone(newPath);
             process.chdir(newPath);
 
         }

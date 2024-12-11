@@ -15,7 +15,7 @@ declare var console:any;
 */
 
 import { grpp_convertLangVar } from './lang';
-import { enableSilentMode, grppSettings } from './main';
+import { enableSilentMode, grppSettings, originalCwd } from './main';
 
 /*
     Require node modules
@@ -95,6 +95,25 @@ export const consoleTextStyle = {
 /*
     Functions
 */
+
+/**
+    * Check if current arg is valid
+    * @param arg [string] Arg to be checked
+*/
+export function checkFlagIsValid(arg:string):string {
+
+    var res = '',
+        handleDatabase = ['-', '/'];
+
+    if (arg.slice(0, 2) === '--'){
+        res = arg.slice(2, arg.length);
+    } else {
+        if (handleDatabase.indexOf(arg.slice(0, 1)) !== -1) res = arg.slice(1, arg.length);
+    }
+
+    return res;
+
+}
 
 /**
     * Change text color if determinated var is higher than zero
@@ -284,9 +303,7 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
         // Change current working directory and declare some vars
         var stdData = '';
         process.chdir(options.chdir);
-        const
-            originalCwd = structuredClone(process.cwd()),
-            execCmd = module_childProcess.exec(cmd);
+        const execCmd = module_childProcess.exec(cmd);
 
         // Process std data
         execCmd.stderr?.on('data', function(data){

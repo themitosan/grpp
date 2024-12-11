@@ -232,18 +232,17 @@ async function grpp_repairAddMissingRepo(path:string){
 
         // Declare config file path and check if current repo isn't bare
         var configPath = `${path}/config`;
-        if (module_fs.existsSync(`${path}/.git/config`) === !0){
+        if (module_fs.existsSync(`${process.cwd()}/repos/${path}/.git/config`) === !0){
             configPath = `${path}/.git/config`;
             createLogEntry(grpp_convertLangVar(langDatabase.repair.warnRepoNotBare, [module_path.parse(path).name]), 'warn');
         }
 
         // Check if config file exists
-        if (module_fs.existsSync(configPath) === !0){
+        if (module_fs.existsSync(`${process.cwd()}/repos/${configPath}`) === !0){
 
             // Create vars
             const
-                gitConfig = parseINI(module_fs.readFileSync(configPath, 'utf-8')),
-                originalCwd = structuredClone(process.cwd()),
+                gitConfig = parseINI(module_fs.readFileSync(`${process.cwd()}/repos/${configPath}`, 'utf-8')),
                 repoUrl = gitConfig['remote "origin"'].url,
                 urlData = repoUrl.split('/'),
                 repoName = urlData[urlData.length - 1],
@@ -259,12 +258,19 @@ async function grpp_repairAddMissingRepo(path:string){
                     importDate: new Date().toString()
                 };
 
+            // Create path structure
+            [
+                `repos/${urlData[2]}`,
+                `repos/${urlData[2]}/${owner}`
+            ].forEach(function(cEntry){
+                if (module_fs.existsSync(`${process.cwd()}/${cEntry}`) === !1) module_fs.mkdirSync(`${process.cwd()}/${cEntry}`);
+            });
+
             // Create log entry and start import process
             createLogEntry(grpp_convertLangVar(langDatabase.repair.importMissingRepo, [repoName, path]));
-            await runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: path })
+            await runExternalCommand('git config remote.origin.fetch "+refs/*:refs/*"', { ...runExternalCommand_Defaults, chdir: `${process.cwd()}/repos/${path}` })
             .then(function(){
-                grpp_updateRepoData(path.replace(`${process.cwd()}/repos/`, ''), repoData);
-                process.chdir(originalCwd);
+                grpp_updateRepoData(path, repoData);
                 importSuccessCounter++;
                 resolve();
             });
@@ -273,8 +279,7 @@ async function grpp_repairAddMissingRepo(path:string){
 
             // Create error msg, log, push error and resolve
             pushError(path, grpp_convertLangVar(langDatabase.repair.errorConfigFileNotExists, [module_path.parse(path).name]));
-            grpp_removeRepo(path);
-            resolve();
+            await grpp_removeRepo(path).then(resolve);
 
         }
 
