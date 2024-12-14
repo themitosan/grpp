@@ -338,7 +338,7 @@ function processBatchResFiles(){
                 enableLineBreak = '\n';
                 updateConsoleLine(0, 11, `──┬ ${grpp_convertLangVar(langDatabase.update.batch_overallProgress, [parsePercentage(reposProcessed, totalReposQueued), reposProcessed, totalReposQueued])}`);
                 updateConsoleLine(0, 13, `  ├ ${grpp_convertLangVar(langDatabase.update.batch_updateCounter, [changeTextColorNumber(updateCounter, consoleTextStyle.fgGreen)])}`);
-                updateConsoleLine(0, 14, `  └ ${grpp_convertLangVar(langDatabase.update.batch_errorCounter, [changeTextColorNumber(errorCounter, consoleTextStyle.fgGreen)])}\n\n${langDatabase.update.batchProcessList}\n\n`);
+                updateConsoleLine(0, 14, `  └ ${grpp_convertLangVar(langDatabase.update.batch_errorCounter, [changeTextColorNumber(errorCounter, consoleTextStyle.fgRed)])}\n\n${langDatabase.update.batchProcessList}\n\n`);
             }
 
             // Update entryChar if there is only one process and update elapsed time line

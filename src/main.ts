@@ -181,7 +181,7 @@ async function grpp_loadSettings(){
 */
 export async function grpp_saveSettings(mode:string = 'db'){
     try {
-        
+
         // Swicth save mode
         process.chdir(originalCwd);
         switch (mode){
