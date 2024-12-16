@@ -67,10 +67,7 @@ export async function grpp_startRepairDatabase(){
     repoList = structuredClone([...Object.keys(grppSettings.repoEntries)]);
 
     // Test conditions to not run repair process
-    if (repoList.length === 0) reasonList.push(langDatabase.repair.warnUnablePerformRepair_noRepos);
     if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(langDatabase.common.errorBatchUpdateRunning);
-
-    // Check if can start repair process
     execReasonListCheck(reasonList, langDatabase.repair.warnUnablePerformRepair, async function(){
 
         // Filter git folders

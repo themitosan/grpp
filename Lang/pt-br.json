@@ -110,7 +110,6 @@
     "repair": {
 
         "warnUnablePerformRepair": "AVISO - Não foi possível realizar reparo!\nMotivo: %VAR_0%",
-        "warnUnablePerformRepair_noRepos": "Não há repositórios no banco de dados!",
 
         "infoCheckDatabaseFiles": "INFO - Verificando lista de repositórios...",
 

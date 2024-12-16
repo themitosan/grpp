@@ -203,47 +203,59 @@ export async function grpp_processBatchFile(id:number){
 }
 
 /**
+    * Sort repos to be updatd
+    * @param repoList [string[]] List to be sorted
+    * @returns [string[]] New list with sorted items
+*/
+async function grpp_sortBatchList(repoList:string[]):Promise<string[]> {
+    return new Promise<string[]>(function(resolve){
+
+        var updateList:string[] = [],
+            priorityRepos:string[] = [];
+
+        repoList.forEach(function(currentRepo){
+
+            // Get current repo data and check if can update
+            const repoData:grppRepoEntry = grppSettings.repoEntries[currentRepo];
+            if (repoData.canUpdate === !0){
+
+                if (repoData.isPriority === !0){
+                    priorityRepos.push(currentRepo);
+                } else {
+                    updateList.push(currentRepo);
+                }
+                totalReposQueued++;
+
+            } else {
+                skippedRepos.push(currentRepo);
+            }
+
+        });
+
+        // Put priority repos first if priority list isn't empty and return sorted list
+        if (priorityRepos.length !== 0) updateList = [ ...priorityRepos, ...updateList ];
+        resolve(updateList);
+
+    });
+}
+
+/**
     * Start GRPP update process
 */
 async function grpp_startBatchUpdate(){
 
-    // Declare vars
-    var completedRunners = 0,
-        updateList:string[] = [],
-        priorityRepos:string[] = [];
-
     // Set current time to measure update time, set tempDir var and check if it exists. If so, remove it and create a new one
+    var completedRunners = 0;
     tempDir = structuredClone(`${process.cwd()}/.temp`);
     startUpdateTime = structuredClone(performance.now());
     if (module_fs.existsSync(tempDir) === !0) module_fs.rmSync(tempDir, { recursive: !0 });
     module_fs.mkdirSync(tempDir);
-
-    // Filter repos that cannot be updated
+    
+    // Split update list on given runners, create GRPP batch file and set total res files / queued repos vars
     createLogEntry(`INFO - Creating update list...`);
-    Object.keys(grppSettings.repoEntries).forEach(function(currentRepo){
-
-        // Get current repo data and check if can update
-        const repoData:grppRepoEntry = grppSettings.repoEntries[currentRepo];
-        if (repoData.canUpdate === !0){
-
-            if (repoData.isPriority === !0){
-                priorityRepos.push(currentRepo);
-            } else {
-                updateList.push(currentRepo);
-            }
-            totalReposQueued++;
-
-        } else {
-            skippedRepos.push(currentRepo);
-        }
-
-    });
-
-    // Put priority repos first if priority list isn't empty
-    if (priorityRepos.length !== 0) updateList = [ ...priorityRepos, ...updateList ];
-
-    // Split update list on given runners, create GRPP batch files and set total res files / queued repos vars
-    const chunkList = spliceArrayIntoChunks(updateList, grppSettings.maxReposPerList);
+    const
+        updateList = await grpp_sortBatchList(Object.keys(grppSettings.repoEntries)),
+        chunkList = spliceArrayIntoChunks(updateList, grppSettings.maxReposPerList);
     module_fs.writeFileSync(`${tempDir}/GRPP_BATCH.json`, JSON.stringify({ batchList: chunkList }), 'utf-8');
     totalResFiles = structuredClone(chunkList.length);
 

@@ -136,7 +136,6 @@ export var langDatabase:any = {
     "repair": {
 
         "warnUnablePerformRepair": "WARN - Unable to perform repair!\nReason: %VAR_0%",
-        "warnUnablePerformRepair_noRepos": "There is no repos on database!",
 
         "infoCheckDatabaseFiles": "INFO - Checking repo list...",
 
