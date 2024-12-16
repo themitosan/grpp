@@ -41,7 +41,9 @@ export var langDatabase:any = {
         "noArgsProvided": "==> Since no args / flags were provided, We wish someone called %VAR_0% a great day! <3\n",
 
         "unableGetNpmRootPath": "ERROR - Unable to get NPM root path!\nReason: %VAR_0%",
-        "unableGetNpmRootPath_notFound": "Path not found! (%VAR_0%)"
+        "unableGetNpmRootPath_notFound": "Path not found! (%VAR_0%)",
+
+        "warnRepoNotFound": "WARN - Unable to find %VAR_0% on repo database!"
 
     },
 

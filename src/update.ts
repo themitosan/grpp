@@ -184,8 +184,7 @@ export async function grpp_processBatchFile(id:number){
         for (const repoIndex in batchFile.batchList[id]){
 
             // Process current repo and output current status
-            const repoEntry = batchFile.batchList[id][repoIndex];
-            await grpp_updateRepo(repoEntry).then(function(){
+            await grpp_updateRepo(batchFile.batchList[id][repoIndex]).then(function(){
 
                 // Reset chdir and create / update current process result
                 process.chdir(originalCwd);

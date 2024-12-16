@@ -15,7 +15,9 @@
         "noArgsProvided": "==> Visto que nenhum argumento foi passado, desejamos que uma bela pessoa com o nome %VAR_0% tenha um ótimo dia! <3\n",
 
         "unableGetNpmRootPath": "ERRO - Não foi possível obter o local de instalação global do NPM!\nMotivo: %VAR_0%",
-        "unableGetNpmRootPath_notFound": "Caminho não encontrado! (%VAR_0%)"
+        "unableGetNpmRootPath_notFound": "Caminho não encontrado! (%VAR_0%)",
+
+        "warnRepoNotFound": "AVISO - Não foi possível encontrar %VAR_0% no banco de dados!"
 
     },
 

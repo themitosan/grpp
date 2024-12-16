@@ -251,7 +251,7 @@ export function grpp_removeRepo(path:string){
             delete grppSettings.repoEntries[path];
             grpp_saveSettings();
         } else {
-            createLogEntry(`WARN - Unable to find ${path} on repo database!`, 'warn');
+            createLogEntry(grpp_convertLangVar(langDatabase.main.warnRepoNotFound, [path]), 'warn');
         }
         resolve();
     });
@@ -378,7 +378,7 @@ async function init(){
         // Set max repos a batch file should have
         if (currentArg.indexOf('maxReposPerList=') !== -1){
             tempSettings.maxReposPerList = preventMinMax(Math.floor(Number(currentArg.replace('maxReposPerList=', ''))), 1, maxValue);
-            grpp_saveSettings();
+            execFn = grpp_saveSettings;
         }
 
         // User settings: Set lang
@@ -387,25 +387,25 @@ async function init(){
         // Set max fetch pages
         if (currentArg.indexOf('setMaxFetchPages=') !== -1){
             tempSettings.maxPages = preventMinMax(Math.floor(Number(currentArg.replace('setMaxFetchPages=', ''))), 1, maxValue);
-            grpp_saveSettings();
+            execFn = grpp_saveSettings;
         }
 
         // Set web test url
         if (currentArg.indexOf('setConnectionTestURL=') !== -1){
             tempSettings.connectionTestURL = currentArg.replace('setConnectionTestURL=', '');
-            grpp_saveSettings();
+            execFn = grpp_saveSettings;
         }
 
         // Set starting fetch page
         if (currentArg.indexOf('setStartPage=') !== -1){
             tempSettings.fetchStartPage = preventMinMax(Math.floor(Number(currentArg.replace('setStartPage=', ''))), 0, maxValue);
-            grpp_saveSettings();
+            execFn = grpp_saveSettings;
         }
 
         // Set text editor
         if (currentArg.indexOf('setEditor') !== -1){
             tempSettings.userEditor = currentArg.replace('setEditor=', '');
-            grpp_saveSettings();
+            execFn = grpp_saveSettings;
         }
 
         // Set GRPP path
