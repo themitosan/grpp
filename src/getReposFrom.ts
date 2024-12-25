@@ -126,7 +126,7 @@ async function startUserFetch(urlBase:string){
         const errorList:string[] = [];
         if (fetchResult.length === 0 && repoChunk.length === 0) errorList.push(langDatabase.getReposFrom.errorNoReposAvailable);
         if (fetchResult['status'] !== void 0 && fetchResult['status'].toString() === '404') errorList.push(fetchResult.status);
-        
+
         // Check if can continue
         if (errorList.length === 0){
 

@@ -127,7 +127,7 @@ export function grpp_getRepoInfo(path:string){
     execReasonListCheck(reasonList, langDatabase.utils.getRepoInfo.errorUnableGetRepoInfo, function(){
 
         // Get repo data
-        const 
+        const
             fullPath = Object.keys(grppSettings.repoEntries)[repoIndex!],
             currentRepoData:grppRepoEntry = grppSettings.repoEntries[fullPath];
         createLogEntry(grpp_convertLangVar(langDatabase.utils.getRepoInfo.repoData, [JSON.stringify(currentRepoData, void 0, 4)]));

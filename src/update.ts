@@ -249,7 +249,7 @@ async function grpp_startBatchUpdate(){
     startUpdateTime = structuredClone(performance.now());
     if (module_fs.existsSync(tempDir) === !0) module_fs.rmSync(tempDir, { recursive: !0 });
     module_fs.mkdirSync(tempDir);
-    
+
     // Split update list on given runners, create GRPP batch file and set total res files / queued repos vars
     createLogEntry(`INFO - Creating update list...`);
     const
