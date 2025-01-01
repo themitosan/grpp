@@ -189,8 +189,11 @@ function processRepoChunk(resultArray:any[]){
         readline = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
 
     // Create import list and trim last line break
-    resultArray.forEach(function(cRepo){
-        repoList = `${repoList}${cRepo.clone_url}\n`;
+    resultArray.forEach(function(currentRepo){
+
+        if (currentRepo['clone_url'] !== void 0) repoList = `${repoList}${currentRepo.clone_url}\n`;
+        if (currentRepo['http_url_to_repo'] !== void 0) repoList = `${repoList}${currentRepo.http_url_to_repo}\n`;
+
     });
     repoList = trimString(repoList);
 
