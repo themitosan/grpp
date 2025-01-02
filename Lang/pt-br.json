@@ -17,7 +17,9 @@
         "unableGetNpmRootPath": "ERRO - Não foi possível obter o local de instalação global do NPM!\nMotivo: %VAR_0%",
         "unableGetNpmRootPath_notFound": "Caminho não encontrado! (%VAR_0%)",
 
-        "warnRepoNotFound": "AVISO - Não foi possível encontrar %VAR_0% no banco de dados!"
+        "warnRepoNotFound": "AVISO - Não foi possível encontrar %VAR_0% no banco de dados!",
+
+        "saveSettings": "AVISO - Salvando alterações..."
 
     },
 

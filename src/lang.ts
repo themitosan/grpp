@@ -43,7 +43,9 @@ export var langDatabase:any = {
         "unableGetNpmRootPath": "ERROR - Unable to get NPM root path!\nReason: %VAR_0%",
         "unableGetNpmRootPath_notFound": "Path not found! (%VAR_0%)",
 
-        "warnRepoNotFound": "WARN - Unable to find %VAR_0% on repo database!"
+        "warnRepoNotFound": "WARN - Unable to find %VAR_0% on repo database!",
+
+        "saveSettings": "INFO - Saving settings..."
 
     },
 

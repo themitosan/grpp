@@ -178,12 +178,14 @@ async function grpp_loadSettings(){
 /**
     * Save GRPP settings
     * @param mode [string] Which settings file should be updated (Default: grpp_settings)
+    * @param displayLog [boolean] Set true to display saving message on screen
 */
-export async function grpp_saveSettings(mode:string = 'db'){
+export async function grpp_saveSettings(mode:string = 'db', displayLog:boolean = !1){
     try {
 
         // Swicth save mode
         process.chdir(originalCwd);
+        if (displayLog === !0) createLogEntry(langDatabase.main.saveSettings);
         switch (mode){
 
             // User settings
@@ -365,8 +367,14 @@ async function init(){
     */
     for (var i = 0; i < process.argv.length; i++){
 
-        // Get current flag and check if current flag is grpp call
-        const currentArg = getArgName(process.argv[i]);
+        // Create consts
+        const
+            currentArg = getArgName(process.argv[i]),
+            saveSettings = function(){
+                grpp_saveSettings('user', !0);
+            };
+
+        // Check if current flag is grpp call
         if (process.argv[i].indexOf('/grpp') !== -1 && i < (process.argv.length - 1)) grppCmdIndex = i;
 
         // Check if needs to enable silent mode
@@ -378,7 +386,7 @@ async function init(){
         // Set max repos a batch file should have
         if (currentArg.indexOf('maxReposPerList=') !== -1){
             tempSettings.maxReposPerList = preventMinMax(Math.floor(Number(currentArg.replace('maxReposPerList=', ''))), 1, maxValue);
-            execFn = grpp_saveSettings;
+            execFn = saveSettings;
         }
 
         // User settings: Set lang
@@ -387,25 +395,25 @@ async function init(){
         // Set max fetch pages
         if (currentArg.indexOf('setMaxFetchPages=') !== -1){
             tempSettings.maxPages = preventMinMax(Math.floor(Number(currentArg.replace('setMaxFetchPages=', ''))), 1, maxValue);
-            execFn = grpp_saveSettings;
+            execFn = saveSettings;
         }
 
         // Set web test url
         if (currentArg.indexOf('setConnectionTestURL=') !== -1){
             tempSettings.connectionTestURL = currentArg.replace('setConnectionTestURL=', '');
-            execFn = grpp_saveSettings;
+            execFn = saveSettings;
         }
 
         // Set starting fetch page
         if (currentArg.indexOf('setStartPage=') !== -1){
             tempSettings.fetchStartPage = preventMinMax(Math.floor(Number(currentArg.replace('setStartPage=', ''))), 0, maxValue);
-            execFn = grpp_saveSettings;
+            execFn = saveSettings;
         }
 
         // Set text editor
         if (currentArg.indexOf('setEditor') !== -1){
             tempSettings.userEditor = currentArg.replace('setEditor=', '');
-            execFn = grpp_saveSettings;
+            execFn = saveSettings;
         }
 
         // Set GRPP path
