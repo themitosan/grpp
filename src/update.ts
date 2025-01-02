@@ -409,7 +409,9 @@ async function batchUpdateComplete(){
         tempSettings = grppSettings,
         updateDurationMs = parsePositive(startUpdateTime - performance.now()),
         readLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout }),
-        exportLogPath = `${process.cwd()}/logs/GRPP_BATCH_${time.toString().replaceAll(':', '_').replaceAll(' ', '_').slice(0, 24)}.txt`;
+        fileName = `GRPP_BATCH_${time.toString().replaceAll(':', '_').replaceAll(' ', '_').slice(0, 24)}`,
+        exportTxtPath = `${process.cwd()}/logs/txt/${fileName}.txt`,
+        exportJsonPath = `${process.cwd()}/logs/json/${fileName}.json`;
 
     // Stop res file watchers
     resWatcherList.forEach(function(currentWatcher){
@@ -455,9 +457,16 @@ async function batchUpdateComplete(){
     tempSettings.updateRuntime = (tempSettings.updateRuntime + updateDurationMs);
     grpp_updateDatabaseSettings(tempSettings);
 
-    // Check if log dir exists, if not, create it and write log data
-    if (module_fs.existsSync(`${process.cwd()}/logs`) === !1) module_fs.mkdirSync(`${process.cwd()}/logs`);
-    module_fs.writeFileSync(exportLogPath, trimString(grpp_convertLangVar(langDatabase.update.logTemplate, [
+    // Check if log dir exists, if not, create them and write log / json files
+    [
+        'logs',
+        'logs/txt',
+        'logs/json'
+    ].forEach(function(currentPath){
+        if (module_fs.existsSync(`${process.cwd()}/${currentPath}`) === !1) module_fs.mkdirSync(`${process.cwd()}/${currentPath}`);
+    });
+    module_fs.writeFileSync(exportJsonPath, JSON.stringify({ errorList, updateList }), 'utf-8');
+    module_fs.writeFileSync(exportTxtPath, trimString(grpp_convertLangVar(langDatabase.update.logTemplate, [
         grpp_getLogoString(!0),
         APP_VERSION,
         APP_HASH,
@@ -469,12 +478,12 @@ async function batchUpdateComplete(){
 
     // Clear screen, display update results and ask if user wants to open exported log
     grpp_displayMainLogo(!0);
-    readLine.question(grpp_convertLangVar(langDatabase.update.infoProcessComplete, [baseLog, exportLogPath]), async function(answer){
+    readLine.question(grpp_convertLangVar(langDatabase.update.infoProcessComplete, [baseLog, exportTxtPath]), async function(answer){
 
         // Close readline and check if user wants to check update data
         readLine.close();
         if (answer.toLowerCase() === langDatabase.common.confirmChar){
-            await openOnTextEditor(exportLogPath).then(process.exit);
+            await openOnTextEditor(exportTxtPath).then(process.exit);
         } else {
             process.exit();
         }
