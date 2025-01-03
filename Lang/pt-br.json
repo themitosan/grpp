@@ -176,7 +176,7 @@
 
         "resultPage": "Local: %VAR_0%\n\n==> Resultado:\n\n──┬ Processos: %VAR_1%\n  ├ Tempo de duração: %VAR_2% [%VAR_3%ms]\n  ├ Repositórios verificados: %VAR_4% [De %VAR_5% no banco de dados, %VAR_6% foram omitidos]\n  ├ Atualizações: %VAR_7%\n  └ Erros: %VAR_8%",
 
-        "logTemplate": "%VAR_0%\nVersão: %VAR_1% [%VAR_2%]\nCompiled at %VAR_3%\n\nLog created at %VAR_4%\n\n%VAR_5%\n\n%VAR_6%",
+        "logTemplate": "%VAR_0%\nVersão: %VAR_1% [%VAR_2%]\nCompilado em %VAR_3%\n\nLog gerado em %VAR_4%\n\n%VAR_5%\n\n%VAR_6%",
         "infoProcessComplete": "INFO - Processo concluído!\n%VAR_0%\n\nVocê pode ver mais detalhes no arquivo de log gerado: %VAR_1%\n\nDeseja abrir o arquivo? [S/n] "
 
     },
