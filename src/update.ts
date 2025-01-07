@@ -465,7 +465,15 @@ async function batchUpdateComplete(){
     ].forEach(function(currentPath){
         if (module_fs.existsSync(`${process.cwd()}/${currentPath}`) === !1) module_fs.mkdirSync(`${process.cwd()}/${currentPath}`);
     });
-    module_fs.writeFileSync(exportJsonPath, JSON.stringify({ errorList, updateList }), 'utf-8');
+    module_fs.writeFileSync(exportJsonPath, JSON.stringify({
+        errorList,
+        updateList,
+        totalResFiles,
+        totalReposQueued,
+        updateDurationMs,
+        skippedRepos: skippedRepos,
+        totalReposPreserved: Object.keys(grppSettings.repoEntries).length,
+    }), 'utf-8');
     module_fs.writeFileSync(exportTxtPath, trimString(grpp_convertLangVar(langDatabase.update.logTemplate, [
         grpp_getLogoString(!0),
         APP_VERSION,
