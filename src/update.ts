@@ -12,7 +12,7 @@
 import { grppRepoEntry } from './import';
 import { grpp_convertLangVar, langDatabase } from './lang';
 import { grpp_displayMainLogo, grpp_getLogoString } from './utils';
-import { APP_COMPILED_AT, APP_HASH, APP_VERSION, grpp_updateRepoData, grpp_updateDatabaseSettings, grppSettings, originalCwd } from './main';
+import { APP_COMPILED_AT, APP_HASH, APP_VERSION, grpp_updateRepoData, grpp_updateDatabaseSettings, grppSettings, originalCwd, update_skipProcessComplete } from './main';
 import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString, updateConsoleLine, consoleTextStyle, changeTextColorNumber } from './tools';
 
 /*
@@ -484,19 +484,24 @@ async function batchUpdateComplete(){
         updateDetails
     ])), 'utf-8');
 
-    // Clear screen, display update results and ask if user wants to open exported log
-    grpp_displayMainLogo(!0);
-    readLine.question(grpp_convertLangVar(langDatabase.update.infoProcessComplete, [baseLog, exportTxtPath]), async function(answer){
+    // Checks if needs to show post update message
+    if (update_skipProcessComplete === !1){
+        
+        // Clear screen, display update results and ask if user wants to open exported log
+        grpp_displayMainLogo(!0);
+        readLine.question(grpp_convertLangVar(langDatabase.update.infoProcessComplete, [baseLog, exportTxtPath]), async function(answer){
+    
+            // Close readline and check if user wants to check update data
+            readLine.close();
+            if (answer.toLowerCase() === langDatabase.common.confirmChar){
+                await openOnTextEditor(exportTxtPath).then(process.exit);
+            } else {
+                process.exit();
+            }
+    
+        });
 
-        // Close readline and check if user wants to check update data
-        readLine.close();
-        if (answer.toLowerCase() === langDatabase.common.confirmChar){
-            await openOnTextEditor(exportTxtPath).then(process.exit);
-        } else {
-            process.exit();
-        }
-
-    });
+    }
 
 }
 

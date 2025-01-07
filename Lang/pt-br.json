@@ -68,6 +68,7 @@
             "fnList": {
                 "help": "Mostra esse menu.",
                 "updateAll": "(Atualização global) GRPP irá tentar atualizar todos os repositórios que foram préviamente importados, excluindo aqueles que foram desabilitados.",
+                "skipUpdateReport": "Use esse argumento junto de \"--updateAll\" para não mostrar a mensagem de status assim que o processo for concluído.",
                 "status": "Mostra informações de uma pasta GRPP inicializada.",
                 "silent": "Apenas mostra erros na tela.",
                 "exportRemotes": "Exporta uma lista com todas URL's de repositórios préviamente clonados em um arquivo (grpp_urls.txt)",

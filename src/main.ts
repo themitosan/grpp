@@ -106,6 +106,9 @@ export var
     // Repair: remove all missing keys from database automatically
     repair_removeAllKeys = !1,
 
+    // Update: skip process complete message
+    update_skipProcessComplete = !1,
+
     // NPM global path
     NPM_GLOBAL_PATH = '',
 
@@ -382,6 +385,9 @@ async function init(){
 
         // Repair: Check if will remove all missing keys from database automatically
         if (currentArg.indexOf('removeAllKeys') !== -1) repair_removeAllKeys = !0;
+
+        // Update: Skip process complete message
+        if (currentArg.indexOf('skipUpdateReport') !== -1) update_skipProcessComplete = !0;
 
         // Set max repos a batch file should have
         if (currentArg.indexOf('maxReposPerList=') !== -1){

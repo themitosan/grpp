@@ -6,11 +6,12 @@
 
 - `help` - Display help menu on screen.
 - `updateAll` - Update all imported repos.
+- `skipUpdateReport` - Use this flag with `--updateAll` to skip post update message.
 - `status` - Display GRPP status from a initialized dir.
 - `silent` - Only print errors on screen.
 - `exportRemotes` - Export all clone urls from previously imported git repos into a file (grpp_urls.txt)
 - `repair` - This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.
-- `removeAllKeys` - Add this option along `--repair` flag to automatically remove all missing keys from database.
+- `removeAllKeys` - Add this flag along `--repair` to automatically remove all missing keys from database.
 - `langList` - List all available languages GRPP can be displayed.
 
 ## Function list (with args)
