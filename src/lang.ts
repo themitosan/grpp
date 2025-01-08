@@ -28,6 +28,7 @@ export var langDatabase:any = {
 
     "common": {
         "confirmChar": "y",
+        "processComplete": "INFO - Process complete!",
         "errorBatchUpdateRunning": "You can't execute this action while GRPP update is running!"
     },
 

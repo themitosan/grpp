@@ -501,6 +501,10 @@ async function batchUpdateComplete(){
     
         });
 
+    } else {
+        grpp_displayMainLogo(!0);
+        createLogEntry(langDatabase.common.processComplete);
+        process.exit();
     }
 
 }

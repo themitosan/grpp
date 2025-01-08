@@ -2,6 +2,7 @@
 
     "common": {
         "confirmChar": "s",
+        "processComplete": "INFO - Processo comcluído!",
         "errorBatchUpdateRunning": "Você não pode executar essa ação enquanto GRPP update estiver sendo executado!"
     },
 
