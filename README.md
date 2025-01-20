@@ -235,7 +235,7 @@ To set the number of processes running, you will need to divide the number of re
 Example: Let's just say that you have `100` repos on your database. If you want 4 processes, you can run the following command:
 
 ```shell
-grpp --maxReposPerList=25 --saveSettings
+grpp --maxReposPerList=25
 ```
 
 This will create four processes, each updating 25 repos.
