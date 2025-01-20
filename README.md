@@ -225,7 +225,7 @@ grpp --update=[PATH_TO_GRPP_REPO]
 **This is where GRPP shines!** To update all repos, run the following command:
 
 ```shell
-grpp --updateAll
+grpp --batch
 ```
 
 This will create a determinated number of processes, updating all repos that can be updated on GRPP.
