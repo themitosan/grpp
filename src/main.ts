@@ -523,7 +523,7 @@ async function init(){
         }
 
         // Update all repos
-        if (currentArg.indexOf('updateAll') !== -1){
+        if (currentArg.indexOf('batch') !== -1){
             execFn = grpp_checkBatchUpdateProcess;
             break;
         }
