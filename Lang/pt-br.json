@@ -68,8 +68,8 @@
 
             "fnList": {
                 "help": "Mostra esse menu.",
-                "updateAll": "(Atualização global) GRPP irá tentar atualizar todos os repositórios que foram préviamente importados, excluindo aqueles que foram desabilitados.",
-                "skipUpdateReport": "Use esse argumento junto de \"--updateAll\" para não mostrar a mensagem de status assim que o processo for concluído.",
+                "batch": "(Atualização global) GRPP irá tentar atualizar todos os repositórios que foram préviamente importados, excluindo aqueles que foram desabilitados.",
+                "skipUpdateReport": "Use esse argumento junto de \"--batch\" para não mostrar a mensagem de status assim que o processo for concluído.",
                 "status": "Mostra informações de uma pasta GRPP inicializada.",
                 "silent": "Apenas mostra erros na tela.",
                 "exportRemotes": "Exporta uma lista com todas URL's de repositórios préviamente clonados em um arquivo (grpp_urls.txt)",
@@ -86,7 +86,7 @@
                 "update": "[CAMINHO] Atualiza um repositório previamente importado.",
                 "getReposFrom": "[NOME_DO_USUÁRIO] Tenta obter todos os repositórios de um usuário, tendo como possibilidade importa-los ao sistema.",
                 "getRepoData": "[CAMINHO] Obtem informações a respeito de um repositório previamente importado.",
-                "processBatchFile": "[NÚMERO] Carrega uma lista de repositórios a serem atualizados, gerado pelo processo de atualização (\"--updateAll\").\nIMPORTANTE: É recomendado que não utilize essa opção de forma manual."
+                "processBatchFile": "[NÚMERO] Carrega uma lista de repositórios a serem atualizados, gerado pelo processo de atualização (\"--batch\").\nIMPORTANTE: É recomendado que não utilize essa opção de forma manual."
             },
 
             "settingsList": {
