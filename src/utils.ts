@@ -64,7 +64,7 @@ export function grpp_getLogoString(removeColors:boolean = !1):string {
     <=|=================================================|=>
     <=|         A classic quote from an old one:        |=>
     <=|               \"Quem guarda, ${consoleTextStyle.fgYellow}t${consoleTextStyle.fgGreen}e${consoleTextStyle.fgBlue}m${consoleTextStyle.reset}!\"               |=>
-    <=====================================================>\n`;
+    <=====================================================>\n${consoleTextStyle.reset}`;
 
     // Check if needs to remove color chars and return logo
     if (removeColors === !0){
