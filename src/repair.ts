@@ -130,7 +130,7 @@ async function grpp_scanMissingEntryKeys(){
         // Declare vars and consts
         var addedMissingKeys = 0,
             removeDeprecatedKeys = 0;
-        
+
         const
             fixedRepos:string[] = [],
             repoPathWithCwd = `${process.cwd()}/repos/`;

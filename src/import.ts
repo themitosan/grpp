@@ -132,7 +132,7 @@ export async function grpp_startImport(cloneURL:string){
 */
 export async function grpp_batchImport(urlList:string){
 
-    // Clear screen, create url array and starrt clone process
+    // Clear screen, create url array and start clone process
     grpp_displayMainLogo(!0);
     const
         urlArray = urlList.split('\n');
