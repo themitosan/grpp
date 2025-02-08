@@ -155,7 +155,7 @@ export async function grpp_updateRepo(path:string){
                         grpp_updateRepoData(path, currentRepoData);
 
                     } else {
-                        grpp_updateResults.errorList.push(processOutput.stdData);
+                        grpp_updateResults.errorList.push(`${currentRepoData.url}\n${processOutput.stdData}`);
                     }
 
                 }
