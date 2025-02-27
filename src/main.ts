@@ -381,7 +381,7 @@ async function init(){
         const
             currentArg = getArgName(process.argv[i]),
             saveSettings = function(){
-                grpp_saveSettings('user', !0);
+                grpp_saveSettings('db', !0);
             };
 
         // Check if current flag is grpp call
@@ -431,14 +431,14 @@ async function init(){
 
         // Set if GRPP should minify settings
         if (currentArg.indexOf('minifySettings=') !== -1){
-            grppSettings.minifySettings = JSON.parse(currentArg.replace('minifySettings=', ''));
+            tempSettings.minifySettings = JSON.parse(currentArg.replace('minifySettings=', ''));
             execFn = saveSettings;
         }
 
         // Set GRPP path
         if (currentArg.indexOf('path=') !== -1){
 
-            // Set new path var and check if it exists. If not, try creating it
+            // Set new path var and check if it exists - if not, create it
             const newPath = currentArg.replace('path=', '');
             if (module_fs.existsSync(newPath) === !1) module_fs.mkdirSync(newPath);
             originalCwd = structuredClone(newPath);
