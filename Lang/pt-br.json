@@ -95,7 +95,8 @@
                 "setStartPage": "[NÚMERO] Informa qual página GRPP deve começar a listar os repositórios de usuário.",
                 "setMaxFetchPages": "[NÚMERO] Informa o número máximo de paginas com repositórios que GRPP deve obter ao procurar repositórios de um usuário.",
                 "setConnectionTestURL": "[URL] Informa qual URL será usada para testar a conexão de internet.",
-                "setEditor": "[EDITOR] Informa qual editor de texto GRPP deverá usar para abrir arquivos de texto. (Padrão: nano)"
+                "setEditor": "[EDITOR] Informa qual editor de texto GRPP deverá usar para abrir arquivos de texto. (Padrão: nano)",
+                "minifySettings": "[BOOLEANO] Informa se GRPP deve comprimir os arquivos de configurações (Padrão: true)"
             }
 
         },

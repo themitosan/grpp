@@ -33,3 +33,4 @@
 - `setMaxFetchPages=[NUMBER]` - Set maximum of pages GRPP will fetch from remote on get user repos process.
 - `setConnectionTestURL=[URL]` - Set URL which GRPP will use to test internet connection.
 - `setEditor=[EDITOR]` - Set which text editor GRPP should use to open text files. (Default: `nano`)
+- `minifySettings=[BOOLEAN]` - Set if GRPP should minify settings files (Default: `true`)

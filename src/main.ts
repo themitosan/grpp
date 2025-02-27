@@ -54,9 +54,9 @@ export interface grppSettingsFile {
     userEditor:string,
     updateRuntime:number,
     fetchStartPage:number,
+    minifySettings:boolean,
     maxReposPerList:number,
-    prettyPrintJson:boolean,
-    connectionTestURL:string
+    connectionTestURL:string,
 }
 
 // GRPP User Settings
@@ -69,7 +69,7 @@ export interface grppUserSettings {
 */
 
 // Default settings file
-export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' | 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage' | 'userEditor' | 'prettyPrintJson'> = {
+export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' | 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage' | 'userEditor' | 'minifySettings'> = {
     maxPages: 5,
     runCounter: 0,
     repoEntries: {},
@@ -77,8 +77,8 @@ export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' |
     updateRuntime: 0,
     fetchStartPage: 1,
     userEditor: 'nano',
+    minifySettings: !0,
     maxReposPerList: 50,
-    prettyPrintJson: !1,
     version: APP_VERSION,
     connectionTestURL: '1.1.1.1'
 }
@@ -188,11 +188,11 @@ async function grpp_loadSettings(){
 export async function grpp_saveSettings(mode:string = 'db', displayLog:boolean = !1){
     try {
 
-        // Move to original chdir, create settings var and check if needs to format it
+        // Move to original chdir, create settings var and check if needs to format
         process.chdir(originalCwd);
         var settingsData = JSON.stringify(grppSettings);
         if (mode === 'user') settingsData = JSON.stringify(grppUserSettings);
-        if (grppSettings.prettyPrintJson === !0) settingsData = JSON.stringify(JSON.parse(settingsData), void 0, 4);
+        if (grppSettings.minifySettings === !1) settingsData = JSON.stringify(JSON.parse(settingsData), void 0, 4);
         
         // Check if needs to display message and swicth save mode
         if (displayLog === !0) createLogEntry(langDatabase.main.saveSettings);
@@ -426,6 +426,12 @@ async function init(){
         // Set text editor
         if (currentArg.indexOf('setEditor') !== -1){
             tempSettings.userEditor = currentArg.replace('setEditor=', '');
+            execFn = saveSettings;
+        }
+
+        // Set if GRPP should minify settings
+        if (currentArg.indexOf('minifySettings=') !== -1){
+            grppSettings.minifySettings = JSON.parse(currentArg.replace('minifySettings=', ''));
             execFn = saveSettings;
         }
 
