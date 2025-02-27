@@ -55,6 +55,7 @@ export interface grppSettingsFile {
     updateRuntime:number,
     fetchStartPage:number,
     maxReposPerList:number,
+    prettyPrintJson:boolean,
     connectionTestURL:string
 }
 
@@ -68,7 +69,7 @@ export interface grppUserSettings {
 */
 
 // Default settings file
-export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' | 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage' | 'userEditor'> = {
+export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' | 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage' | 'userEditor' | 'prettyPrintJson'> = {
     maxPages: 5,
     runCounter: 0,
     repoEntries: {},
@@ -77,6 +78,7 @@ export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' |
     fetchStartPage: 1,
     userEditor: 'nano',
     maxReposPerList: 50,
+    prettyPrintJson: !1,
     version: APP_VERSION,
     connectionTestURL: '1.1.1.1'
 }
@@ -186,19 +188,24 @@ async function grpp_loadSettings(){
 export async function grpp_saveSettings(mode:string = 'db', displayLog:boolean = !1){
     try {
 
-        // Swicth save mode
+        // Move to original chdir, create settings var and check if needs to format it
         process.chdir(originalCwd);
+        var settingsData = JSON.stringify(grppSettings);
+        if (mode === 'user') settingsData = JSON.stringify(grppUserSettings);
+        if (grppSettings.prettyPrintJson === !0) settingsData = JSON.stringify(JSON.parse(settingsData), void 0, 4);
+        
+        // Check if needs to display message and swicth save mode
         if (displayLog === !0) createLogEntry(langDatabase.main.saveSettings);
         switch (mode){
 
             // User settings
             case 'user':
-                module_fs.writeFileSync(`${module_os.userInfo().homedir}/.config/grpp/user_settings.json`, JSON.stringify(grppUserSettings));
+                module_fs.writeFileSync(`${module_os.userInfo().homedir}/.config/grpp/user_settings.json`, settingsData);
                 break;
 
             // Database
             default:
-                module_fs.writeFileSync(`${process.cwd()}/grpp_settings.json`, JSON.stringify(grppSettings), 'utf-8');
+                module_fs.writeFileSync(`${process.cwd()}/grpp_settings.json`, settingsData, 'utf-8');
                 break;
 
         }
