@@ -29,7 +29,8 @@ import * as module_readLine from 'readline';
 
 // Batch update file
 interface batchUpdate_list {
-    batchList:string[]
+    list:string[],
+    skippedRepos:string[]
 }
 
 // Batch update results
@@ -93,20 +94,148 @@ const grpp_updateResults:batchUpdate_results = { ...batchUpdateResults_Defaults 
 */
 
 /**
-    * Check if can start update
+    * Check if can start batch update
 */
 export async function grpp_checkBatchUpdateProcess(){
 
     // Check if we have some internet connection
     await checkConnection().then(function(){
 
-        // Declare vars, test if there is repos to be updated, if GRPP update process is running and check if can start update process
-        const reasonList:string[] = [];
+        // Declare const, test if there is repos to be updated, if GRPP update process is running and check if can start update process
+        const
+            reasonList:string[] = [],
+            startCheck = function(){
+                execReasonListCheck(reasonList, langDatabase.update.errorUnableStartUpdate, grpp_startBatchUpdate);
+            };
+    
         if (grppSettings.repoEntries.length === 0) reasonList.push(langDatabase.update.errorUnableStartUpdate_noRepos);
-        if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(langDatabase.update.errorUnableStartUpdate_updateRunning);
-        execReasonListCheck(reasonList, langDatabase.update.errorUnableStartUpdate, grpp_startBatchUpdate);
+        if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0){
+
+            // Clear screen, display update results and ask if user wants to open exported log
+            grpp_displayMainLogo(!0);
+            const readLine = module_readLine.createInterface({ input: process.stdin, output: process.stdout });
+            readLine.question(langDatabase.update.warnFoundBrokenBatchRun, async function(answer){
+
+                // Close readline and check if user wants to check update data
+                readLine.close();
+                if (answer.toLowerCase() === langDatabase.common.confirmChar){
+                    grpp_createUpdateReport();
+                } else {
+                    reasonList.push(langDatabase.update.errorUnableStartUpdate_updateRunning);
+                    startCheck();
+                }
+
+            });
+
+        } else {
+            startCheck();
+        }
 
     });
+
+}
+
+/**
+    * Generate update report with already existing data
+*/
+export function grpp_createUpdateReport(){
+
+    // Create consts and vars
+    const
+        time = new Date(),
+        tempSettings = grppSettings,
+        tempPath = `${process.cwd()}/.temp`,
+        fileName = `GRPP_BATCH_${time.toString().replaceAll(':', '_').replaceAll(' ', '_').slice(0, 24)}`,
+        exportTxtPath = `${process.cwd()}/logs/txt/${fileName}.txt`,
+        exportJsonPath = `${process.cwd()}/logs/json/${fileName}.json`;
+
+    var baseLog = '',
+        totalRepos = 0,
+        updateDetails = '',
+        brokenUpdateString = '',
+        errorList:string[] = [],
+        updateList:string[] = [],
+        errorString = langDatabase.update.noErrorsRun,
+        updateString = langDatabase.update.noUpdatesRun,
+        skippedReposString = langDatabase.update.noSkippedReposRun;
+
+    // Check if batch file exists and try running update again
+    if (module_fs.existsSync(`${tempPath}/GRPP_BATCH.json`) === !0){
+
+        const batchFile:batchUpdate_list | any = JSON.parse(module_fs.readFileSync(`${tempPath}/GRPP_BATCH.json`, 'utf-8'));
+        for (var currentFile = 0; currentFile < batchFile.list.length; currentFile++){
+
+            // Update total repos counter and check if current res file exists
+            totalRepos = (totalRepos + batchFile.list[currentFile].length);
+            if (module_fs.existsSync(`${tempPath}/GRPP_BATCH_RES_${currentFile}.json`) === !0){
+
+                // Read 
+                const tempResFile:batchUpdate_results = JSON.parse(module_fs.readFileSync(`${tempPath}/GRPP_BATCH_RES_${currentFile}.json`, 'utf-8'));
+                errorList = [ ...errorList, ...tempResFile.errorList ];
+                updateList = [ ...updateList, ...tempResFile.updateList ];
+
+            } else {
+                brokenUpdateString = langDatabase.update.missingResFile;
+            }
+
+        }
+
+        // Process errors, update and skipped repos lists
+        if (errorList.length > 0) errorString = processUpdateArrays(errorList);
+        if (updateList.length > 0) updateString = processUpdateArrays(updateList);
+        if (batchFile.skippedRepos.length > 0) skippedReposString = convertArrayToString(batchFile.skippedRepos);
+
+        updateDetails = grpp_convertLangVar(langDatabase.update.resultDetails, [updateString, errorString, skippedReposString]);
+        baseLog = grpp_convertLangVar(langDatabase.update.resultPage, [
+            process.cwd(),
+            batchFile.list.length,
+            langDatabase.common.unknown,
+            langDatabase.common.unknown,
+            totalRepos,
+            (totalRepos + batchFile.skippedRepos.length),
+            batchFile.skippedRepos.length,
+            updateList.length,
+            errorList.length
+        ]);
+
+        // Update settings
+        tempSettings.runCounter++;
+        grpp_updateDatabaseSettings(tempSettings);
+
+        // Check if log dir exists, if not, create them and write log / json files
+        [
+            'logs',
+            'logs/txt',
+            'logs/json'
+        ].forEach(function(currentPath){
+            if (module_fs.existsSync(`${process.cwd()}/${currentPath}`) === !1) module_fs.mkdirSync(`${process.cwd()}/${currentPath}`);
+        });
+        module_fs.writeFileSync(exportJsonPath, JSON.stringify({
+            errorList,
+            updateList,
+            totalResFiles: batchFile.list.length,
+            totalRepos,
+            updateDurationMs: langDatabase.common.unknown,
+            skippedRepos: batchFile.skippedRepos.length,
+            totalReposPreserved: langDatabase.common.unknown,
+        }), 'utf-8');
+        module_fs.writeFileSync(exportTxtPath, trimString(langDatabase.update.warnBrokenBatchRun + grpp_convertLangVar(langDatabase.update.logTemplate, [
+            grpp_getLogoString(!0),
+            APP_VERSION,
+            APP_HASH,
+            APP_COMPILED_AT,
+            new Date().toString(),
+            baseLog,
+            updateDetails
+        ]) + brokenUpdateString), 'utf-8');
+
+        // Remove temp dir
+        module_fs.rmSync(`${process.cwd()}/.temp`, { recursive: !0 });
+
+    } else {
+        createLogEntry(langDatabase.update.unableFindBatchFile);
+    }
+    grpp_checkBatchUpdateProcess();
 
 }
 
@@ -160,7 +289,7 @@ export async function grpp_updateRepo(path:string){
 
                 }
                 resolve();
-            
+
             });
 
         });
@@ -180,11 +309,11 @@ export async function grpp_processBatchFile(id:number){
 
         // Read batch update file, set total repos var on update results and start processing repos
         const batchFile:batchUpdate_list | any = JSON.parse(module_fs.readFileSync(batchFilePath, 'utf-8'));
-        grpp_updateResults.totalRepos = batchFile.batchList[id].length;
-        for (const repoIndex in batchFile.batchList[id]){
+        grpp_updateResults.totalRepos = batchFile.list[id].length;
+        for (const repoIndex in batchFile.list[id]){
 
             // Process current repo and output current status
-            await grpp_updateRepo(batchFile.batchList[id][repoIndex]).then(function(){
+            await grpp_updateRepo(batchFile.list[id][repoIndex]).then(function(){
 
                 // Reset chdir and create / update current process result
                 process.chdir(originalCwd);
@@ -202,7 +331,7 @@ export async function grpp_processBatchFile(id:number){
 }
 
 /**
-    * Sort repos to be updatd
+    * Sort repos to be updated
     * @param repoList [string[]] List to be sorted
     * @returns [string[]] New list with sorted items
 */
@@ -255,7 +384,7 @@ async function grpp_startBatchUpdate(){
     const
         updateList = await grpp_sortBatchList(Object.keys(grppSettings.repoEntries)),
         chunkList = spliceArrayIntoChunks(updateList, grppSettings.maxReposPerList);
-    module_fs.writeFileSync(`${tempDir}/GRPP_BATCH.json`, JSON.stringify({ batchList: chunkList }), 'utf-8');
+    module_fs.writeFileSync(`${tempDir}/GRPP_BATCH.json`, JSON.stringify({ list: chunkList, skippedRepos }), 'utf-8');
     totalResFiles = structuredClone(chunkList.length);
 
     // Clear console screen, create log entry and spawn processes
@@ -471,7 +600,7 @@ async function batchUpdateComplete(){
         totalResFiles,
         totalReposQueued,
         updateDurationMs,
-        skippedRepos: skippedRepos,
+        skippedRepos,
         totalReposPreserved: Object.keys(grppSettings.repoEntries).length,
     }), 'utf-8');
     module_fs.writeFileSync(exportTxtPath, trimString(grpp_convertLangVar(langDatabase.update.logTemplate, [
@@ -486,11 +615,11 @@ async function batchUpdateComplete(){
 
     // Checks if needs to show post update message
     if (update_skipProcessComplete === !1){
-        
+
         // Clear screen, display update results and ask if user wants to open exported log
         grpp_displayMainLogo(!0);
         readLine.question(grpp_convertLangVar(langDatabase.update.infoProcessComplete, [baseLog, exportTxtPath]), async function(answer){
-    
+
             // Close readline and check if user wants to check update data
             readLine.close();
             if (answer.toLowerCase() === langDatabase.common.confirmChar){
@@ -498,7 +627,7 @@ async function batchUpdateComplete(){
             } else {
                 process.exit();
             }
-    
+
         });
 
     } else {

@@ -3,7 +3,8 @@
     "common": {
         "confirmChar": "s",
         "processComplete": "INFO - Processo comcluído!",
-        "errorBatchUpdateRunning": "Você não pode executar essa ação enquanto GRPP update estiver sendo executado!"
+        "errorBatchUpdateRunning": "Você não pode executar essa ação enquanto GRPP update estiver sendo executado!",
+        "unknown": "Desconhecido"
     },
 
     "main": {
@@ -177,10 +178,16 @@
 
         "resultDetails": "==> Atualizações:\n%VAR_0%\n\n==> Erros:\n%VAR_1%\n\n==> Repositórios omitidos:\n%VAR_2%\n",
 
-        "resultPage": "Local: %VAR_0%\n\n==> Resultado:\n\n──┬ Processos: %VAR_1%\n  ├ Tempo de duração: %VAR_2% [%VAR_3%ms]\n  ├ Repositórios verificados: %VAR_4% [De %VAR_5% no banco de dados, %VAR_6% foram omitidos]\n  ├ Atualizações: %VAR_7%\n  └ Erros: %VAR_8%",
+        "resultPage": "Local: %VAR_0%\n\n==> Resultado:\n\n──┬ Processos: %VAR_1%\n  ├ Tempo de duração: %VAR_2% [%VAR_3% ms]\n  ├ Repositórios verificados: %VAR_4% [De %VAR_5% no banco de dados, %VAR_6% foram omitidos]\n  ├ Atualizações: %VAR_7%\n  └ Erros: %VAR_8%",
 
         "logTemplate": "%VAR_0%\nVersão: %VAR_1% [%VAR_2%]\nCompilado em %VAR_3%\n\nLog gerado em %VAR_4%\n\n%VAR_5%\n\n%VAR_6%",
-        "infoProcessComplete": "INFO - Processo concluído!\n%VAR_0%\n\nVocê pode ver mais detalhes no arquivo de log gerado: %VAR_1%\n\nDeseja abrir o arquivo? [S/n] "
+        "infoProcessComplete": "INFO - Processo concluído!\n%VAR_0%\n\nVocê pode ver mais detalhes no arquivo de log gerado: %VAR_1%\n\nDeseja abrir o arquivo? [S/n] ",
+
+        "warnFoundBrokenBatchRun": "AVISO: GRPP encontrou uma tentativa interrompida de atualização global!\nVocê quer criar um relatório com os dados disponíveis? [S/n] ",
+
+        "warnBrokenBatchRun": "\nAVISO: Esse relatório foi gerado de uma tentativa interrompida de atualização global!\n",
+        "unableFindBatchFile": "AVISO: Não foi possível criar relatório por que o arquivo de batch não foi encontrado!",
+        "missingResFile": "\nAVISO: Um dos arquivos de relatórios não não foi encontrado, o que torna esse documento incompleto."
 
     },
 
