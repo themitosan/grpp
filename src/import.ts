@@ -32,7 +32,6 @@ export interface grppRepoEntry {
     canUpdate:boolean,
     importDate:string,
     isPriority:boolean,
-    updateCounter:number,
     lastUpdatedOn:string,
 }
 
@@ -48,13 +47,12 @@ var currentRepo:grppRepoEntry;
 */
 
 // Repo entry default
-export const repoEntry_Defaults:Pick <grppRepoEntry, 'canUpdate' | 'importDate' | 'lastUpdatedOn' | 'updateCounter' | 'name' | 'owner' | 'url' | 'isPriority'> = {
+export const repoEntry_Defaults:Pick <grppRepoEntry, 'canUpdate' | 'importDate' | 'lastUpdatedOn' | 'name' | 'owner' | 'url' | 'isPriority'> = {
     canUpdate: !0,
     isPriority: !1,
     url: 'UNKNOWN',
     name: 'UNKNOWN',
     owner: 'UNKNOWN',
-    updateCounter: 0,
     lastUpdatedOn: 'Never',
     importDate: new Date().toString()
 }
@@ -93,7 +91,6 @@ export async function grpp_startImport(cloneURL:string){
                 url: cloneURL,
                 canUpdate: !0,
                 isPriority: !1,
-                updateCounter: 0,
                 lastUpdatedOn: 'Never',
                 importDate: new Date().toString()
             };

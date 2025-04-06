@@ -279,7 +279,6 @@ export async function grpp_updateRepo(path:string){
                         grpp_updateResults.updateList.push(processOutput.stdData);
 
                         // Update current repo data
-                        currentRepoData.updateCounter++;
                         currentRepoData.lastUpdatedOn = new Date().toString();
                         grpp_updateRepoData(path, currentRepoData);
 

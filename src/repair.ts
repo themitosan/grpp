@@ -250,7 +250,6 @@ async function grpp_repairAddMissingRepo(path:string){
                     canUpdate: !0,
                     name: repoName,
                     isPriority: !1,
-                    updateCounter: 0,
                     lastUpdatedOn: `Never`,
                     importDate: new Date().toString()
                 };
