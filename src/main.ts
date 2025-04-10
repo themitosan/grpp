@@ -111,6 +111,9 @@ export var
     // Update: skip process complete message
     update_skipProcessComplete = !1,
 
+    // Update: Queue only repos with isPriority flag as true
+    update_onlyQueuePriorityRepos = !1,
+
     // NPM global path
     NPM_GLOBAL_PATH = '',
 
@@ -392,6 +395,9 @@ async function init(){
 
         // Repair: Check if will remove all missing keys from database automatically
         if (currentArg.indexOf('removeAllKeys') !== -1) repair_removeAllKeys = !0;
+
+        // Update: Queue only repos with isPriority flag
+        if (currentArg.indexOf('priority') !== -1) update_onlyQueuePriorityRepos = !0;
 
         // Update: Skip process complete message
         if (currentArg.indexOf('skipUpdateReport') !== -1) update_skipProcessComplete = !0;

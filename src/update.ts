@@ -12,7 +12,7 @@
 import { grppRepoEntry } from './import';
 import { grpp_convertLangVar, langDatabase } from './lang';
 import { grpp_displayMainLogo, grpp_getLogoString } from './utils';
-import { APP_COMPILED_AT, APP_HASH, APP_VERSION, grpp_updateRepoData, grpp_updateDatabaseSettings, grppSettings, originalCwd, update_skipProcessComplete } from './main';
+import { APP_COMPILED_AT, APP_HASH, APP_VERSION, grpp_updateRepoData, grpp_updateDatabaseSettings, grppSettings, originalCwd, update_skipProcessComplete, update_onlyQueuePriorityRepos } from './main';
 import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry, execReasonListCheck, isValidJSON, openOnTextEditor, parsePercentage, parsePositive, runExternalCommand, runExternalCommand_Defaults, runExternalCommand_output, spliceArrayIntoChunks, trimString, updateConsoleLine, consoleTextStyle, changeTextColorNumber } from './tools';
 
 /*
@@ -351,7 +351,6 @@ async function grpp_sortBatchList(repoList:string[]):Promise<string[]> {
                 } else {
                     updateList.push(currentRepo);
                 }
-                totalReposQueued++;
 
             } else {
                 skippedRepos.push(currentRepo);
@@ -360,7 +359,16 @@ async function grpp_sortBatchList(repoList:string[]):Promise<string[]> {
         });
 
         // Put priority repos first if priority list isn't empty and return sorted list
-        if (priorityRepos.length !== 0) updateList = [ ...priorityRepos, ...updateList ];
+        if (priorityRepos.length !== 0){
+
+            // Create update list and check if only priority repos should be updated
+            updateList = [ ...priorityRepos, ...updateList ];
+            if (update_onlyQueuePriorityRepos === !0){
+                updateList = priorityRepos;
+            }
+
+        }
+        totalReposQueued = updateList.length;
         resolve(updateList);
 
     });

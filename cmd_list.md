@@ -6,7 +6,8 @@
 
 - `help` - Display help menu on screen.
 - `batch` - Update all imported repos.
-- `skipUpdateReport` - Use this flag with `--batch` to skip post update message.
+- `priority` - [Use this flag with `--batch`] Only update repos with `isPriority` value set as `true`.
+- `skipUpdateReport` - [Use this flag with `--batch`] Skip post update message.
 - `status` - Display GRPP status from a initialized dir.
 - `silent` - Only print errors on screen.
 - `exportRemotes` - Export all clone urls from previously imported git repos into a file (grpp_urls.txt)

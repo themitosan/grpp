@@ -70,6 +70,7 @@
             "fnList": {
                 "help": "Mostra esse menu.",
                 "batch": "(Atualização global) GRPP irá tentar atualizar todos os repositórios que foram préviamente importados, excluindo aqueles que foram desabilitados.",
+                "priority": "Apenas atualiza repositórios que estejam marcados como prioridade [\"isPriority\" com o valor \"true\"].",
                 "skipUpdateReport": "Use esse argumento junto de \"--batch\" para não mostrar a mensagem de status assim que o processo for concluído.",
                 "status": "Mostra informações de uma pasta GRPP inicializada.",
                 "silent": "Apenas mostra erros na tela.",
