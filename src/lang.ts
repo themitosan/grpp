@@ -205,9 +205,9 @@ export var langDatabase:any = {
 
         "resultDetails": "==> Updates:\n%VAR_0%\n\n==> Errors:\n%VAR_1%\n\n==> Skipped Repos:\n%VAR_2%\n",
 
-        "resultPage": "GRPP location: %VAR_0%\n\n==> Results:\n\n──┬ Processes: %VAR_1%\n  ├ Update duration: %VAR_2% [%VAR_3% ms]\n  ├ Total repos queued: %VAR_4% [From %VAR_5% on database, %VAR_6% were skipped]\n  ├ Repos updated on this run: %VAR_7%\n  └ Error counter: %VAR_8%",
+        "resultPage": "Backup path: %VAR_0%\n\n==> Results:\n\n──┬ Processes: %VAR_1%\n  ├ Update duration: %VAR_2% [%VAR_3% ms]\n  ├ Total repos queued: %VAR_4% [From %VAR_5% on database, %VAR_6% were skipped]\n  ├ Repos updated on this run: %VAR_7%\n  └ Error counter: %VAR_8%",
 
-        "logTemplate": "%VAR_0%\nVersion: %VAR_1% [%VAR_2%]\nCompiled at %VAR_3%\n\nLog created at %VAR_4%\n\n%VAR_5%\n\n%VAR_6%",
+        "logTemplate": "%VAR_0%\nVersion: %VAR_1% [%VAR_2%]\nCompiled at %VAR_3%\n\nLog created at %VAR_4%\nRun args: %VAR_5%\n%VAR_6%\n\n%VAR_7%",
         "infoProcessComplete": "INFO - Process complete!\n%VAR_0%\n\nYou can see more details on gereated log file: %VAR_1%\n\nDo you want to open it? [Y/n] ",
 
         "warnFoundBrokenBatchRun": "WARN: GRPP found an incomplete batch run attempt!\nDo you want to save a report with current data? [Y/n] ",

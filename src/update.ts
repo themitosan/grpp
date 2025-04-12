@@ -225,6 +225,7 @@ export function grpp_createUpdateReport(){
             APP_HASH,
             APP_COMPILED_AT,
             new Date().toString(),
+            process.argv.toString().replaceAll(',', ' '),
             baseLog,
             updateDetails
         ]) + brokenUpdateString), 'utf-8');
@@ -616,6 +617,7 @@ async function batchUpdateComplete(){
         APP_HASH,
         APP_COMPILED_AT,
         new Date().toString(),
+        process.argv.toString().replaceAll(',', ' '),
         baseLog,
         updateDetails
     ])), 'utf-8');

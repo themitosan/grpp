@@ -179,9 +179,9 @@
 
         "resultDetails": "==> Atualizações:\n%VAR_0%\n\n==> Erros:\n%VAR_1%\n\n==> Repositórios omitidos:\n%VAR_2%\n",
 
-        "resultPage": "Local: %VAR_0%\n\n==> Resultado:\n\n──┬ Processos: %VAR_1%\n  ├ Tempo de duração: %VAR_2% [%VAR_3% ms]\n  ├ Repositórios verificados: %VAR_4% [De %VAR_5% no banco de dados, %VAR_6% foram omitidos]\n  ├ Atualizações: %VAR_7%\n  └ Erros: %VAR_8%",
+        "resultPage": "Local de backup: %VAR_0%\n\n==> Resultado:\n\n──┬ Processos: %VAR_1%\n  ├ Tempo de duração: %VAR_2% [%VAR_3% ms]\n  ├ Repositórios verificados: %VAR_4% [De %VAR_5% no banco de dados, %VAR_6% foram omitidos]\n  ├ Atualizações: %VAR_7%\n  └ Erros: %VAR_8%",
 
-        "logTemplate": "%VAR_0%\nVersão: %VAR_1% [%VAR_2%]\nCompilado em %VAR_3%\n\nLog gerado em %VAR_4%\n\n%VAR_5%\n\n%VAR_6%",
+        "logTemplate": "%VAR_0%\nVersão: %VAR_1% [%VAR_2%]\nCompilado em %VAR_3%\n\nLog gerado em %VAR_4%\nLinha de comando: %VAR_5%\n%VAR_6%\n%VAR_7%",
         "infoProcessComplete": "INFO - Processo concluído!\n%VAR_0%\n\nVocê pode ver mais detalhes no arquivo de log gerado: %VAR_1%\n\nDeseja abrir o arquivo? [S/n] ",
 
         "warnFoundBrokenBatchRun": "AVISO: GRPP encontrou uma tentativa interrompida de atualização global!\nVocê quer criar um relatório com os dados disponíveis? [S/n] ",
