@@ -169,7 +169,16 @@ export async function grpp_updateRepo(path:string){
                         'error: ',
                         'warning: '
                     ].forEach(function(currentSample){
-                        if (processOutput.stdData.indexOf(currentSample) !== -1) errorCounter++;
+                        if (processOutput.stdData.indexOf(currentSample) !== -1){
+
+                            // Check for false-positive errors
+                            [
+                                `\'--no-show-forced-updates\' or run \'git config fetch.showForcedUpdates false\'`
+                            ].forEach(function(falsePositive){
+                                if (currentSample.indexOf(falsePositive) !== -1) errorCounter++;
+                            })
+
+                        }
                     });
 
                     // Check if fetch process printed any data without errors (update)
