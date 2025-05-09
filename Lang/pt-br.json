@@ -177,7 +177,7 @@
         "noUpdatesRun": "...Nenhum repositório foi atualizado durante todo o processo.",
         "noSkippedReposRun": "...Nenhum repositório foi omitido nesse processo.",
 
-        "resultDetails": "==> Atualizações:\n%VAR_0%\n\n==> Erros:\n%VAR_1%\n\n==> Repositórios omitidos:\n%VAR_2%\n",
+        "resultDetails": "==> Atualizações:\n%VAR_0%\n\n==> Erros:\n%VAR_1%\n",
 
         "resultPage": "Local de backup: %VAR_0%\n\n==> Resultado:\n\n──┬ Processos: %VAR_1%\n  ├ Tempo de duração: %VAR_2% [%VAR_3% ms]\n  ├ Repositórios verificados: %VAR_4% [De %VAR_5% no banco de dados, %VAR_6% foram omitidos]\n  ├ Atualizações: %VAR_7%\n  └ Erros: %VAR_8%",
 

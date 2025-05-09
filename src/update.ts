@@ -479,8 +479,8 @@ async function grpp_createBatchUpdateReport(postAction:Function){
 
                 // Get file data and get errors / updates
                 const updateData:batchUpdate_results = JSON.parse(module_fs.readFileSync(filePath, 'utf-8'));
-                errorList = [ ...errorList, ...updateData.errorList ];
-                updateList = [ ...updateList, ...updateData.updateList ];
+                errorList = [...errorList, ...updateData.errorList];
+                updateList = [...updateList, ...updateData.updateList];
 
             } else {
                 brokenUpdateString = langDatabase.update.missingResFile;
@@ -495,7 +495,7 @@ async function grpp_createBatchUpdateReport(postAction:Function){
         if (skippedRepos.length > 0) skippedReposString = convertArrayToString(skippedRepos);
 
         // Set string vars
-        updateDetails = grpp_convertLangVar(langDatabase.update.resultDetails, [updateString, errorString, skippedReposString]);
+        updateDetails = grpp_convertLangVar(langDatabase.update.resultDetails, [updateString, errorString]);
         baseLog = grpp_convertLangVar(langDatabase.update.resultPage, [
             process.cwd(),
             totalResFiles,

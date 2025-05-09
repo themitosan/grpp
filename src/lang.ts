@@ -203,7 +203,7 @@ export var langDatabase:any = {
         "noUpdatesRun": "...there was no updates on this run.",
         "noSkippedReposRun": "...there was no skipped repos on this run.",
 
-        "resultDetails": "==> Updates:\n%VAR_0%\n\n==> Errors:\n%VAR_1%\n\n==> Skipped Repos:\n%VAR_2%\n",
+        "resultDetails": "==> Updates:\n%VAR_0%\n\n==> Errors:\n%VAR_1%\n",
 
         "resultPage": "Backup path: %VAR_0%\n\n==> Results:\n\n──┬ Processes: %VAR_1%\n  ├ Update duration: %VAR_2% [%VAR_3% ms]\n  ├ Total repos queued: %VAR_4% [From %VAR_5% on database, %VAR_6% were skipped]\n  ├ Repos updated on this run: %VAR_7%\n  └ Error counter: %VAR_8%",
 
