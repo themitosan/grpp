@@ -46,7 +46,7 @@ sudo dnf install nodejs git
 ```
 
 > [!IMPORTANT]
-> GRPP uses [`nano`](nano-editor.org) as default text editor! If you want to use something else, you can change it by running `grpp --setEditor=[YOUR_COOL_EDITOR]` later.
+> GRPP uses [`nano`](https://nano-editor.org) as default text editor! If you want to use something else, you can change it by running `grpp --setEditor=[YOUR_COOL_EDITOR]` later.
 
 <a id="how-to-install"></a>
 ## How to install
