@@ -19,6 +19,7 @@ import { checkConnection, converMsToHHMMSS, convertArrayToString, createLogEntry
     Require node modules
 */
 
+import * as module_os from 'os';
 import * as module_fs from 'fs';
 import * as module_path from 'path';
 import * as module_readLine from 'readline';
@@ -498,6 +499,7 @@ async function grpp_createBatchUpdateReport(postAction:Function){
         updateDetails = grpp_convertLangVar(langDatabase.update.resultDetails, [updateString, errorString]);
         baseLog = grpp_convertLangVar(langDatabase.update.resultPage, [
             process.cwd(),
+            module_os.userInfo().username,
             totalResFiles,
             converMsToHHMMSS(updateDurationMs),
             updateDurationMs,
