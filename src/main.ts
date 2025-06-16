@@ -11,8 +11,8 @@
 
 import { grpp_getReposFrom } from './getReposFrom';
 import { grpp_startRepairDatabase } from './repair';
-import { createLogEntry, preventMinMax, getArgName } from './tools';
 import { grpp_batchImport, grpp_startImport, grppRepoEntry } from './import';
+import { createLogEntry, preventMinMax, getArgName, consoleTextStyle } from './tools';
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from './update';
 import { grpp_convertLangVar, grpp_displayLangList, grpp_loadLang, grpp_setLang, langDatabase } from './lang';
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_exportRemotes, grpp_getRepoInfo, grpp_printStatus } from './utils';
@@ -571,7 +571,7 @@ async function init(){
     }
 
     // Check if no flags were provided
-    if (execFn === null && process.argv.length < 3) createLogEntry(grpp_convertLangVar(langDatabase.main.noArgsProvided, [module_os.userInfo().username]));
+    if (execFn === null && process.argv.length < 3) createLogEntry(grpp_convertLangVar(langDatabase.main.noArgsProvided, [consoleTextStyle.fgGreen + module_os.userInfo().username + consoleTextStyle.reset]));
 
 }
 
