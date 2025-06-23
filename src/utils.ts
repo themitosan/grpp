@@ -58,13 +58,13 @@ export function grpp_printStatus(){
 export function grpp_getLogoString(removeColors:boolean = !1):string {
 
     var logo = `${consoleTextStyle.reset}
-    <=====================================================>
+    <=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=>
     <=|       Git Repo Preservation Project (GRPP)      |=>
     <=| Created by TheMitoSan (@themitosan.bsky.social) |=>
-    <=|=================================================|=>
+    <=|=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=|=>
     <=|         A classic quote from an old one:        |=>
     <=|               \"Quem guarda, ${consoleTextStyle.fgYellow}t${consoleTextStyle.fgGreen}e${consoleTextStyle.fgBlue}m${consoleTextStyle.reset}!\"               |=>
-    <=====================================================>\n${consoleTextStyle.reset}`;
+    <=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=>\n${consoleTextStyle.reset}`;
 
     // Check if needs to remove color chars and return logo
     if (removeColors === !0){
