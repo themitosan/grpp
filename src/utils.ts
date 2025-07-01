@@ -131,7 +131,7 @@ export function grpp_getRepoInfo(path:string){
             fullPath = Object.keys(grppSettings.repoEntries)[repoIndex!],
             currentRepoData:grppRepoEntry = grppSettings.repoEntries[fullPath];
         createLogEntry(grpp_convertLangVar(langDatabase.utils.getRepoInfo.repoData, [JSON.stringify(currentRepoData, void 0, 4)]));
-    
+
     });
 
 }

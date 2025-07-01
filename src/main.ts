@@ -196,7 +196,7 @@ export async function grpp_saveSettings(mode:string = 'db', displayLog:boolean =
         var settingsData = JSON.stringify(grppSettings);
         if (mode === 'user') settingsData = JSON.stringify(grppUserSettings);
         if (grppSettings.minifySettings === !1) settingsData = JSON.stringify(JSON.parse(settingsData), void 0, 4);
-        
+
         // Check if needs to display message and swicth save mode
         if (displayLog === !0) createLogEntry(langDatabase.main.saveSettings);
         switch (mode){

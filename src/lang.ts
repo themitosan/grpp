@@ -299,8 +299,9 @@ async function checkLangKeys(langKeys:any){
     return new Promise<void>(function(resolve){
 
         // Create missingKeys var and check object function
-        const missingKeys:string[] = [];
-        const checkObject = function(currentObject:any, sampleObject:any){
+        const
+            missingKeys:string[] = [],
+            checkObject = function(currentObject:any, sampleObject:any){
 
             // Create object array and start check process
             const objectArray = Object.keys(currentObject);
