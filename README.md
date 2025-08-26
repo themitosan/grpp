@@ -34,7 +34,7 @@ You can install all required packages by running some of the commands below:
 
 ```shell
 # Arch based distros <3
-sudo pacman -Sy nodejs git npm
+sudo pacman -S nodejs git npm
 
 # Debian based distros
 sudo apt update
@@ -114,16 +114,16 @@ sudo npm i -g grpp.tgz
 ```
 
 > [!IMPORTANT]\
-> You MUST run this command as `sudo`, since it will install grpp as a global package.
+> You MUST run this command as `sudo` because **npm will install grpp globally**.
 > 
-> If you don't have sudo access (like termux without su), you can run without `sudo` (or run `npm run bi-sudoless` to do everything automatically)
+> If you don't have superuser access (like non-rooted Android devices), you can run `npm run bi-sudoless` instead.
 
 If everything is fine, you will be able to call `grpp` system-wide.
 
 <a id="how-to-uninstall"></a>
 ## How to uninstall
 
-It's simple! Just run the following command:
+It's simple - just run the following command:
 
 ```shell
 sudo npm remove grpp

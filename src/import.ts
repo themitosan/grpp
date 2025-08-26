@@ -131,8 +131,7 @@ export async function grpp_batchImport(urlList:string){
 
     // Clear screen, create url array and start clone process
     grpp_displayMainLogo(!0);
-    const
-        urlArray = urlList.split('\n');
+    const urlArray = urlList.split('\n');
     for (const url of urlArray){
         if (url.length > 0){
             createLogEntry(grpp_convertLangVar(langDatabase.import.batchCurrentRepo, [(urlArray.indexOf(url) + 1), urlArray.length, url]));

@@ -300,8 +300,10 @@ export async function checkConnection(){
 export async function runExternalCommand(cmd:string, options:runExternalCommandOptions = { ...runExternalCommand_Defaults }){
     return new Promise<runExternalCommand_output>(function(resolve){
 
-        // Change current working directory and declare some vars
-        var stdData = '';
+        var stdData = '',
+            finalStd = '',
+            tempString = '';
+
         process.chdir(options.chdir);
         const execCmd = module_childProcess.exec(cmd);
 
@@ -320,16 +322,13 @@ export async function runExternalCommand(cmd:string, options:runExternalCommandO
         // Reset chdir and resolve after closing process
         execCmd.on('exit', function(exitCode){
 
-            // Check if had exit code and create log entry if it was higher than 1
-            if (exitCode !== null && exitCode > 1)
-                createLogEntry(`INFO - ${cmd} exited with code ${exitCode}`);
+            if (exitCode !== null && exitCode > 1) createLogEntry(`INFO - ${cmd} exited with code ${exitCode}`);
 
             // Create final string var and check if needs to clean output
-            var finalStd = trimString(stdData);
+            finalStd = trimString(stdData);
             if (options.removeBlankLines === !0){
 
                 // Create temp var and process all lines
-                var tempString = '';
                 finalStd.split('\n').forEach(function(currentLine){
                     if (currentLine !== '') tempString = `${tempString}${currentLine}\n`;
                 });

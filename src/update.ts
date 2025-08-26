@@ -177,7 +177,7 @@ export async function grpp_updateRepo(path:string){
                                 `\'--no-show-forced-updates\' or run \'git config fetch.showForcedUpdates false\'`
                             ].forEach(function(falsePositive){
                                 if (currentSample.indexOf(falsePositive) === -1) errorCounter++;
-                            })
+                            });
 
                         }
                     });
