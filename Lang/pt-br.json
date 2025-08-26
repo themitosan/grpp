@@ -136,7 +136,7 @@
         "infoAddRemoveKeys": "INFO - GRPP adicionou %VAR_0% chaves que estavam faltando e removeu %VAR_1% chaves desnecessárias em %VAR_2% repositórios.",
         "infoRepairComplete": "\nINFO - Processo de reparo completo!\n",
 
-        "confirmRemoveRepoDatabase": "AVISO - Parece que %VAR_0% não existe!\nVocê quer remover esse item do banco de dados? [S/n] ",
+        "confirmRemoveRepoDatabase": "AVISO - Parece que %VAR_0% não existe!\nVocê quer remover esse item do banco de dados? [s/N] ",
 
         "warnRepoNotBare": "AVISO - Parece que %VAR_0%.git não foi clonado em formato bare!",
         "importMissingRepo": "INFO - Incluindo repositório ao banco de dados: %VAR_0% [%VAR_1%]",
@@ -182,9 +182,9 @@
         "resultPage": "Local de backup: %VAR_0%\n\n==> Resultado:\n\n──┬ Usuário: %VAR_1%\n  Processos: %VAR_2%\n  ├ Tempo de duração: %VAR_3% [%VAR_4% ms]\n  ├ Repositórios verificados: %VAR_5% [De %VAR_6% no banco de dados, %VAR_7% foram omitidos]\n  ├ Atualizações: %VAR_8%\n  └ Erros: %VAR_9%",
 
         "logTemplate": "%VAR_0%\nVersão: %VAR_1% [%VAR_2%]\nCompilado em %VAR_3%\n\nLog gerado em %VAR_4%\nLinha de comando: %VAR_5%\n%VAR_6%\n%VAR_7%",
-        "infoProcessComplete": "INFO - Processo concluído!\n%VAR_0%\n\nVocê pode ver mais detalhes no arquivo de log gerado: %VAR_1%\n\nDeseja abrir o arquivo? [S/n] ",
+        "infoProcessComplete": "INFO - Processo concluído!\n%VAR_0%\n\nVocê pode ver mais detalhes no arquivo de log gerado: %VAR_1%\n\nDeseja abrir o arquivo? [s/N] ",
 
-        "warnFoundBrokenBatchRun": "AVISO: GRPP encontrou uma tentativa interrompida de atualização global!\nVocê quer criar um relatório com os dados disponíveis? [S/n] ",
+        "warnFoundBrokenBatchRun": "AVISO: GRPP encontrou uma tentativa interrompida de atualização global!\nVocê quer criar um relatório com os dados disponíveis? [s/N] ",
 
         "warnBrokenBatchRun": "\nAVISO: Esse relatório foi gerado de uma tentativa interrompida de atualização global!\n",
         "unableFindBatchFile": "AVISO: Não foi possível criar relatório por que o arquivo de batch não foi encontrado!",

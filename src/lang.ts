@@ -162,7 +162,7 @@ export var langDatabase:any = {
         "infoAddRemoveKeys": "INFO - GRPP added %VAR_0% missing keys and removed %VAR_1% deprecated keys on %VAR_2% repos.",
         "infoRepairComplete": "\nINFO - Repair complete!\n",
 
-        "confirmRemoveRepoDatabase": "WARN - It seems that %VAR_0% does not exists!\nDo you want to remove this entry from database? [Y/n] ",
+        "confirmRemoveRepoDatabase": "WARN - It seems that %VAR_0% does not exists!\nDo you want to remove this entry from database? [y/N] ",
 
         "warnRepoNotBare": "WARN - It seems that %VAR_0%.git is not on bare format!",
         "importMissingRepo": "INFO - Importing missing repo: %VAR_0% [%VAR_1%]",
@@ -208,9 +208,9 @@ export var langDatabase:any = {
         "resultPage": "Backup path: %VAR_0%\n\n==> Results:\n\n──┬ User: %VAR_1%\n  ├ Processes: %VAR_2%\n  ├ Update duration: %VAR_3% [%VAR_4% ms]\n  ├ Total repos queued: %VAR_5% [From %VAR_6% on database, %VAR_7% were skipped]\n  ├ Repos updated on this run: %VAR_8%\n  └ Error counter: %VAR_9%",
 
         "logTemplate": "%VAR_0%\nVersion: %VAR_1% [%VAR_2%]\nCompiled at %VAR_3%\n\nLog created at %VAR_4%\nRun args: %VAR_5%\n%VAR_6%\n\n%VAR_7%",
-        "infoProcessComplete": "INFO - Process complete!\n%VAR_0%\n\nYou can see more details on gereated log file: %VAR_1%\n\nDo you want to open it? [Y/n] ",
+        "infoProcessComplete": "INFO - Process complete!\n%VAR_0%\n\nYou can see more details on gereated log file: %VAR_1%\n\nDo you want to open it? [y/N] ",
 
-        "warnFoundBrokenBatchRun": "WARN: GRPP found an incomplete batch run attempt!\nDo you want to save a report with current data? [Y/n] ",
+        "warnFoundBrokenBatchRun": "WARN: GRPP found an incomplete batch run attempt!\nDo you want to save a report with current data? [y/N] ",
 
         "warnBrokenBatchRun": "\nWARN: This report was created from an aborted / incomplete run!\n",
         "unableFindBatchFile": "WARN: Unable to create report because batch file was not found!",
