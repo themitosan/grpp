@@ -403,14 +403,16 @@ export function getDirTree(dir:string, stopLocation:string = ''):string[] {
 
 		    // Scan current dir and check for subfolders
 		    module_fs.readdirSync(path, { withFileTypes: !0 }).filter(function(cEntry){
+
 		    	if (cEntry.isDirectory() === !0){
 
                     // Create current dir var, push current dir to res and check if can continue
                     const currentDir = `${cEntry.parentPath}/${cEntry.name}`;
 		    		res.push(currentDir);
-                    if (currentDir.indexOf(stopLocation) === -1) checkDir(currentDir);
+                    if (stopLocation !== cEntry.name) checkDir(currentDir);
 
                 }
+
 		    });
 
 	    };
