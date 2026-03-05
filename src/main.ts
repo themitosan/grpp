@@ -9,6 +9,7 @@
     Import TS modules
 */
 
+import { grpp_recover } from './recover';
 import { grpp_getReposFrom } from './getReposFrom';
 import { grpp_startRepairDatabase } from './repair';
 import { grpp_batchImport, grpp_startImport, grppRepoEntry } from './import';
@@ -159,7 +160,7 @@ async function grpp_loadSettings(){
                     }
                 });
 
-                // Check if versio matches. If not, warn user to run repair mode
+                // Check if version matches. If not, warn user to run repair mode.
                 if (grppSettings.version !== APP_VERSION){
                     createLogEntry(langDatabase.repair.warnDbVersinoMismatch, 'warn');
                     grppSettings.version = APP_VERSION;
@@ -175,9 +176,22 @@ async function grpp_loadSettings(){
             }
 
         } else {
-            createLogEntry(langDatabase.main.warnPathNotInit, 'warn');
-            grpp_initPath();
+
+            // Check if folder needs to be initialized or if it's a broken instance
+            if (module_fs.existsSync(`${process.cwd()}/repos`) === !1){
+
+                createLogEntry(langDatabase.main.warnPathNotInit, 'warn');
+                grpp_initPath();
+
+            } else {
+
+                createLogEntry(langDatabase.main.warnBrokenInstance, 'warn');
+                grpp_recover();
+
+            }
+
             resolve();
+
         }
 
     });
@@ -499,6 +513,12 @@ async function init(){
         // Repair database
         if (currentArg.indexOf('repair') !== -1){
             execFn = grpp_startRepairDatabase;
+            break;
+        }
+
+        // Recover grpp path
+        if (currentArg.indexOf('recover') !== -1){
+            grpp_recover();
             break;
         }
 

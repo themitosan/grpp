@@ -196,9 +196,7 @@ export function parseINI(data:string):any {
             }
 
             // Check if current line have content
-            if (currentLine.length === 0 && section){
-                section = null;
-            }
+            if (currentLine.length === 0 && section) section = null;
 
         }
 

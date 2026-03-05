@@ -38,6 +38,7 @@ export var langDatabase:any = {
         "warnUnknownArgs": "WARN - Unknown args: \"%VAR_0%\"\n",
 
         "warnPathNotInit": "WARN - Unable to load settings because this location isn't initialized! GRPP will initialize this folder before moving on...",
+        "warnBrokenInstance": "WARN - Unable to load settings because this GRPP instance seems to be broken / missing settings file!\nGRPP Will attempt to create a new settings file with all available git repos present...",
         "version": "Version: %VAR_0% [%VAR_1%]\nCompiled at %VAR_2%\n",
         "knowMore": "==> Use \"--help\" for more details.\n",
         "noArgsProvided": "==> Since no args / flags were provided, We wish someone called %VAR_0% a great day! <3\n",
@@ -102,6 +103,7 @@ export var langDatabase:any = {
                 "silent": "Only print errors on screen.",
                 "exportRemotes": "Export all clone urls from previously imported git repos into a file (grpp_urls.txt)",
                 "repair": "This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.",
+                "recover": "Try to recover an GRPP instance that doesn't have a settings file.",
                 "removeAllKeys": "Add this flag along \"--repair\" to automatically remove all missing keys from database. (USE WITH CARE!)",
                 "langList": "List all available languages GRPP can be displayed."
             },
@@ -215,6 +217,22 @@ export var langDatabase:any = {
         "warnBrokenBatchRun": "\nWARN: This report was created from an aborted / incomplete run!\n",
         "unableFindBatchFile": "WARN: Unable to create report because batch file was not found!",
         "missingResFile": "\nWARN: One of the result files was not found, making this report incomplete."
+
+    },
+
+    "recover": {
+
+        "processComplete": "INFO - GRPP parsed %VAR_0% repos and created a new settings file.",
+
+        "error": {
+
+            "unableRecover": "ERROR - Unable to execute recover!\nReason: %VAR_0%",
+            "unableRecover_pathEmpty": "There\'s nothing to be recovered on this path!",
+            "unableRecover_reposFolderNotFound": "Unable to locate repos folder!",
+            "unableRecover_settingsExists": "GRPP settings file (grpp_settings.json) already exists!",
+            "unableRecover_noReposFound": "GRPP didn\'t found any git repository! A blank settings file will be created..."
+
+        }
 
     },
 

@@ -13,6 +13,7 @@
 - `exportRemotes` - Export all clone urls from previously imported git repos into a file (grpp_urls.txt)
 - `repair` - This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.
 - `removeAllKeys` - Add this flag along `--repair` to automatically remove all missing keys from database.
+- `recover` - Try to recover an GRPP instance that doesn't have a settings file.
 - `langList` - List all available languages GRPP can be displayed.
 
 ## Function list (with args)

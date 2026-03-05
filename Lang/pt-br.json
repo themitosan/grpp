@@ -12,6 +12,7 @@
         "warnUnknownArgs": "AVISO - GRPP não indentificou a seguinte lista de argumentos: \"%VAR_0%\"\n",
 
         "warnPathNotInit": "AVISO - Não foi possível carregar as configurações por que esse diretório não foi inicializado! GRPP irá inicializar antes de continuar...",
+        "warnBrokenInstance": "AVISO - Não foi possível carregar as informações da pasta atual!\nGRPP irá tentar criar um novo arquivo de configurações baseado nos possíveis repositórios presentes...",
         "version": "Versão: %VAR_0% [%VAR_1%]\nCompilado em %VAR_2%\n",
         "knowMore": "==> Use o argumento \"--help\" para obter mais informações.\n",
         "noArgsProvided": "==> Visto que nenhum argumento foi passado, desejamos que uma bela pessoa com o nome %VAR_0% tenha um ótimo dia! <3\n",
@@ -76,6 +77,7 @@
                 "silent": "Apenas mostra erros na tela.",
                 "exportRemotes": "Exporta uma lista com todas URL's de repositórios préviamente clonados em um arquivo (grpp_urls.txt)",
                 "repair": "GRPP irá procurar por erros nos repositórios, anexando qualquer repositório que não esteja no banco de dados, removendo itens que não se fazem presente no banco de dados (ou no sistema) e etc.",
+                "recover": "GRPP irá gerar um novo arquivo de configurações para uma pasta já inicializada sem arquivo de configurações.",
                 "removeAllKeys": "Use juto do argumento \"--repair\" para remover todos os itens que não se fazem presentes no banco de dados. (USE COM CUIDADO!)",
                 "langList": "Liste todos os idiomas no qual GRPP pode ser executado."
             },
@@ -189,6 +191,22 @@
         "warnBrokenBatchRun": "\nAVISO: Esse relatório foi gerado de uma tentativa interrompida de atualização global!\n",
         "unableFindBatchFile": "AVISO: Não foi possível criar relatório por que o arquivo de batch não foi encontrado!",
         "missingResFile": "\nAVISO: Um dos arquivos de relatórios não não foi encontrado, o que torna esse documento incompleto."
+
+    },
+
+    "recover": {
+
+        "processComplete": "INFO - GRPP processou %VAR_0% repositórios e gerou um novo arquivo de configurações.",
+
+        "error": {
+
+            "unableRecover": "ERRO - Não foi possível executar processo de recuperação!\nMotivo: %VAR_0%",
+            "unableRecover_pathEmpty": "Não existe nada para ser recuperado nesse local!",
+            "unableRecover_reposFolderNotFound": "Não foi possível encontrar a pasta de repositórios!",
+            "unableRecover_settingsExists": "O arquivo de configurações (grpp_settings.json) já existe!",
+            "unableRecover_noReposFound": "O GRPP não conseguiu encontrar nenhum repositório! Um arquivo de configurações em branco será gerado..."
+
+        }
 
     },
 
