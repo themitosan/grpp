@@ -72,7 +72,7 @@ export async function grpp_startRepairDatabase(){
 
         // Filter git folders
         getDirTree(`${process.cwd()}/repos`, '.git').forEach(function(currentFolder){
-            if (currentFolder.toLowerCase().indexOf('.git') !== -1) scanList.push(currentFolder.replace(`${process.cwd()}/repos/`, ''));
+            if (currentFolder.slice(currentFolder.length - 4, currentFolder.length) === '.git') scanList.push(currentFolder.replace(`${process.cwd()}/repos/`, ''));
         });
 
         // Check missing entry keys, check missing repos and finish process

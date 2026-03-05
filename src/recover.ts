@@ -67,7 +67,7 @@ export function grpp_recover(){
                 }
 
                 currentUrlData = currentSettings[currentRemote].url.split('/');
-                newSettingsFile.repoEntries[currentSettings[currentRemote].url] = {
+                newSettingsFile.repoEntries[currentSettings[currentRemote].url.replace('https://', '').replace('http://', '')] = {
                     url: currentSettings[currentRemote].url,
                     name: currentUrlData[currentUrlData.length - 1],
                     owner: currentUrlData[currentUrlData.length - 2],
