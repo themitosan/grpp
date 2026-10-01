@@ -54,11 +54,6 @@ export async function grpp_getReposFrom(userName:string){
                 readline.close();
                 switch (usrAnswer){
 
-                    // GitHub
-                    case '1':
-                        urlBase = `https://api.github.com/users/${userName}/repos?per_page=100&page=`;
-                        break;
-
                     // GitLab
                     case '2':
                         urlBase = `https://gitlab.com/api/v4/users/${userName}/projects?per_page=100&page=`;
@@ -205,11 +200,6 @@ function processRepoChunk(resultArray:any[]){
         readline.close();
         switch (userAction){
 
-            // Import all files
-            case '1':
-                grpp_batchImport(repoList);
-                break;
-
             // Edit list before importing
             case '2':
                 grpp_editRepoListBeforeImport(repoList);
@@ -226,7 +216,7 @@ function processRepoChunk(resultArray:any[]){
             case '4':
                 process.exit();
 
-            // Default
+            // [Default] Import all files
             default:
                 grpp_batchImport(repoList);
                 break;
