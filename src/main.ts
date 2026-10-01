@@ -285,6 +285,7 @@ export function grpp_removeRepo(path:string){
         resolve();
     });
 }
+
 /**
     * Load user settings 
 */
