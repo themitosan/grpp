@@ -34,7 +34,7 @@ You can install all required packages by running some of the commands below:
 
 ```shell
 # Arch based distros <3
-sudo pacman -S nodejs git npm
+sudo pacman -Sy nodejs git npm
 
 # Debian based distros
 sudo apt update
@@ -83,18 +83,13 @@ npm i && npm run webpack
 ```
 The compiled script will be on `Build` dir.
 
-**TIP**: You can also run `npm run dev` - `ts` will watch all changes on your code and will compile script on the go! In this case, the compiled script will be on `App` dir instead.
+**TIP**: You can also run `npm run dev` - `ts` will watch all changes on your code and will compile it on the go! In this case, the compiled script will be on `App` dir instead.
 
-In order to run GRPP, you will need to run like this:
+In order to run GRPP, you can run:
 
 ```shell
 # webpack
 node Build/grpp.js
-
-# OR
-
-# Dev mode
-node App/grpp.js
 ```
 
 <a id="build-production-mode"></a>
@@ -232,9 +227,10 @@ This will create a determinated number of processes, updating all repos that can
 
 To set the number of processes running, you will need to divide the number of repos that will be updated per process.
 
-Example: Let's just say that you have `100` repos on your database. If you want 4 processes, you can run the following command:
+**Example**: Let's just say that you have `100` repos on your database. If you want 4 processes, you can run the following command:
 
 ```shell
+# 100 / 4 = 25 repos per process
 grpp --maxReposPerList=25
 ```
 
