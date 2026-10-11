@@ -150,7 +150,7 @@ export async function grpp_updateRepo(path:string){
 
         // Declare reasonList const, check if repo exists on database and check if can continue
         const reasonList:string[] = [];
-        if (grppSettings.repoEntries[path] === void 0) reasonList.push(grpp_convertLangVar(langDatabase.update.errorUnableUpdateRepo_repoNotFound, [path]));
+        if (grppSettings.repoEntries[path] === void 0 || module_fs.existsSync(`${process.cwd()}/repos/${path}`) !== !0) reasonList.push(grpp_convertLangVar(langDatabase.update.errorUnableUpdateRepo_repoNotFound, [path]));
         execReasonListCheck(reasonList, langDatabase.update.errorUnableUpdateRepo, async function(){
 
             // Get current repo data and start fetching updates
@@ -274,9 +274,7 @@ async function grpp_sortBatchList(repoList:string[]):Promise<string[]> {
 
             // Create update list and check if only priority repos should be updated
             updateList = [ ...priorityRepos, ...updateList ];
-            if (update_onlyQueuePriorityRepos === !0){
-                updateList = priorityRepos;
-            }
+            if (update_onlyQueuePriorityRepos === !0) updateList = priorityRepos;
 
         }
         totalReposQueued = updateList.length;
