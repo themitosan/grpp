@@ -42,6 +42,12 @@ interface batchUpdate_results {
     updateList:string[]
 }
 
+// Batch update using spread strategy
+interface batchUpdateSpread {
+    priority:string[]
+    common:string[]
+}
+
 // Console res
 interface consoleDimensions {
     x:number,
@@ -241,11 +247,11 @@ export async function grpp_processBatchFile(id:number){
 }
 
 /**
-    * Sort repos to be updated
+    * Sort repos to be updated in default strategy
     * @param repoList [string[]] List to be sorted
     * @returns [string[]] New list with sorted items
 */
-async function grpp_sortBatchList(repoList:string[]):Promise<string[]> {
+async function grpp_sortBatchListDefault(repoList:string[]):Promise<string[]> {
     return new Promise<string[]>(function(resolve){
 
         var updateList:string[] = [],
@@ -277,8 +283,49 @@ async function grpp_sortBatchList(repoList:string[]):Promise<string[]> {
             if (update_onlyQueuePriorityRepos === !0) updateList = priorityRepos;
 
         }
+
         totalReposQueued = updateList.length;
         resolve(updateList);
+
+    });
+}
+
+/**
+    * Sort repos to be updated using spread strategy
+    * @param repoList [string[]] List to be sorted
+    * @returns [batchUpdateSpread] Object containing repos lists
+*/
+async function grpp_sortBatchListSpread(repoList:string[]):Promise<batchUpdateSpread>{
+    return new Promise<batchUpdateSpread>(function(resolve){
+
+        var updateList:string[] = [],
+            priorityRepos:string[] = [];
+
+        repoList.forEach(function(currentRepo){
+
+            // Get current repo data and check if can update
+            const repoData:grppRepoEntry = grppSettings.repoEntries[currentRepo];
+            if (repoData.canUpdate === !0){
+
+                if (repoData.isPriority === !0){
+                    priorityRepos.push(currentRepo);
+                } else {
+                    updateList.push(currentRepo);
+                }
+
+            } else {
+                skippedRepos.push(currentRepo);
+            }
+
+        });
+
+        // Declare res const and check if there is priority repos and should ONLY queue priority. If so, remove common.
+        const res:batchUpdateSpread = { priority: priorityRepos, common: updateList };
+        if (priorityRepos.length !== 0 && update_onlyQueuePriorityRepos === !0) res.common = [];
+
+        // Update total repos queued and resolve with new group
+        totalReposQueued = (res.priority.length + res.common.length);
+        resolve(res);
 
     });
 }
@@ -288,8 +335,11 @@ async function grpp_sortBatchList(repoList:string[]):Promise<string[]> {
 */
 async function grpp_startBatchUpdate(){
 
+    // Declare main vars
+    var chunkList:any[] = [],
+        completedRunners = 0;
+    
     // Set current time to measure update time, set tempDir var and check if it exists. If so, remove it and create a new one
-    var completedRunners = 0;
     tempDir = structuredClone(`${process.cwd()}/.temp`);
     startUpdateTime = structuredClone(performance.now());
     if (module_fs.existsSync(tempDir) === !0) module_fs.rmSync(tempDir, { recursive: !0 });
@@ -297,11 +347,49 @@ async function grpp_startBatchUpdate(){
 
     // Split update list on given runners, create GRPP batch file and set total res files / queued repos vars
     createLogEntry(`INFO - Creating update list...`);
-    const
-        updateList = await grpp_sortBatchList(Object.keys(grppSettings.repoEntries)),
-        chunkList = spliceArrayIntoChunks(updateList, grppSettings.maxReposPerList);
-    module_fs.writeFileSync(`${tempDir}/GRPP_BATCH.json`, JSON.stringify({ list: chunkList, skippedRepos }), 'utf-8');
-    totalResFiles = structuredClone(chunkList.length);
+    switch (grppSettings.updateStrategy){
+
+        // Split all priority repos in all threads, making them update sooner
+        case 'spread':
+
+            // Sort update list and check if common list contains repos to be updated. If not, just split the priority list into chunks
+            const
+                updateObject = await grpp_sortBatchListSpread(Object.keys(grppSettings.repoEntries));
+                if (updateObject.common.length > 0){
+
+                    // Declare current thread var, split common repos into chunks and process priority repos list
+                    var cThread = 0;
+                    chunkList = spliceArrayIntoChunks(updateObject.common, grppSettings.maxReposPerList);
+                    updateObject.priority.forEach(function(cPriority){
+
+                        // Check if current chunk is valid. If so, push current priority repo at start and bump cThread counter. If not, reset cThread
+                        if (chunkList[cThread] !== void 0){
+                            chunkList[cThread].splice(0, 0, cPriority);
+                            cThread++;
+                        } else {
+                            cThread = 0;
+                        }
+
+                    });
+
+                } else {
+                    chunkList = spliceArrayIntoChunks(updateObject.priority, grppSettings.maxReposPerList);
+                }
+
+                // Write new batch json and set total res files as the final chunk length
+                module_fs.writeFileSync(`${tempDir}/GRPP_BATCH.json`, JSON.stringify({ list: chunkList, skippedRepos }), 'utf-8');
+                totalResFiles = structuredClone(chunkList.length);
+            break;
+
+        // Default: Put all priority repos in the first thread
+        default:
+            const updateList = await grpp_sortBatchListDefault(Object.keys(grppSettings.repoEntries));
+            chunkList = spliceArrayIntoChunks(updateList, grppSettings.maxReposPerList);
+            module_fs.writeFileSync(`${tempDir}/GRPP_BATCH.json`, JSON.stringify({ list: chunkList, skippedRepos }), 'utf-8');
+            totalResFiles = structuredClone(chunkList.length);
+            break;
+
+    }
 
     // Clear console screen, create log entry and spawn processes
     grpp_displayMainLogo(!1);
@@ -547,7 +635,7 @@ async function grpp_createBatchUpdateReport(postAction:Function){
 
             // Clear screen, display update results and ask if user wants to open exported log
             grpp_displayMainLogo(!0);
-            readLine.question(grpp_convertLangVar(langDatabase.update.infoProcessComplete, [baseLog, exportTxtPath]), async function(answer){
+            readLine.question(grpp_convertLangVar(langDatabase.update.infoProcessComplete, [baseLog, exportTxtPath]), async function(answer:any){
 
                 // Close readline and check if user wants to check update data
                 readLine.close();

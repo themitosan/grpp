@@ -55,9 +55,10 @@ export interface grppSettingsFile {
     userEditor:string,
     updateRuntime:number,
     fetchStartPage:number,
+    updateStrategy:string,
     minifySettings:boolean,
     maxReposPerList:number,
-    connectionTestURL:string,
+    connectionTestURL:string
 }
 
 // GRPP User Settings
@@ -70,7 +71,7 @@ export interface grppUserSettings {
 */
 
 // Default settings file
-export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' | 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage' | 'userEditor' | 'minifySettings'> = {
+export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' | 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage' | 'userEditor' | 'minifySettings' | 'updateStrategy'> = {
     maxPages: 5,
     runCounter: 0,
     repoEntries: {},
@@ -81,7 +82,8 @@ export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' |
     minifySettings: !0,
     maxReposPerList: 50,
     version: APP_VERSION,
-    connectionTestURL: '1.1.1.1'
+    connectionTestURL: '1.1.1.1',
+    updateStrategy: 'spread'
 }
 
 // Default user settings
@@ -327,7 +329,7 @@ async function grpp_getNpmRootPath(){
 
             // Run command to get global path and set NPM_GLOBAL_PATH value
             const childProcess = module_childProcess.exec(`npm root -g`);
-            childProcess.stdout!.on('data', function(data){
+            childProcess.stdout!.on('data', function(data:any){
                 NPM_GLOBAL_PATH = data.replaceAll('\n', '');
             });
 
@@ -420,6 +422,12 @@ async function init(){
         // Set max repos a batch file should have
         if (currentArg.indexOf('maxReposPerList=') !== -1){
             tempSettings.maxReposPerList = preventMinMax(Math.floor(Number(currentArg.replace('maxReposPerList=', ''))), 1, maxValue);
+            execFn = saveSettings;
+        }
+
+        // Set batch update strategy
+        if (currentArg.indexOf('setBatchStrategy=') !== -1){
+            tempSettings.updateStrategy = currentArg.replace('setBatchStrategy=', '');
             execFn = saveSettings;
         }
 

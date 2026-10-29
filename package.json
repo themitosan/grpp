@@ -16,7 +16,7 @@
 		"webpack": "clear && webpack --config ./compiler/build-webpack.config.js"
 	},
 	"devDependencies": {
-		"@types/node": "^22.8.4",
+		"@types/node": "^22.20.5",
 		"ts-loader": "^9.5.1",
 		"webpack": "^5.105.4",
 		"webpack-cli": "^5.1.4"
@@ -28,5 +28,7 @@
 		"type": "git",
 		"url": "https://github.com/themitosan/grpp.git"
 	},
-	"files": ["*"]
+	"files": [
+		"*"
+	]
 }

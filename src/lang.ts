@@ -126,7 +126,8 @@ export var langDatabase:any = {
                 "setMaxFetchPages": "[NUMBER] Set maximum of pages GRPP will fetch from remote on get user repos process.",
                 "setConnectionTestURL": "[URL] Set URL which GRPP will use to test internet connection.",
                 "setEditor": "[EDITOR] Set which text editor GRPP should use to open text files. (Default: nano)",
-                "minifySettings": "[BOOLEAN] Set if GRPP should minify settings files (Default: true)"
+                "minifySettings": "[BOOLEAN] Set if GRPP should minify settings files (Default: true)",
+                "setBatchStrategy": "[STRING] Define how GRPP should queue repos on a batch run.\n\"default\": Put all priority repos on the first thread\n\"spread\": Spread all priority repos on all threads, making them update sooner."
             }
 
         },
