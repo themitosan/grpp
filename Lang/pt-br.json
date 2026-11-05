@@ -86,6 +86,7 @@
                 "init": "[CAMINHO] Informa aonde GRPP deve inicializar / guardar os repositórios.\nVocê pode apenas user \"--init\" para inicializar a pasta atual!",
                 "import": "[URL_GIT] Importa (clona) o repositório especificado para o sistema.",
                 "importList": "[CAMINHO] Importa (clona) todos os repositórios de um arquivo de texto.",
+                "setAsPriority": "[Use junto de --import ou --importList] Usar essa flag irá fazer com que todos os repositórios sejam importados com a variável \"isPriority\" como verdadeiro (true).",
                 "path": "[CAMINHO] Especifica aonde GRPP deve operar.",
                 "update": "[CAMINHO] Atualiza um repositório previamente importado.",
                 "getReposFrom": "[NOME_DO_USUÁRIO] Tenta obter todos os repositórios de um usuário, tendo como possibilidade importa-los ao sistema.",

@@ -117,6 +117,9 @@ export var
     // Update: Queue only repos with isPriority flag as true
     update_onlyQueuePriorityRepos = !1,
 
+    // If true, this will import the current repo with asPriority set true
+    import_setAsPriority = !1,
+
     // NPM global path
     NPM_GLOBAL_PATH = '',
 
@@ -412,6 +415,9 @@ async function init(){
 
         // Repair: Check if will remove all missing keys from database automatically
         if (currentArg.indexOf('removeAllKeys') !== -1) repair_removeAllKeys = !0;
+
+        // Import all repos with "isPriority" set true
+        if (currentArg.indexOf('setAsPriority') !== -1) import_setAsPriority = !0;
 
         // Update: Queue only repos with isPriority flag
         if (currentArg.indexOf('priority') !== -1) update_onlyQueuePriorityRepos = !0;

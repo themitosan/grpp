@@ -112,6 +112,7 @@ export var langDatabase:any = {
                 "init": "[PATH] Set a location where GRPP will initialize and backup your repos.\nYou can also just use \"--init\" to initialize where you currently are!",
                 "import": "[GIT_URL] Imports a git repository to database.",
                 "importList": "[PATH] Import a list of git repositories from a text file.",
+                "setAsPriority": "[Use with --import or --importList] This will make the current repos being added with \"isPriority\" set as true.",
                 "path": "[PATH] Set GRPP current working directory.",
                 "update": "[PATH] Updates a previously imported repo.",
                 "getReposFrom": "[USERNAME] Attempts to list / import all repos from a specified user.",

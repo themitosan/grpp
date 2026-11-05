@@ -10,8 +10,8 @@
 */
 
 import { grpp_displayMainLogo } from './utils';
-import { grpp_updateRepoData, originalCwd } from './main';
 import { grpp_convertLangVar, langDatabase } from './lang';
+import { grpp_updateRepoData, import_setAsPriority, originalCwd } from './main';
 import { createLogEntry, execReasonListCheck, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
 /*
@@ -90,8 +90,8 @@ export async function grpp_startImport(cloneURL:string){
                 owner,
                 url: cloneURL,
                 canUpdate: !0,
-                isPriority: !1,
                 lastUpdatedOn: 'Never',
+                isPriority: import_setAsPriority,
                 importDate: new Date().toString()
             };
 
