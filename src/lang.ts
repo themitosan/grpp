@@ -192,7 +192,7 @@ export var langDatabase:any = {
 
         "errorBatchFileNotFound": "ERROR - Unable to locate batch file!\nPath: %VAR_0%",
 
-        "startBatchUpdate": "INFO - Starting GRPP Batch Update process... (Creating %VAR_0% processes, with at max. %VAR_1% repos per list)",
+        "startBatchUpdate": "INFO - Starting GRPP Batch Update process... (Creating %VAR_0% processes, with at min. %VAR_1% repos per list)",
 
         "batchStatus": "==> Batch update:",
         "batch_overallProgress": "Overall Progress: %VAR_0%% [%VAR_1% of %VAR_2%]",

@@ -166,7 +166,7 @@
 
         "errorBatchFileNotFound": "ERRO - Não foi possível encontrar o arquivo de atualização batch!\nCaminho: %VAR_0%",
 
-        "startBatchUpdate": "INFO - Iniciando processo de atualização global... (Criando %VAR_0% processos, com no máximo %VAR_1% repositórios por processo)",
+        "startBatchUpdate": "INFO - Iniciando processo de atualização global... (Criando %VAR_0% processos, com no mínimo %VAR_1% repositórios por processo)",
 
         "batchStatus": "==> Atualização global:",
         "batch_overallProgress": "Progresso geral: %VAR_0%% [%VAR_1% de %VAR_2%]",
