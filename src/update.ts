@@ -456,7 +456,7 @@ function processBatchResFiles(){
         reposProcessed = 0;
 
     // Reset console color, print status and start processing all files
-    updateConsoleLine(0, 9, `${consoleTextStyle.reset}${langDatabase.update.batchStatus}\n`);
+    updateConsoleLine(0, 9, `${consoleTextStyle.reset}${grpp_convertLangVar(langDatabase.update.batchStatus, [process.cwd()])}\n`);
     for (var currentFile = 0; currentFile < totalResFiles; currentFile++){
 
         // Get file data and check if is a valid JSON
@@ -479,18 +479,18 @@ function processBatchResFiles(){
             if (currentFile === (totalResFiles - 1)){
                 entryChar = '  └';
                 enableLineBreak = '\n';
-                updateConsoleLine(0, 11, `──┬ ${grpp_convertLangVar(langDatabase.update.batch_overallProgress, [parsePercentage(reposProcessed, totalReposQueued), reposProcessed, totalReposQueued])}`);
-                updateConsoleLine(0, 13, `  ├ ${grpp_convertLangVar(langDatabase.update.batch_updateCounter, [changeTextColorNumber(updateCounter, consoleTextStyle.fgGreen)])}`);
-                updateConsoleLine(0, 14, `  └ ${grpp_convertLangVar(langDatabase.update.batch_errorCounter, [changeTextColorNumber(errorCounter, consoleTextStyle.fgRed)])}\n\n${langDatabase.update.batchProcessList}\n\n`);
+                updateConsoleLine(0, 12, `──┬ ${grpp_convertLangVar(langDatabase.update.batch_overallProgress, [parsePercentage(reposProcessed, totalReposQueued), reposProcessed, totalReposQueued])}`);
+                updateConsoleLine(0, 14, `  ├ ${grpp_convertLangVar(langDatabase.update.batch_updateCounter, [changeTextColorNumber(updateCounter, consoleTextStyle.fgGreen)])}`);
+                updateConsoleLine(0, 15, `  └ ${grpp_convertLangVar(langDatabase.update.batch_errorCounter, [changeTextColorNumber(errorCounter, consoleTextStyle.fgRed)])}\n\n${langDatabase.update.batchProcessList}\n\n`);
             }
 
             // Update entryChar if there is only one process and update elapsed time line
             if (totalResFiles === 1) entryChar = '-->';
-            updateConsoleLine(0, 12, `  ├ ${grpp_convertLangVar(langDatabase.update.batch_elapsedTime, [converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime))])}`);
+            updateConsoleLine(0, 13, `  ├ ${grpp_convertLangVar(langDatabase.update.batch_elapsedTime, [converMsToHHMMSS(parsePositive(performance.now() - startUpdateTime))])}`);
 
             // Check if process finished - if so, update checkbox char and update each process line
             if (batchResData.currentRepo > (batchResData.totalRepos - 1)) checkboxChar = `[${consoleTextStyle.fgGreen}✓${consoleTextStyle.reset}]`;
-            updateConsoleLine(0, (currentFile + 18), grpp_convertLangVar(langDatabase.update.batchProcess, [
+            updateConsoleLine(0, (currentFile + 19), grpp_convertLangVar(langDatabase.update.batchProcess, [
                 entryChar,
                 checkboxChar,
                 currentFile,

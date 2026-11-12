@@ -203,7 +203,7 @@ export var langDatabase:any = {
 
         "startBatchUpdate": "INFO - Starting GRPP Batch Update process... (Creating %VAR_0% processes, with at min. %VAR_1% repos per list)",
 
-        "batchStatus": "==> Batch update:",
+        "batchStatus": "==> Batch update:\n    Path: %VAR_0%\n\n",
         "batch_overallProgress": "Overall Progress: %VAR_0%% [%VAR_1% of %VAR_2%]",
         "batch_updateCounter": "Update counter: %VAR_0%",
         "batch_errorCounter": "Error counter: %VAR_0%",
