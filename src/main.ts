@@ -80,7 +80,7 @@ export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' |
     fetchStartPage: 1,
     userEditor: 'nano',
     minifySettings: !0,
-    maxReposPerList: 50,
+    maxReposPerList: 300,
     version: APP_VERSION,
     connectionTestURL: '1.1.1.1',
     updateStrategy: 'spread'
