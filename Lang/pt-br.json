@@ -97,7 +97,7 @@
 
             "settingsList": {
                 "setLang": "[IDIOMA] Altera qual idimoa GRPP será exibido. Você pode ver a lista de idiomas disponíveis usando o argumento \"--langList\".",
-                "maxReposPerList": "[NÚMERO] Informa quantos repositórios cada processo deverá ter quando GRPP for atualizar.",
+                "maxReposPerList": "[NÚMERO] Define quantos processos GRPP Batch Update devem ser criados.",
                 "setStartPage": "[NÚMERO] Informa qual página GRPP deve começar a listar os repositórios de usuário.",
                 "setMaxFetchPages": "[NÚMERO] Informa o número máximo de paginas com repositórios que GRPP deve obter ao procurar repositórios de um usuário.",
                 "setConnectionTestURL": "[URL] Informa qual URL será usada para testar a conexão de internet.",

@@ -13,7 +13,7 @@ import { grpp_recover } from './recover';
 import { grpp_getReposFrom } from './getReposFrom';
 import { grpp_checkIfCanStartRepair } from './repair';
 import { grpp_batchImport, grpp_startImport, grppRepoEntry } from './import';
-import { createLogEntry, preventMinMax, getArgName, consoleTextStyle } from './tools';
+import { createLogEntry, clamp, getArgName, consoleTextStyle } from './tools';
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from './update';
 import { grpp_convertLangVar, grpp_displayLangList, grpp_loadLang, grpp_setLang, langDatabase } from './lang';
 import { grpp_displayHelp, grpp_displayMainLogo, grpp_exportRemotes, grpp_getRepoInfo, grpp_printStatus } from './utils';
@@ -58,6 +58,7 @@ export interface grppSettingsFile {
     updateStrategy:string,
     minifySettings:boolean,
     maxReposPerList:number,
+    maxBatchThreads:number,
     connectionTestURL:string
 }
 
@@ -71,7 +72,7 @@ export interface grppUserSettings {
 */
 
 // Default settings file
-export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' | 'lastRun' | 'repoEntries' | 'runCounter' | 'maxReposPerList' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage' | 'userEditor' | 'minifySettings' | 'updateStrategy'> = {
+export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' | 'lastRun' | 'repoEntries' | 'runCounter' | 'maxPages' | 'connectionTestURL' | 'updateRuntime' | 'fetchStartPage' | 'userEditor' | 'minifySettings' | 'updateStrategy' | 'maxBatchThreads'> = {
     maxPages: 5,
     runCounter: 0,
     repoEntries: {},
@@ -80,10 +81,10 @@ export const grppSettingsFile_Defaults:any | Pick <grppSettingsFile, 'version' |
     fetchStartPage: 1,
     userEditor: 'nano',
     minifySettings: !0,
-    maxReposPerList: 300,
     version: APP_VERSION,
     connectionTestURL: '1.1.1.1',
-    updateStrategy: 'spread'
+    updateStrategy: 'spread',
+    maxBatchThreads: 6
 }
 
 // Default user settings
@@ -431,9 +432,9 @@ async function init(){
         // Update: Skip process complete message
         if (currentArg.indexOf('skipUpdateReport') !== -1) update_skipProcessComplete = !0;
 
-        // Set max repos a batch file should have
-        if (currentArg.indexOf('maxReposPerList=') !== -1){
-            tempSettings.maxReposPerList = preventMinMax(Math.floor(Number(currentArg.replace('maxReposPerList=', ''))), 1, maxValue);
+        // Set number of batch threads
+        if (currentArg.indexOf('maxBatchThreads=') !== -1){
+            tempSettings.maxBatchThreads = clamp(Math.floor(Number(currentArg.replace('maxBatchThreads=', ''))), 1, maxValue);
             execFn = saveSettings;
         }
 
@@ -448,7 +449,7 @@ async function init(){
 
         // Set max fetch pages
         if (currentArg.indexOf('setMaxFetchPages=') !== -1){
-            tempSettings.maxPages = preventMinMax(Math.floor(Number(currentArg.replace('setMaxFetchPages=', ''))), 1, maxValue);
+            tempSettings.maxPages = clamp(Math.floor(Number(currentArg.replace('setMaxFetchPages=', ''))), 1, maxValue);
             execFn = saveSettings;
         }
 
@@ -460,7 +461,7 @@ async function init(){
 
         // Set starting fetch page
         if (currentArg.indexOf('setStartPage=') !== -1){
-            tempSettings.fetchStartPage = preventMinMax(Math.floor(Number(currentArg.replace('setStartPage=', ''))), 0, maxValue);
+            tempSettings.fetchStartPage = clamp(Math.floor(Number(currentArg.replace('setStartPage=', ''))), 0, maxValue);
             execFn = saveSettings;
         }
 

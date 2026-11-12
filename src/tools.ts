@@ -238,13 +238,13 @@ export function parsePositive(n:number):number {
 }
 
 /**
-    * Prevent number being lower than a specified value
+    * Clamp a given number
     * @param num [number] input number
     * @param min [number] minimum value
     * @param max [number] maximum value
     * @returns fixed number
 */
-export function preventMinMax(num:number, min:number, max:number):number {
+export function clamp(num:number, min:number, max:number):number {
     if (num < min) num = min;
     if (num > max) num = max;
     return num;
@@ -359,8 +359,8 @@ export function converMsToHHMMSS(ms:number):string {
     * Split array into chunks
     * Original code: https://stackabuse.com/how-to-split-an-array-into-even-chunks-in-javascript
     * @param arr [array] Array with objects
-    * @param chunkSize [number] number of chinks main array will be splitted (default: 2)
-    * @returns [any[]] array with smaller chunks
+    * @param chunkSize [number] number of chunks main array will be splitted (default: 2)
+    * @returns [any[]] Array with smaller chunks
 */
 export function spliceArrayIntoChunks(target:any[], chunkSize:number = 2):any[] {
     const res:any[] = [];

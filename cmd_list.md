@@ -31,7 +31,7 @@
 ## Settings list
 
 - `setLang=[LANG]` - Set which language GRPP should be displayed. You can see the lang available list by using `--langList` option.
-- `maxReposPerList=[NUMBER]` - Set how many repos a GRPP Batch Update list should have.
+- `maxBatchThreads=[NUMBER]` - Set how many threads GRPP Batch Update should spawn.
 - `setStartPage=[NUMBER]` - Set which page GRPP should start fetching user repos from git hosting website.
 - `setMaxFetchPages=[NUMBER]` - Set maximum of pages GRPP will fetch from remote on get user repos process.
 - `setConnectionTestURL=[URL]` - Set URL which GRPP will use to test internet connection.

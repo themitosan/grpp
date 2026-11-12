@@ -346,10 +346,9 @@ async function grpp_startBatchUpdate(){
     module_fs.mkdirSync(tempDir);
 
     // Split update list on given runners, create GRPP batch file and set total res files / queued repos vars
-    createLogEntry(`INFO - Creating update list...`);
     switch (grppSettings.updateStrategy){
 
-        // Split all priority repos in all threads, making them update sooner
+        // Split all priority repos in all threads, making them update before non-priority repos
         case 'spread':
 
             // Sort update list and check if common list contains repos to be updated. If not, just split the priority list into chunks
@@ -359,7 +358,7 @@ async function grpp_startBatchUpdate(){
 
                     // Declare current thread var, split common repos into chunks and process priority repos list
                     var cThread = 0;
-                    chunkList = spliceArrayIntoChunks(updateObject.common, grppSettings.maxReposPerList);
+                    chunkList = spliceArrayIntoChunks(updateObject.common, Math.floor(updateObject.common.length / grppSettings.maxBatchThreads));
                     updateObject.priority.forEach(function(cPriority){
 
                         // Check if current chunk is valid. If so, push current priority repo at start and bump cThread counter. If not, reset cThread
@@ -373,7 +372,7 @@ async function grpp_startBatchUpdate(){
                     });
 
                 } else {
-                    chunkList = spliceArrayIntoChunks(updateObject.priority, grppSettings.maxReposPerList);
+                    chunkList = spliceArrayIntoChunks(updateObject.priority, Math.floor(updateObject.priority.length / grppSettings.maxBatchThreads));
                 }
 
                 // Write new batch json and set total res files as the final chunk length
@@ -384,7 +383,7 @@ async function grpp_startBatchUpdate(){
         // Default: Put all priority repos in the first thread
         default:
             const updateList = await grpp_sortBatchListDefault(Object.keys(grppSettings.repoEntries));
-            chunkList = spliceArrayIntoChunks(updateList, grppSettings.maxReposPerList);
+            chunkList = spliceArrayIntoChunks(updateList, Math.floor(updateList.length / grppSettings.maxBatchThreads));
             module_fs.writeFileSync(`${tempDir}/GRPP_BATCH.json`, JSON.stringify({ list: chunkList, skippedRepos }), 'utf-8');
             totalResFiles = structuredClone(chunkList.length);
             break;
@@ -393,7 +392,7 @@ async function grpp_startBatchUpdate(){
 
     // Clear console screen, create log entry and spawn processes
     grpp_displayMainLogo(!1);
-    createLogEntry(grpp_convertLangVar(langDatabase.update.startBatchUpdate, [totalResFiles, grppSettings.maxReposPerList]));
+    createLogEntry(grpp_convertLangVar(langDatabase.update.startBatchUpdate, [totalResFiles, chunkList[0].length]));
     for (var currentList = 0; currentList < totalResFiles; currentList++){
 
         // Spawn process and start watching for batch res files

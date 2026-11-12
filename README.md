@@ -225,16 +225,13 @@ grpp --batch
 
 This will create a determinated number of processes, updating all repos that can be updated on GRPP.
 
-To set the number of processes running, you will need to divide the number of repos that will be updated per process.
-
-**Example**: Let's just say that you have `100` repos on your database. If you want 4 processes, you can run the following command:
+To set the number of processes running, you can set it by using `--maxBatchThreads`:
 
 ```shell
-# 100 / 4 = 25 repos per process
-grpp --maxReposPerList=25
+grpp --maxBatchThreads=4
 ```
 
-This will create four processes, each updating 25 repos.
+**Example**: Let's say you have 100 repos preserved. By running the command above, it will make spawn 4 threads, each updating 25 repos.
 
 After processing all repos, GRPP will show the update results and save a copy on `Logs` dir.
 
