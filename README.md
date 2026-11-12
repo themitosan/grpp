@@ -24,6 +24,8 @@ Created by [TheMitoSan](https://bsky.app/profile/themitosan.bsky.social), this i
     - [How to update repos](#how-to-update)
         - [Update a single repo](#update-single-repo)
         - [Update all repos](#update-all-repos)
+    - [Repair](#repair)
+        - [Moving repos between instances](#repair-move-repos)
 - [External tools used on this project](#external-tools)
 - [External code snippets used on this project](#external-code-snippets)
 
@@ -234,6 +236,33 @@ grpp --maxBatchThreads=4
 **Example**: Let's say you have 100 repos preserved. By running the command above, it will make spawn 4 threads, each updating 25 repos.
 
 After processing all repos, GRPP will show the update results and save a copy on `Logs` dir.
+
+<a id="repair"></a>
+## Repair
+
+If _(by some reason)_ you have any issue on your GRPP instance, it may help by running `grpp --repair`.
+It verifies if all entries are present and if not, remove them or even export if you are planning to move some of them to another location.
+
+<a id="repair-move-repos"></a>
+### Moving repos between instances
+If you are planning to move git repos from one instance to another, here is how you can do it:
+
+1) Create _(or go to)_ another instance
+2) Move all folders and make sure to keep the same structure (Example: repos/site.com/owner/repo.git)
+3) On original instance, run the following 
+
+```shell
+# This will remove all non-present repos and export a list contaning all their data (GRPP_EXPORT_MISSING.json)
+grpp --removeAllKeys --exportAllKeys
+```
+
+4) Now, move `GRPP_EXPORT_MISSING.json` to Instance B root and then, run:
+
+```shell
+grpp --repair
+```
+
+GRPP will detect the database and ask if you want to import the missing repos data.
 
 <a id="external-tools"></a>
 ## External tools used on this project
