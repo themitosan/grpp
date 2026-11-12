@@ -105,6 +105,7 @@ export var langDatabase:any = {
                 "repair": "This option will fix current database, linking any repo that is not present or removing any repo entry that doesn't exists.",
                 "recover": "Try to recover an GRPP instance that doesn't have a settings file.",
                 "removeAllKeys": "Add this flag along \"--repair\" to automatically remove all missing keys from database. (USE WITH CARE!)",
+                "exportAllKeys": "Add this flag along \"--repair\" to export all missing keys from database to \"GRPP_EXPORT_MISSING.json\"",
                 "langList": "List all available languages GRPP can be displayed."
             },
 
@@ -166,7 +167,8 @@ export var langDatabase:any = {
         "infoAddRemoveKeys": "INFO - GRPP added %VAR_0% missing keys and removed %VAR_1% deprecated keys on %VAR_2% repos.",
         "infoRepairComplete": "\nINFO - Repair complete!\n",
 
-        "confirmRemoveRepoDatabase": "WARN - It seems that %VAR_0% does not exists!\nDo you want to remove this entry from database? [y/N] ",
+        "informMissingRepo": "WARN - It seems that \"%VAR_0%\" does not exists!\n",
+        "confirmRemoveRepoDatabase": "\nDo you want to remove this entry from database? [y/N] ",
 
         "warnRepoNotBare": "WARN - It seems that %VAR_0%.git is not on bare format!",
         "importMissingRepo": "INFO - Importing missing repo: %VAR_0% [%VAR_1%]",
@@ -174,7 +176,14 @@ export var langDatabase:any = {
         "errorConfigFileNotExists": "Unable to read data from %VAR_0%.git because config file doesn't exists!\nGRPP will remove this repo entry from database...",
         "pushErrorWarn": "WARN - %VAR_0%",
 
-        "warnDbVersinoMismatch": "WARN - It seems that your database version is from another grpp version!\nMake sure to run grpp on repair mode to prevent any possible issues."
+        "warnDbVersinoMismatch": "WARN - It seems that your database version is from another grpp version!\nMake sure to run grpp on repair mode to prevent any possible issues.",
+
+        "exportMissingDatabase": "INFO - Exporting missing database...",
+
+        "grppExportMissingDetected": "INFO - GRPP found a file with missing repos from an database (GRPP_EXPORT_MISSING)\nDo you want to import them? [y/N] ",
+
+        "importMissing_createEntry": "INFO - (%VAR_3% | %VAR_1% of %VAR_2%) Importing missing repo from database: %VAR_0%",
+        "importMissing_repoAlreadyExists": "WARN - Skipping repo \"%VAR_0%\" because it already exists on database!"
 
     },
 

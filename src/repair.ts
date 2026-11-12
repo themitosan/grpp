@@ -11,8 +11,8 @@
 
 import { grpp_convertLangVar, langDatabase } from './lang';
 import { grppRepoEntry, repoEntry_Defaults } from './import';
-import { grpp_removeRepo, grpp_updateRepoData, grppSettings, repair_removeAllKeys } from './main';
-import { createLogEntry, execReasonListCheck, getDirTree, parseINI, runExternalCommand, runExternalCommand_Defaults } from './tools';
+import { grpp_removeRepo, grpp_updateRepoData, grppSettings, repair_exportAllKeys, repair_removeAllKeys } from './main';
+import { createLogEntry, execReasonListCheck, getDirTree, parseINI, parsePercentage, runExternalCommand, runExternalCommand_Defaults } from './tools';
 
 /*
     Require node modules
@@ -30,6 +30,11 @@ import * as module_readline from 'readline';
 interface pushError {
     err:string,
     repo:string
+}
+
+// GRPP export missing database
+interface grppExportMissing {
+    entries:any
 }
 
 /*
@@ -51,7 +56,12 @@ var
     repoList:string[] = [],
 
     // Repair error list
-    errorList:pushError[] = [];
+    errorList:pushError[] = [],
+
+    // Export missing repos 
+    exportMissing:grppExportMissing = {
+        entries: {}
+    }
 
 /*
     Functions
@@ -60,7 +70,7 @@ var
 /**
     * Start repair database process
 */
-export async function grpp_startRepairDatabase(){
+export async function grpp_checkIfCanStartRepair(){
 
     // Declare reasonList const and get repo entries
     const reasonList:string[] = [];
@@ -70,17 +80,79 @@ export async function grpp_startRepairDatabase(){
     if (module_fs.existsSync(`${process.cwd()}/.temp/`) === !0) reasonList.push(langDatabase.common.errorBatchUpdateRunning);
     execReasonListCheck(reasonList, langDatabase.repair.warnUnablePerformRepair, async function(){
 
-        // Filter git folders
-        getDirTree(`${process.cwd()}/repos`, '.git').forEach(function(currentFolder){
-            if (currentFolder.slice(currentFolder.length - 4, currentFolder.length) === '.git') scanList.push(currentFolder.replace(`${process.cwd()}/repos/`, ''));
-        });
+        /*
+            First GRPP will check if there's missing repos to be imported (GRPP_EXPORT_MISSING.json)
+            If so, prompt user if needs to import them before start repair
+        */
 
-        // Check missing entry keys, check missing repos and finish process
-        await grpp_scanMissingEntryKeys();
-        await grpp_checkMissingRepos().then(function(){
-            createLogEntry(langDatabase.repair.infoRepairComplete);
-        });
+        // Check if export missing repo files exists
+        if (module_fs.existsSync('GRPP_EXPORT_MISSING.json') === !0){
 
+            // Declare readline const and prompt user
+            const readline = module_readline.createInterface({ input: process.stdin, output: process.stdout });
+            readline.question(langDatabase.repair.grppExportMissingDetected, async function(answer){
+                readline.close();
+                if (answer.toLowerCase() === langDatabase.common.confirmChar) await grpp_importMissingRepos();
+            });
+
+        } else {
+            await grpp_startRepair();
+        }
+
+    });
+
+}
+
+/**
+    * Start local repair 
+*/
+async function grpp_startRepair(){
+
+    // Filter git folders
+    getDirTree(`${process.cwd()}/repos`, '.git').forEach(function(currentFolder){
+        if (currentFolder.slice((currentFolder.length - 4), currentFolder.length) === '.git') scanList.push(currentFolder.replace(`${process.cwd()}/repos/`, ''));
+    });
+
+    // Check missing entry keys, check missing repos and finish process
+    await grpp_scanMissingEntryKeys();
+    await grpp_checkMissingRepos().then(function(){
+
+        // Check if needs to export missing database
+        if (Object.keys(exportMissing.entries).length !== 0){
+
+            // Create export data var and check if need to save it without minifying it
+            var exportData = JSON.stringify(exportMissing);
+            if (grppSettings.minifySettings === !1) exportData = JSON.stringify(JSON.parse(exportData), void 0, 4);
+
+            createLogEntry(langDatabase.repair.exportMissingDatabase);
+            module_fs.writeFileSync('GRPP_EXPORT_MISSING.json', exportData, 'utf8');
+        
+        }
+
+        // Process complete
+        createLogEntry(langDatabase.repair.infoRepairComplete);
+    
+    });
+
+}
+
+/**
+    * Import missing repos from GRPP_EXPORT_MISSING.json
+*/
+async function grpp_importMissingRepos(){
+
+    // Read GRPP_EXPORT_MISSING and process all entries
+    const tempMissingRepos:grppExportMissing = JSON.parse(module_fs.readFileSync('GRPP_EXPORT_MISSING.json', 'utf8'));
+    Object.keys(tempMissingRepos.entries).forEach(function(currentRepo, cIndex){
+        if (grppSettings.repoEntries[currentRepo] === void 0){
+
+            // Create log entry and append current repo to main database
+            createLogEntry(grpp_convertLangVar(langDatabase.repair.importMissing_createEntry, [currentRepo, (cIndex + 1), Object.keys(tempMissingRepos.entries).length, `${parsePercentage((cIndex + 1), Object.keys(tempMissingRepos.entries).length)}%`]));
+            grpp_updateRepoData(currentRepo, tempMissingRepos.entries[currentRepo]);
+
+        } else {
+            createLogEntry(grpp_convertLangVar(langDatabase.repair.importMissing_repoAlreadyExists, [currentRepo]));
+        }
     });
 
 }
@@ -201,12 +273,18 @@ async function grpp_scanMissingEntryKeys(){
 async function grpp_removeRepoEntry(path:string){
     return new Promise<void>(function(resolve){
 
+        // Check if needs to export missing repo
+        const removeRepoData:grppRepoEntry = structuredClone(grppSettings.repoEntries[path]);
+        if (repair_exportAllKeys === !0) exportMissing.entries[path] = removeRepoData;
+
         // Check if needs to ask if user wants to remove current key from database
         if (repair_removeAllKeys === !1){
 
             // Declare readline const and check if user wants to remove repo entry
             const readline = module_readline.createInterface({ input: process.stdin, output: process.stdout });
-            readline.question(grpp_convertLangVar(langDatabase.repair.confirmRemoveRepoDatabase, [path]), function(answer){
+            createLogEntry(grpp_convertLangVar(langDatabase.repair.informMissingRepo, [path]));
+            console.table(removeRepoData);
+            readline.question(langDatabase.repair.confirmRemoveRepoDatabase, function(answer){
                 readline.close();
                 if (answer.toLowerCase() === langDatabase.common.confirmChar) removeRepo(path);
                 resolve();

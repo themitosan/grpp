@@ -11,7 +11,7 @@
 
 import { grpp_recover } from './recover';
 import { grpp_getReposFrom } from './getReposFrom';
-import { grpp_startRepairDatabase } from './repair';
+import { grpp_checkIfCanStartRepair } from './repair';
 import { grpp_batchImport, grpp_startImport, grppRepoEntry } from './import';
 import { createLogEntry, preventMinMax, getArgName, consoleTextStyle } from './tools';
 import { grpp_checkBatchUpdateProcess, grpp_processBatchFile, grpp_updateRepo } from './update';
@@ -111,6 +111,9 @@ export var
     // Repair: remove all missing keys from database automatically
     repair_removeAllKeys = !1,
 
+    // Repair: export all missing keys from database and save them to GRPP_EXPORT_MISSING.json
+    repair_exportAllKeys = !1,
+
     // Update: skip process complete message
     update_skipProcessComplete = !1,
 
@@ -139,7 +142,7 @@ export var
 /**
     * Load GRPP settings
 */
-async function grpp_loadSettings(){
+export async function grpp_loadSettings(){
     return new Promise<void>(function(resolve, reject){
 
         // Create settings file path and check if it exists
@@ -413,8 +416,11 @@ async function init(){
         // Check if needs to enable silent mode
         if (currentArg.indexOf('silent') !== -1) enableSilentMode = !0;
 
-        // Repair: Check if will remove all missing keys from database automatically
+        // Repair: Check if needs to remove all missing keys from database without prompt
         if (currentArg.indexOf('removeAllKeys') !== -1) repair_removeAllKeys = !0;
+
+        // Repair: Check if needs exporting all missing keys from database
+        if (currentArg.indexOf('exportAllKeys') !== -1) repair_exportAllKeys = !0;
 
         // Import all repos with "isPriority" set true
         if (currentArg.indexOf('asPriority') !== -1) import_setAsPriority = !0;
@@ -527,7 +533,7 @@ async function init(){
 
         // Repair database
         if (currentArg.indexOf('repair') !== -1){
-            execFn = grpp_startRepairDatabase;
+            execFn = grpp_checkIfCanStartRepair;
             break;
         }
 
@@ -599,11 +605,7 @@ async function init(){
     }
 
     // If have functions to execute, run init process and then, execute it!
-    if (execFn !== null){
-        await grpp_loadSettings().then(async function(){
-            await execFn!();
-        });
-    }
+    if (execFn !== null) await grpp_loadSettings().then(async function(){ await execFn!(); });
 
     // Check if no flags were provided
     if (execFn === null && process.argv.length < 3) createLogEntry(grpp_convertLangVar(langDatabase.main.noArgsProvided, [consoleTextStyle.fgGreen + module_os.userInfo().username + consoleTextStyle.reset]));

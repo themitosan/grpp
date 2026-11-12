@@ -78,7 +78,8 @@
                 "exportRemotes": "Exporta uma lista com todas URL's de repositórios préviamente clonados em um arquivo (grpp_urls.txt)",
                 "repair": "GRPP irá procurar por erros nos repositórios, anexando qualquer repositório que não esteja no banco de dados, removendo itens que não se fazem presente no banco de dados (ou no sistema) e etc.",
                 "recover": "GRPP irá gerar um novo arquivo de configurações para uma pasta já inicializada sem arquivo de configurações.",
-                "removeAllKeys": "Use juto do argumento \"--repair\" para remover todos os itens que não se fazem presentes no banco de dados. (USE COM CUIDADO!)",
+                "removeAllKeys": "Use juto da opção \"--repair\" para remover todos os itens que não se fazem presentes no banco de dados. (USE COM CUIDADO!)",
+                "exportAllKeys": "Use junto da opção \"--repair\" para exportar todos os itens ausentes do banco de dados em \"GRPP_EXPORT_MISSING.json\"",
                 "langList": "Liste todos os idiomas no qual GRPP pode ser executado."
             },
 
@@ -140,7 +141,8 @@
         "infoAddRemoveKeys": "INFO - GRPP adicionou %VAR_0% chaves que estavam faltando e removeu %VAR_1% chaves desnecessárias em %VAR_2% repositórios.",
         "infoRepairComplete": "\nINFO - Processo de reparo completo!\n",
 
-        "confirmRemoveRepoDatabase": "AVISO - Parece que %VAR_0% não existe!\nVocê quer remover esse item do banco de dados? [s/N] ",
+        "informMissingRepo": "AVISO - Parece que \"%VAR_0%\" não existe!\n",
+        "confirmRemoveRepoDatabase": "\nVocê quer remover esse item do banco de dados? [s/N] ",
 
         "warnRepoNotBare": "AVISO - Parece que %VAR_0%.git não foi clonado em formato bare!",
         "importMissingRepo": "INFO - Incluindo repositório ao banco de dados: %VAR_0% [%VAR_1%]",
@@ -148,7 +150,12 @@
         "errorConfigFileNotExists": "Não foi possível obter informações de %VAR_0%.git por que o arquivo de configurações não existe!\nGRPP irá remover esse item do banco de dados...",
         "pushErrorWarn": "AVISO - %VAR_0%",
 
-        "warnDbVersinoMismatch": "AVISO - É possível que o banco de dados atual esteja desatualizado (ou seja de outra versão).\nCertifique-se de executar grpp em modo de reparo para prevenir possíveis problemas."
+        "warnDbVersinoMismatch": "AVISO - É possível que o banco de dados atual esteja desatualizado (ou seja de outra versão).\nCertifique-se de executar grpp em modo de reparo para prevenir possíveis problemas.",
+
+        "exportMissingDatabase": "AVISO - Exportando banco de dados com repositórios ausentes...",
+
+        "importMissing_createEntry": "INFO - (%VAR_3% | %VAR_1% de %VAR_2%) Importando repositório ausente: %VAR_0%",
+        "importMissing_repoAlreadyExists": "AVISO - \"%VAR_0%\" não foi importado visto que o mesmo já se encontra presente no banco de dados!"
 
     },
 
