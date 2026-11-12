@@ -241,7 +241,7 @@ After processing all repos, GRPP will show the update results and save a copy on
 ## Repair
 
 If _(by some reason)_ you have any issue on your GRPP instance, it may help by running `grpp --repair`.
-It verifies if all entries are present and if not, remove them or even export if you are planning to move some of them to another location.
+It verifies if all entries are present and if not, remove them or even export their data if you are planning to move some of them to another location.
 
 <a id="repair-move-repos"></a>
 ### Moving repos between instances
