@@ -358,7 +358,7 @@ async function grpp_startBatchUpdate(){
 
                     // Declare current thread var, split common repos into chunks and process priority repos list
                     var cThread = 0;
-                    chunkList = spliceArrayIntoChunks(updateObject.common, Math.floor(updateObject.common.length / grppSettings.maxBatchThreads));
+                    chunkList = spliceArrayIntoChunks(updateObject.common, Math.ceil(updateObject.common.length / grppSettings.maxBatchThreads));
                     updateObject.priority.forEach(function(cPriority){
 
                         // Check if current chunk is valid. If so, push current priority repo at start and bump cThread counter. If not, reset cThread
@@ -372,7 +372,7 @@ async function grpp_startBatchUpdate(){
                     });
 
                 } else {
-                    chunkList = spliceArrayIntoChunks(updateObject.priority, Math.floor(updateObject.priority.length / grppSettings.maxBatchThreads));
+                    chunkList = spliceArrayIntoChunks(updateObject.priority, Math.ceil(updateObject.priority.length / grppSettings.maxBatchThreads));
                 }
 
                 // Write new batch json and set total res files as the final chunk length
@@ -383,7 +383,7 @@ async function grpp_startBatchUpdate(){
         // Default: Put all priority repos in the first thread
         default:
             const updateList = await grpp_sortBatchListDefault(Object.keys(grppSettings.repoEntries));
-            chunkList = spliceArrayIntoChunks(updateList, Math.floor(updateList.length / grppSettings.maxBatchThreads));
+            chunkList = spliceArrayIntoChunks(updateList, Math.ceil(updateList.length / grppSettings.maxBatchThreads));
             module_fs.writeFileSync(`${tempDir}/GRPP_BATCH.json`, JSON.stringify({ list: chunkList, skippedRepos }), 'utf-8');
             totalResFiles = structuredClone(chunkList.length);
             break;
